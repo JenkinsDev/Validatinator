@@ -8,7 +8,7 @@ module.exports = function(grunt) {
             },
             all: {
                 files: {
-                    './js/<%= pkg.name %>.min.js': ['./js/<%= pkg.name %>.utils.js', './js/<%= pkg.name %>.js']
+                    './js/<%= pkg.name %>.min.js': ['./js/<%= pkg.name %>.polyfill.js', './js/<%= pkg.name %>.utils.js', './js/<%= pkg.name %>.core.js']
                 }
             }
         },
@@ -31,7 +31,7 @@ module.exports = function(grunt) {
         },
         watch: {
             scriptsUglify: {
-                files: ['./js/<%= pkg.name %>.utils.js', './js/<%= pkg.name %>.js'],
+                files: ['./js/<%= pkg.name %>.polyfill.js', './js/<%= pkg.name %>.utils.js', './js/<%= pkg.name %>.core.js'],
                 tasks: ['uglify'],
                 options: {
                     spawn: false
@@ -51,5 +51,5 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-jasmine');
 
     // Default task(s).
-    grunt.registerTask('default', ['uglify', 'watch', 'connect']);
+    grunt.registerTask('default', ['watch:scriptsUglify']);
 };

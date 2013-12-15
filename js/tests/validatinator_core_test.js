@@ -11,10 +11,12 @@ describe('Validator Core', function() {
 	});
 
     it('should be created.', function() {
-        expect(validatinator).toEqual(jasmine.any(Validatinator));
+        expect(validatinator).toEqual(jasmine.any(Object));
     });
 
-    it('should have validationInformation property populated with real data.', function() {
-        expect(validatinator.validationInformation).toEqual(validationInformationMock);
+    describe('properties', function() {  
+        it('should have validationInformation property populated with real data.', function() {
+            expect(validatinator.validationInformation).toEqual(validationInformationMock);
+        }); 
     });
 });
