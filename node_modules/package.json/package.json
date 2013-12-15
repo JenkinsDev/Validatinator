@@ -1,0 +1,19 @@
+{
+  "name": "package.json",
+  "version": "0.0.0",
+  "description": "ERROR: No README.md file found!",
+  "main": "bin/main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": "",
+  "author": "",
+  "license": "BSD",
+  "readme": "ERROR: No README data found!",
+  "_id": "package.json@0.0.0",
+  "dist": {
+    "shasum": "75a65026bb1cfd14769c195ff6843f31a34e15ed"
+  },
+  "_from": "package.json@",
+  "_resolved": "https://registry.npmjs.org/package.json/-/package.json-0.0.0.tgz"
+}
