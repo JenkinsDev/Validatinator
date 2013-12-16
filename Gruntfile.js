@@ -8,7 +8,7 @@ module.exports = function(grunt) {
             },
             all: {
                 files: {
-                    './js/<%= pkg.name %>.min.js': ['./js/<%= pkg.name %>.polyfill.js', './js/<%= pkg.name %>.utils.js', './js/<%= pkg.name %>.core.js']
+                    'js/<%= pkg.name %>.min.js': ['js/<%= pkg.name %>.polyfill.js', 'js/<%= pkg.name %>.core.js', 'js/<%= pkg.name %>.utils.js']
                 }
             }
         },
@@ -23,22 +23,22 @@ module.exports = function(grunt) {
         },
         jasmine: {
             validatinatorTests: {
-                src: './js/<%= pkg.name %>.min.js',
+                src: 'js/<%= pkg.name %>.min.js',
                 options: {
-                    specs: './js/tests/*.js'
+                    specs: 'js/tests/*.js'
                 }
             }
         },
         watch: {
             scriptsUglify: {
-                files: ['./js/<%= pkg.name %>.polyfill.js', './js/<%= pkg.name %>.utils.js', './js/<%= pkg.name %>.core.js'],
+                files: ['js/<%= pkg.name %>.polyfill.js', 'js/<%= pkg.name %>.core.js', 'js/<%= pkg.name %>.utils.js'],
                 tasks: ['uglify'],
                 options: {
                     spawn: false
                 }
             },
             jasmineTests: {
-            	files: ['./js/tests/*.js', './js/<%= pkg.name %>.min.js'],
+            	files: ['js/tests/*.js', 'js/<%= pkg.name %>.min.js'],
             	tasks: ['jasmine:validatinatorTests']
             }
         }
