@@ -20,7 +20,30 @@ Validatinator.prototype.utils = {
         return type;
     },
 
+    /**
+     *  Validatinator.utils.convertFieldValidationsToArray(validationInformation);
+     *
+     *  Convert string field validations to array field validations.
+     *  "required|min:5|max:10" => ["required", "min:5", "max:10"];
+     *
+     *  @Added: 12/16/2013
+     */
     convertFieldValidationsToArray: function(validationInformation) {
+        var fieldValidation;
 
+        // Loop through the top level forms.
+        for (formName in validationInformation) {
+            // Loop through each, individual, field that has validation tests attached to it.
+            for (fieldName in validationInformation[formName]) {
+                fieldValidation = validationInformation[formName][fieldName];
+
+                // If the user has passed in an array then we want to go ahead and skip this portion as we `trust` them
+                // to understand that there shouldn't be any pipe characters.
+                if (this.getRealType(fieldValidation) !== "array")
+                    validationInformation[formName][fieldName] = (fieldValidation.contains("|")) ? fieldValidation.split("|") : [fieldValidation];
+            }
+        }
+
+        return validationInformation;
     }
 }

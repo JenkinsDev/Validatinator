@@ -4,7 +4,8 @@ module.exports = function(grunt) {
         pkg: grunt.file.readJSON('package.json'),
         uglify: {
             options: {
-                banner: '/*\n * <%= pkg.name %> \n * Simple yet effective vanilla JavaScript front-end validation add-on.\n * <%= grunt.template.today("mm/dd/yyyy") %>\n */\n'
+                banner: '/*\n * <%= pkg.name %> \n * Simple yet effective vanilla JavaScript front-end validation add-on.\n * <%= grunt.template.today("mm/dd/yyyy") %>\n */\n (function(window, undefined) {',
+                footer: '})(window);'
             },
             all: {
                 files: {
