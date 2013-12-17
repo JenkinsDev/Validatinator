@@ -8,6 +8,8 @@ function Validatinator(validationInformation) {
     // any validation information.
     this.validationInformation = (validationInformation !== undefined) ? this.utils.convertFieldValidationsToArray(validationInformation) : {};
     this.errors = {};
+    this.currentValidatingForm;
+    this.currentValidatingField;
 
 
     /****************************************/
@@ -22,24 +24,34 @@ function Validatinator(validationInformation) {
 
     }
 
-    this.testValidations = function() {
-        var fieldValidationArray;
+    this.getValidationArray = function(formName) {
+        var fieldName;
+        this.currentValidatingForm = formName;
 
-        // Loop through the top level forms.
-        for (formName in validationInformation) {
-            // Loop through each, individual, field that has validation tests attached to it.
-            for (fieldName in validationInformation[formName]) {
-                fieldValidationArray = validationInformation[formName][fieldName];
+        for (fieldName in this.validationInformation[formName]) {
+            this.currentValidatingField = fieldName;
+            this.testValidations(this.validationInformation[formName][fieldName]);
+        }
+    },
 
-                // Now that we are inside the actual validation array, let's loop through each validation.
-                for (validation in fieldValidationArray) {
-                    // We need to check to see if the validation actually exists; if it doesn't then we need to throw an error.
-                    if (fieldValidationArray[validation] in this.validations)
-                        this["validations"][fieldValidationArray[validation]](formName, fieldName);
-                    else
-                        throw new Error("Validation does not exist");
-                }
-            }
+    /**
+     *  Validatinator.testValidations();
+     *
+     *  Loops through each field that needs to be validated, then each individual validation for that field and attempts
+     *  to call the validation if the validation method exists.
+     *
+     *  @Added: 12/16/2013
+     */
+    this.testValidationArray = function(fieldValidationArray) {
+        var i;
+        
+        // Now that we are inside the actual validation array, let's loop through each validation.
+        for (i=0; i<fieldValidationArray.length; i++) {
+            // We need to check to see if the validation actually exists; if it doesn't then we need to throw an error.
+            if (fieldValidationArray[i] in this["validations"])
+                this["validations"][fieldValidationArray[i]](formName, fieldName);
+            else
+                throw new Error("Validation does not exist: " + fieldValidationArray[i]);
         }
     }
 }

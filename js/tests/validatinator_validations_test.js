@@ -1,16 +1,23 @@
 describe("Validations", function() {
-    var validatinator;
+    var fakeValidatinator, realValidatinator;
 
     beforeEach(function() {
-        fakeValidatinator = new Validatinator({
+        validatinator = new Validatinator({
             "my-form": {
-                "not-a-real-function": "fakeValidation"
+                "first-name": "required"
             }
         });
     });
 
-    it('should throw an exception if there is no validation with that name', function() {
-        // Make sure to add a wrapping, anonymouse, function when checking to make sure your methods throw an exception.
-        expect(function() { fakeValidatinator.testValidations() }).toThrow("Validation does not exist");
+    it('should handle bad and good method calls.', function() {
+        // Make sure to add a wrapping, anonymous, function when checking to make sure your methods throw an exception.
+        expect(function() { validatinator.testValidationArray(["fakeValidationMethod"]) }).toThrow();
+
+        // If the validation method does exist then let's go ahead and make sure it doesn't throw an exception.
+        expect(function() { validatinator.testValidationArray(["required"]) }).not.toThrow();
+    });
+
+    it('should not throw exception when getting field validation arrays.', function() {
+        expect(function() { validatinator.getValidationArray() }).not.toThrow();
     });
 });
