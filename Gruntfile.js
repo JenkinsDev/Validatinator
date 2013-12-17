@@ -8,7 +8,7 @@ module.exports = function(grunt) {
             },
             all: {
                 files: {
-                    'js/<%= pkg.name %>.min.js': ['js/<%= pkg.name %>.polyfill.js', 'js/<%= pkg.name %>.core.js', 'js/<%= pkg.name %>.utils.js']
+                    'js/<%= pkg.name %>.min.js': ['js/<%= pkg.name %>.polyfill.js', 'js/<%= pkg.name %>.core.js', 'js/<%= pkg.name %>.utils.js', 'js/<%= pkg.name %>.validations.js']
                 }
             }
         },
@@ -31,7 +31,7 @@ module.exports = function(grunt) {
         },
         watch: {
             scriptsUglify: {
-                files: ['js/<%= pkg.name %>.polyfill.js', 'js/<%= pkg.name %>.core.js', 'js/<%= pkg.name %>.utils.js'],
+                files: ['js/<%= pkg.name %>.polyfill.js', 'js/<%= pkg.name %>.core.js', 'js/<%= pkg.name %>.utils.js', 'js/<%= pkg.name %>.validations.js'],
                 tasks: ['uglify'],
                 options: {
                     spawn: false

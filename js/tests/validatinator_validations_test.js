@@ -2,14 +2,14 @@ describe("Validations", function() {
     var validatinator;
 
     beforeEach(function() {
-        validatinator = Validatinator.make({
+        validatinator = new Validatinator({
             "my-form": {
-            	"first-name": "required|min:5|max:10"
+                "first-name": "required|min:5|max:10|fakeValidation"
             }
         });
     });
 
-    it("Should exist", function() {
-        
+    it('should throw an exception if there is no validation with that name', function() {
+        //expect(Validatinator.validations)
     });
 });

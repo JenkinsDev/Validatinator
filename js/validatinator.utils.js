@@ -1,4 +1,4 @@
-Validatinator.utils = {
+Validatinator.prototype.utils = {
     /**
      *  Validatinator.utils.getRealType(obj);
      *
@@ -8,25 +8,19 @@ Validatinator.utils = {
      *  @Added: 12/15/2013
      */
     getRealType: function(obj) {
-    	var type = typeof obj;
+        var type = (typeof obj).toLowerCase();
 
-        if (type.toLowerCase() === "object") {
+        if (type === "object") {
             if (obj === null)
                 return null;
 
             return obj.constructor.name.toLowerCase();
         }
 
-        return type.toLowerCase();
+        return type;
     },
 
-    /**
-     *  Validatinator.utils.convertToArray();
-     *
-     *  Generally the end user will never touch this method, but here we handle converting the validations
-     *  into an array of strings.
-     */
-    convertToArray: function() {
-        
-    },
+    convertFieldValidationsToArray: function(validationInformation) {
+
+    }
 }

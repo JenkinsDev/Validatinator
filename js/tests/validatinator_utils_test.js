@@ -1,13 +1,16 @@
 describe("Validatinator Utils", function() {
-    var utils = Validatinator.utils,
+    var utils,
         validatinator;
 
+    // Let's make sure we have a fresh Validatinator instance before each `spec.`
     beforeEach(function() {
-        validatinator = Validatinator.make({
+        validatinator = new Validatinator({
             "my-form": {
                 "first-name": "required|min:5|max:10"
             }
         });
+
+        utils = validatinator.utils;
     });
 
     it("should return correct data types.", function() {
@@ -18,7 +21,7 @@ describe("Validatinator Utils", function() {
         expect(utils.getRealType({})).toEqual("object");
 
         // Validatinator "Object" === "object"
-        expect(utils.getRealType(validatinator)).toEqual("object");
+        expect(utils.getRealType(validatinator)).toEqual("validatinator");
 
         // String === "string"
         expect(utils.getRealType("test string")).toEqual("string");
