@@ -6,10 +6,13 @@ function Validatinator(validationInformation) {
     
     // Users may want to add validation information later on so we will allow them to create an instance of Validatinator without passing
     // any validation information.
-    this.validationInformation = (validationInformation !== undefined) ? this.utils.convertFieldValidationsToArray(validationInformation) : {};
+    this.validationInformation = (typeof validationInformation !== undefined) ? this.utils.convertFieldValidationsToArray(validationInformation) : {};
     this.errors = {};
     this.currentValidatingForm;
     this.currentValidatingField;
+    // We will give each of our sub classes a parent property so they can easily, interchangebly, call each other's methods.
+    this.utils.parent = this;
+    this.validations.parent = this;
 
 
     /****************************************/
@@ -42,7 +45,7 @@ function Validatinator(validationInformation) {
             this.currentValidatingField = fieldName;
             this.testValidations(this.validationInformation[formName][fieldName]);
         }
-    },
+    }
 
     /**
      *  Validatinator.testValidations();
@@ -63,10 +66,10 @@ function Validatinator(validationInformation) {
         // Now that we are inside the actual validation array, let's loop through each validation.
         for (i=0; i<fieldValidationArray.length; i++) {
             // We need to check to see if the validation actually exists; if it doesn't then we need to throw an error.
-            if (! (fieldValidationArray[i] in this["validations"])) {
+            if (! (fieldValidationArray[i] in this["validations"]))
                 throw new Error("Validation does not exist: " + fieldValidationArray[i]);
-            }
             
+            // If the validation does exist then call it.
             this["validations"][fieldValidationArray[i]](fieldValue);
         }
     }

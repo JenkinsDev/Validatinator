@@ -45,5 +45,29 @@ Validatinator.prototype.utils = {
         }
 
         return validationInformation;
+    },
+
+    /**
+     *  Validatinator.utils.isValueFalsyInNature(value, strict);
+     *
+     *  Tests to see if the value provided is falsy in it's nature; i.e: undefined, null or false.
+     *  If strict mode is set to true or no boolean is passed in for strict then 0 equates to false,
+     *  else 0 equates to true.
+     *
+     *  @Added: 12/23/2013
+     */
+    isValueFalsyInNature: function(value, strict) {
+        // Check to see if a value was passed to strict, if not then strict mode will be set to True by default.
+        if (strict === undefined || strict === null)
+            strict = true;
+
+        // If value is undefined or null then it is automatically marked as falsy in nature and therefore we return true.
+        if (value === undefined || value === null || value === "")
+            return true;
+
+        // If strict mode is set to true then 0 will be the same as false.
+        if (strict)
+            return (!value) ? true : false;
+        return (value === false) ? true : false;
     }
 }
