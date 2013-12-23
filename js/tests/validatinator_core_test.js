@@ -1,4 +1,4 @@
-describe('Validator Core', function() {
+describe("Validator Core", function() {
     var validatinator,
         validationInformationMock = {
             "my-form": {
@@ -42,13 +42,16 @@ describe('Validator Core', function() {
             // Field validation as array; let's make sure it doesn't change it's form.
             expect(validatinator.validationInformation["my-form"]["email"]).toEqual(['required', 'email']);
         });
-    });
 
-    xit('should fail if it failed validation.', function() {
-        expect(validatinator.fails()).toBeTruthy();
-        expect(validatinator.passes()).toBeFalsy();
+        it('should handle bad and good method calls.', function() {
+            // Make sure to add a wrapping, anonymous, function when checking to make sure your methods throw an exception.
+            expect(function() { validatinator.testValidationArray(["fakeValidationMethod"]) }).toThrow();
+            // If the validation method does exist then let's go ahead and make sure it doesn't throw an exception.
+            expect(function() { validatinator.testValidationArray(["required"]) }).not.toThrow("Validation does not exist: required");
+        });
 
-        expect(validatinator.fails()).toBeTruthy();
-        expect(validatinator.passes()).toBeTruthy();
+        it('should not throw exception when getting field validation arrays.', function() {
+            expect(function() { validatinator.getValidationArray(["required"]) }).not.toThrow();
+        });
     });
 });

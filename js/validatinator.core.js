@@ -16,14 +16,24 @@ function Validatinator(validationInformation) {
     /*             Core Methods             */
     /****************************************/
     
-    this.fails = function() {
-        
+    this.fails = function(formName) {
+        // Start up the validation process.
+        this.getValidationArray(formName);
     }
 
-    this.passes = function() {
-
+    this.passes = function(formName) {
+        // Start up the validation process.
+        this.getValidationArray(formName);
     }
 
+    /**
+     *  Validatinator.getValidationArray();
+     *
+     *  Loops through each field that the form contains and passes their validation arrays to
+     *  testValidationArray();
+     *
+     *  @Added: 12/17/2013
+     */
     this.getValidationArray = function(formName) {
         var fieldName;
         this.currentValidatingForm = formName;
@@ -37,21 +47,27 @@ function Validatinator(validationInformation) {
     /**
      *  Validatinator.testValidations();
      *
-     *  Loops through each field that needs to be validated, then each individual validation for that field and attempts
+     *  Loops through each individual validation and attempts
      *  to call the validation if the validation method exists.
      *
      *  @Added: 12/16/2013
      */
     this.testValidationArray = function(fieldValidationArray) {
-        var i;
+        var form,
+            fieldValue,
+            i;
+
+        form = document.getElementsByName(this.currentValidatingForm)[0];
+        fieldValue = form.getElementsByName(this.currentValidatingField)[0].value;
         
         // Now that we are inside the actual validation array, let's loop through each validation.
         for (i=0; i<fieldValidationArray.length; i++) {
             // We need to check to see if the validation actually exists; if it doesn't then we need to throw an error.
-            if (fieldValidationArray[i] in this["validations"])
-                this["validations"][fieldValidationArray[i]](formName, fieldName);
-            else
+            if (! (fieldValidationArray[i] in this["validations"])) {
                 throw new Error("Validation does not exist: " + fieldValidationArray[i]);
+            }
+            
+            this["validations"][fieldValidationArray[i]](fieldValue);
         }
     }
 }
