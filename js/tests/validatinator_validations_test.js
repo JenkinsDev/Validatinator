@@ -37,7 +37,9 @@ describe("Validations", function() {
         expect(validatinator.validations.required("")).toBeFalsy();
         expect(validatinator.validations.required(null)).toBeFalsy();
         expect(validatinator.validations.required()).toBeFalsy();
+
         expect(validatinator.validations.required("Jenkins")).toBeTruthy();
+        expect(validatinator.validations.required(0)).toBeTruthy();
     });
 
     it('confirmed should return false if normal field and confirmation field are not equal, else be false', function() {
@@ -61,5 +63,23 @@ describe("Validations", function() {
         expect(validatinator.validations.accepted("on")).toBeTruthy();
         expect(validatinator.validations.accepted(true)).toBeTruthy();
         expect(validatinator.validations.accepted(1)).toBeTruthy();
+    });
+
+    it('alpha should return true if the field value only contains letters; else false', function() {
+        expect(validatinator.validations.alpha(123)).toBeFalsy();
+        expect(validatinator.validations.alpha("123")).toBeFalsy();
+        expect(validatinator.validations.alpha("sadf23435@#$")).toBeFalsy();
+        expect(validatinator.validations.alpha("This is a test")).toBeFalsy();
+
+        expect(validatinator.validations.alpha("test")).toBeTruthy();
+        expect(validatinator.validations.alpha("TEST")).toBeTruthy();
+    });
+
+    it('alphaDash should return true if the field value only contains letters, hyphens and underscores; else false', function() {
+        expect(validatinator.validations.alphaDash(123)).toBeFalsy();
+        expect(validatinator.validations.alphaDash("123")).toBeFalsy();
+        expect(validatinator.validations.alphaDash("This is a test")).toBeFalsy();
+
+        expect(validatinator.validations.alphaDash("This-Is-A-Test_")).toBeTruthy();
     });
 });

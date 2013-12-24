@@ -10,10 +10,14 @@ Validatinator.prototype.utils = {
     getRealType: function(obj) {
         var type = (typeof obj).toLowerCase();
 
+        // If the type of our object is "object" then there is a chance
+        // that it is null, test that first.
         if (type === "object") {
             if (obj === null)
                 return null;
 
+            // If it's not null then let's get the constructor's name
+            // so we have the `true` object type.
             return obj.constructor.name.toLowerCase();
         }
 
