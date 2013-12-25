@@ -35,7 +35,7 @@ Validatinator.prototype.validations = {
     },
 
     /**
-     *  Validatinator.validations.alpha_dash(fieldValue);
+     *  Validatinator.validations.alphaDash(fieldValue);
      *
      *  Check to make sure the field's value is only of alpha, underscore and hyphen characters.
      *
@@ -47,6 +47,50 @@ Validatinator.prototype.validations = {
         if (this.parent.utils.isValueFalsyInNature(fieldValue))
             return false;
         return alphaDashReg.test(fieldValue);
+    },
+
+    /**
+     *  Validatinator.validations.alphaNum(fieldValue);
+     *
+     *  Checks to make sure our field's value only contains alpha, underscore, hyphen and numerical
+     *  characters.
+     *
+     *  @Added: 12/25/2013 *CHRISTMAS DAY!*
+     */
+    alphaNum: function(fieldValue) {
+        var alphaNumReg = /^[a-zA-Z-_0-9]+$/;
+
+        if (this.parent.utils.isValueFalsyInNature(fieldValue))
+            return false;
+        return alphaNumReg.test(fieldValue);
+    },
+
+    /**
+     *  Validatinator.validations.between(fieldValue, minLength, maxLength);
+     *
+     *  Checks to make sure our field's value's length is is between the minimum and maximum
+     *  value passed in.
+     *
+     *  @Added: 12/25/2013 *CHRISTMAS DAY!*
+     */
+    between: function(fieldValue, minLength, maxLength) {
+        var fieldValueType = this.parent.utils.getRealType(fieldValue);
+
+        if (this.parent.utils.getRealType(minLength) !== "number" || this.parent.utils.getRealType(maxLength) !== "number")
+            throw new Error("minLength and maxLength must both be numbers in the `between` validation.");
+
+        // We only want to deal with string's and numbers (int, float, etc.)  If something else is supplied then
+        // we will automatically fail.  Possible TODO: Change to throw an error?
+        if (fieldValueType !== "string" && fieldValueType !== "number")
+            return false;
+
+        // If we are working with a number then we need to transfer it to a string so we can make use of the
+        // .length property.
+        fieldValue = (fieldValueType === "number") ? String(fieldValue) : fieldValue;
+
+        if (minLength <= fieldValue.length && fieldValue.length <= maxLength)
+            return true;
+        return false;
     },
 
     /**

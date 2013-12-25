@@ -82,4 +82,27 @@ describe("Validations", function() {
 
         expect(validatinator.validations.alphaDash("This-Is-A-Test_")).toBeTruthy();
     });
+
+    it('alphaNum should return true if the field value only contains letters, hyphens, underscores and numbers; else false', function() {
+        expect(validatinator.validations.alphaNum("%$#")).toBeFalsy();
+        expect(validatinator.validations.alphaNum("^&.")).toBeFalsy();
+        expect(validatinator.validations.alphaNum("This is a real test")).toBeFalsy();
+
+        expect(validatinator.validations.alphaNum(123)).toBeTruthy();
+        expect(validatinator.validations.alphaNum("djenkins")).toBeTruthy();
+        expect(validatinator.validations.alphaNum("This-Is-A-Test_0-9")).toBeTruthy();
+    });
+
+    it('between should return true if the field value\'s length is between the min and max number', function() {
+        expect(validatinator.validations.between("value", 20, 30)).toBeFalsy();
+        expect(validatinator.validations.between(123, 1, 2)).toBeFalsy();
+        expect(validatinator.validations.between({}, 1, 20)).toBeFalsy();
+
+        expect(validatinator.validations.between(123.432, 1, 20)).toBeTruthy();
+        expect(validatinator.validations.between("Testing", 5, 10)).toBeTruthy();
+
+        expect(function() {
+            validatinator.validations.between(123, "min", "max")
+        }).toThrow("minLength and maxLength must both be numbers in the `between` validation.");
+    });
 });
