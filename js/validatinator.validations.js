@@ -103,11 +103,32 @@ Validatinator.prototype.validations = {
      */
 	confirmed: function(fieldValue, confirmationFieldValue, strict) {
         if (strict === undefined || strict === null)
-        	strict = true;
+            strict = true;
 
         if (strict)
         	return fieldValue === confirmationFieldValue;
         return fieldValue.toLowerCase() === confirmationFieldValue.toLowerCase();
+    },
+
+    /**
+     *  Validatinator.validations.different(fieldValue, differentFieldValue, strict);
+     *
+     *  Checks to make sure the two field value's provided are, in fact, different in value.
+     *  All values are casted into their string representative and if strict is set to false
+     *  then we will make sure to lowercase each value to make sure casing doesn't matter.
+     *
+     *  @Added: 12/26/2013
+     */
+    different: function(fieldValue, differentFieldValue, strict) {
+        if (strict === undefined || strict === null)
+            strict = true;
+
+        fieldValue = String(fieldValue);
+        differentFieldValue = String(differentFieldValue);
+
+        if (strict)
+            return !(fieldValue === differentFieldValue);
+        return !(fieldValue.toLowerCase() === differentFieldValue.toLowerCase());
     },
 
     /**
@@ -120,6 +141,6 @@ Validatinator.prototype.validations = {
     required: function(fieldValue) {
         // Flip the boolean return value because if the value is falsy in nature then it returns
         // true; we want to return true if the value exists, not if it is falsy.
-        return !this.parent.utils.isValueFalsyInNature(fieldValue, false);
+        return !(this.parent.utils.isValueFalsyInNature(fieldValue, false));
     },
 }

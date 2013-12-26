@@ -105,4 +105,13 @@ describe("Validations", function() {
             validatinator.validations.between(123, "min", "max")
         }).toThrow("minLength and maxLength must both be numbers in the `between` validation.");
     });
+
+    it('different should return true if the field\'s value is different than the second field value supplied', function() {
+        expect(validatinator.validations.different("test", "test")).toBeFalsy();
+        expect(validatinator.validations.different(123, 123)).toBeFalsy();
+        expect(validatinator.validations.different("TEST", "test", false)).toBeFalsy();
+
+        expect(validatinator.validations.different("Test", "test")).toBeTruthy();
+        expect(validatinator.validations.different(0, 124)).toBeTruthy();
+    });
 });
