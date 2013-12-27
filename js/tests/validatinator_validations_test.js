@@ -158,4 +158,12 @@ describe("Validations", function() {
         expect(validatinator.validations.email("me@something.com")).toBeTruthy();
         expect(validatinator.validations.email("me123@youtube.com")).toBeTruthy();
     });
+
+    it('number should return true if the field\'s value is a valid number.', function() {
+        expect(validatinator.validations.number("123432")).toBeFalsy();
+        expect(validatinator.validations.number("test")).toBeFalsy();
+
+        expect(validatinator.validations.number(123)).toBeTruthy();
+        expect(validatinator.validations.number(123.123)).toBeTruthy();
+    });
 });

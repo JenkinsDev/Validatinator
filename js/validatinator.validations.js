@@ -185,10 +185,23 @@ Validatinator.prototype.validations = {
      */
     email: function(fieldValue) {
         var emailReg = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,10})+$/;
-        
+
         if (this.utils.getRealType(fieldValue) !== "string")
             return false;
         return fieldValue.match(emailReg);
+    },
+
+    /**
+     *  Validatinator.validations.number(fieldValue);
+     *
+     *  Check to make sure the field value supplied is a valid number; int, float, double, etc.
+     *
+     *  @Added: 12/27/2013
+     */
+    number: function(fieldValue) {
+        if (this.utils.isValueFalsyInNature(fieldValue, false) || this.utils.getRealType(fieldValue) !== "number")
+            return false;
+        return true;
     },
 
     /**
