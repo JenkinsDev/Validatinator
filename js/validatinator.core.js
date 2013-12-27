@@ -13,6 +13,7 @@ function Validatinator(validationInformation) {
     // We will give each of our sub classes a parent property so they can easily, interchangebly, call each other's methods.
     this.utils.parent = this;
     this.validations.parent = this;
+    this.validations.utils = this.utils;
 
 
     /****************************************/

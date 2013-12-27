@@ -10,7 +10,7 @@ Validatinator.prototype.validations = {
 	accepted: function(fieldValue) {
 		// We can't call .toLowerCase(); on a non-string object so let's see if we are clear
 		// here.
-		if (this.parent.utils.isValueFalsyInNature(fieldValue))
+		if (this.utils.isValueFalsyInNature(fieldValue))
 			return false;
 
 		// Case sensitivity shouldn't matter here as long as our value is a string.
@@ -29,7 +29,7 @@ Validatinator.prototype.validations = {
     alpha: function(fieldValue) {
         var alphaReg = /^[a-zA-Z]+$/;
 
-        if (this.parent.utils.isValueFalsyInNature(fieldValue))
+        if (this.utils.isValueFalsyInNature(fieldValue))
             return false;
         return alphaReg.test(fieldValue);
     },
@@ -44,7 +44,7 @@ Validatinator.prototype.validations = {
     alphaDash: function(fieldValue) {
         var alphaDashReg = /^[a-zA-Z-_]+$/;
 
-        if (this.parent.utils.isValueFalsyInNature(fieldValue))
+        if (this.utils.isValueFalsyInNature(fieldValue))
             return false;
         return alphaDashReg.test(fieldValue);
     },
@@ -60,7 +60,7 @@ Validatinator.prototype.validations = {
     alphaNum: function(fieldValue) {
         var alphaNumReg = /^[a-zA-Z-_0-9]+$/;
 
-        if (this.parent.utils.isValueFalsyInNature(fieldValue))
+        if (this.utils.isValueFalsyInNature(fieldValue))
             return false;
         return alphaNumReg.test(fieldValue);
     },
@@ -76,7 +76,7 @@ Validatinator.prototype.validations = {
     between: function(fieldValue, minLength, maxLength) {
         var fieldValueType = this.parent.utils.getRealType(fieldValue);
 
-        if (this.parent.utils.getRealType(minLength) !== "number" || this.parent.utils.getRealType(maxLength) !== "number")
+        if (this.utils.getRealType(minLength) !== "number" || this.utils.getRealType(maxLength) !== "number")
             throw new Error("minLength and maxLength must both be numbers in the `between` validation.");
 
         // We only want to deal with string's and numbers (int, float, etc.)  If something else is supplied then
@@ -88,9 +88,7 @@ Validatinator.prototype.validations = {
         // .length property.
         fieldValue = (fieldValueType === "number") ? String(fieldValue) : fieldValue;
 
-        if (minLength <= fieldValue.length && fieldValue.length <= maxLength)
-            return true;
-        return false;
+        return (minLength <= fieldValue.length && fieldValue.length <= maxLength);
     },
 
     /**
@@ -126,9 +124,54 @@ Validatinator.prototype.validations = {
         fieldValue = String(fieldValue);
         differentFieldValue = String(differentFieldValue);
 
+        // We need to flip the equality boolen as we are wanting to see if they are different or not.
+        // False -> True; True -> False
         if (strict)
             return !(fieldValue === differentFieldValue);
         return !(fieldValue.toLowerCase() === differentFieldValue.toLowerCase());
+    },
+
+    /**
+     *  Validatinator.validations.digits(fieldValue, length);
+     *
+     *  Checks to make sure the field value is only numerical and that the length of the value
+     *  is exactly the length supplied.
+     *
+     *  @Added: 12/26/2013
+     */ 
+    digits: function(fieldValue, length) {
+        if (length === undefined || length === null || this.parent.utils.getRealType(length) !== "number")
+            throw new Error("Length must be a numerical value.");
+
+        if (this.utils.getRealType(fieldValue) !== "number")
+            return false;
+
+        // Even though we only want a numerical value, we cast our value to a string so we can
+        // make use of the the .length property.
+        return String(fieldValue).length === length;
+    },
+
+    /**
+     *  Validatinator.validations.digitsBetween(fieldValue, minLength, maxLength);
+     *
+     *  Checks to make sure the field value supplied is only numerical and that the length of the value
+     *  is between or equal to the min and max length supplied.
+     *
+     *  @Added: 12/26/2013
+     */
+    digitsBetween: function(fieldValue, minLength, maxLength) {
+        if (this.utils.isValueFalsyInNature(minLength) || this.utils.isValueFalsyInNature(maxLength)
+                || this.utils.getRealType(minLength) !== "number" || this.utils.getRealType(maxLength) !== "number")
+            throw new Error("minLength and maxLength must both be numerical values.");
+
+        if (this.utils.getRealType(fieldValue) !== "number")
+            return false;
+
+        // Even though we only want a numerical value, we cast our value to a string so we can
+        // make use of the the .length property.
+        fieldValueLength = String(fieldValue).length;
+
+        return ((minLength <= fieldValueLength) && (fieldValueLength <= maxLength));
     },
 
     /**
