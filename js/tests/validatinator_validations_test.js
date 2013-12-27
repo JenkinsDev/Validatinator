@@ -150,4 +150,12 @@ describe("Validations", function() {
             validatinator.validations.digitsBetween(123, "1", 234)
         }).toThrow("minLength and maxLength must both be numerical values.");
     });
+
+    it('email should return true if the field\'s value is a valid email address.', function() {
+        expect(validatinator.validations.email("asdfasdf")).toBeFalsy();
+        expect(validatinator.validations.email("asdfasdf@asdfasdf")).toBeFalsy();
+
+        expect(validatinator.validations.email("me@something.com")).toBeTruthy();
+        expect(validatinator.validations.email("me123@youtube.com")).toBeTruthy();
+    });
 });

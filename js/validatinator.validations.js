@@ -29,6 +29,8 @@ Validatinator.prototype.validations = {
     alpha: function(fieldValue) {
         var alphaReg = /^[a-zA-Z]+$/;
 
+        // We won't check to see if the value is a string because our regex will
+        // handle that for us.
         if (this.utils.isValueFalsyInNature(fieldValue))
             return false;
         return alphaReg.test(fieldValue);
@@ -172,6 +174,21 @@ Validatinator.prototype.validations = {
         fieldValueLength = String(fieldValue).length;
 
         return ((minLength <= fieldValueLength) && (fieldValueLength <= maxLength));
+    },
+
+    /**
+     *  Validatinator.validations.email(fieldValue);
+     *
+     *  Checks to make sure the field value supplied is a valid email address, in format.
+     *
+     *  @Added: 12/27/2013
+     */
+    email: function(fieldValue) {
+        var emailReg = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,10})+$/;
+        
+        if (this.utils.getRealType(fieldValue) !== "string")
+            return false;
+        return fieldValue.match(emailReg);
     },
 
     /**
