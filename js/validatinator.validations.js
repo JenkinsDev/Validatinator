@@ -192,6 +192,22 @@ Validatinator.prototype.validations = {
     },
 
     /**
+     *  Validatiantor.validations.ip(fieldValue);
+     *
+     *  Checks to make sure the field value supplied is a valid ip address; ipv4 or ipv6.
+     *
+     *  @Added: 12/27/2013
+     */
+    ip: function(fieldValue) {
+        var ipvFourReg = /^((2[0-4]|1\d|[1-9])?\d|25[0-5])(\.(?1)){3}\z+$/;
+        var ipvSixReg = /^((?=.*::)(?!.*::.+::)(::)?([\dA-F]{1,4}:(:|\b)|){5}|([\dA-F]{1,4}:){6})((([\dA-F]{1,4}((?!\3)::|:\b|$))|(?!\2\3)){2}|(((2[0-4]|1\d|[1-9])?\d|25[0-5])\.?\b){4})$/i;
+
+        if (this.utils.isValueFalsyInNature(fieldValue) || fieldValue.match(ipvFourReg) === null || fieldValue.match(ipvSixReg) === null)
+            return false;
+        return true;
+    },
+
+    /**
      *  Validatinator.validations.number(fieldValue);
      *
      *  Check to make sure the field value supplied is a valid number; int, float, double, etc.
@@ -214,6 +230,6 @@ Validatinator.prototype.validations = {
     required: function(fieldValue) {
         // Flip the boolean return value because if the value is falsy in nature then it returns
         // true; we want to return true if the value exists, not if it is falsy.
-        return !(this.parent.utils.isValueFalsyInNature(fieldValue, false));
+        return !(this.utils.isValueFalsyInNature(fieldValue, false));
     },
 }
