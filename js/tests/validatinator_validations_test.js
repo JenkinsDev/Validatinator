@@ -62,4 +62,8 @@ describe("Validations", function() {
         expect(validatinator.validations.accepted(true)).toBeTruthy();
         expect(validatinator.validations.accepted(1)).toBeTruthy();
     });
+
+    it('after should return true if the field value passed in is a later date than what it is being compared to.', function() {
+        // Dates need to be in mm/dd/yyyy or dd/mm/yyyy
+    });
 });
