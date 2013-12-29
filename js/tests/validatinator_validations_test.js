@@ -37,7 +37,9 @@ describe("Validations", function() {
         expect(validatinator.validations.required("")).toBeFalsy();
         expect(validatinator.validations.required(null)).toBeFalsy();
         expect(validatinator.validations.required()).toBeFalsy();
+
         expect(validatinator.validations.required("Jenkins")).toBeTruthy();
+        expect(validatinator.validations.required(0)).toBeTruthy();
     });
 
     it('confirmed should return false if normal field and confirmation field are not equal, else be false', function() {
@@ -63,7 +65,115 @@ describe("Validations", function() {
         expect(validatinator.validations.accepted(1)).toBeTruthy();
     });
 
-    it('after should return true if the field value passed in is a later date than what it is being compared to.', function() {
-        // Dates need to be in mm/dd/yyyy or dd/mm/yyyy
+    it('alpha should return true if the field value only contains letters; else false', function() {
+        expect(validatinator.validations.alpha(123)).toBeFalsy();
+        expect(validatinator.validations.alpha("123")).toBeFalsy();
+        expect(validatinator.validations.alpha("sadf23435@#$")).toBeFalsy();
+        expect(validatinator.validations.alpha("This is a test")).toBeFalsy();
+
+        expect(validatinator.validations.alpha("test")).toBeTruthy();
+        expect(validatinator.validations.alpha("TEST")).toBeTruthy();
+    });
+
+    it('alphaDash should return true if the field value only contains letters, hyphens and underscores; else false', function() {
+        expect(validatinator.validations.alphaDash(123)).toBeFalsy();
+        expect(validatinator.validations.alphaDash("123")).toBeFalsy();
+        expect(validatinator.validations.alphaDash("This is a test")).toBeFalsy();
+
+        expect(validatinator.validations.alphaDash("This-Is-A-Test_")).toBeTruthy();
+    });
+
+    it('alphaNum should return true if the field value only contains letters, hyphens, underscores and numbers; else false', function() {
+        expect(validatinator.validations.alphaNum("%$#")).toBeFalsy();
+        expect(validatinator.validations.alphaNum("^&.")).toBeFalsy();
+        expect(validatinator.validations.alphaNum("This is a real test")).toBeFalsy();
+
+        expect(validatinator.validations.alphaNum(123)).toBeTruthy();
+        expect(validatinator.validations.alphaNum("djenkins")).toBeTruthy();
+        expect(validatinator.validations.alphaNum("This-Is-A-Test_0-9")).toBeTruthy();
+    });
+
+    it('between should return true if the field value\'s length is between the min and max number', function() {
+        expect(validatinator.validations.between("value", 20, 30)).toBeFalsy();
+        expect(validatinator.validations.between(123, 1, 2)).toBeFalsy();
+        expect(validatinator.validations.between({}, 1, 20)).toBeFalsy();
+
+        expect(validatinator.validations.between(123.432, 1, 20)).toBeTruthy();
+        expect(validatinator.validations.between("Testing", 5, 10)).toBeTruthy();
+
+        expect(function() {
+            validatinator.validations.between(123, "min", "max")
+        }).toThrow("minLength and maxLength must both be numbers in the `between` validation.");
+    });
+
+    it('different should return true if the field\'s value is different than the second field value supplied', function() {
+        expect(validatinator.validations.different("test", "test")).toBeFalsy();
+        expect(validatinator.validations.different(123, 123)).toBeFalsy();
+        expect(validatinator.validations.different("TEST", "test", false)).toBeFalsy();
+
+        expect(validatinator.validations.different("Test", "test")).toBeTruthy();
+        expect(validatinator.validations.different(0, 124)).toBeTruthy();
+    });
+
+    it('digits should return true if the field\'s value is only numerical and have the same exact length as supplied.', function() {
+        expect(validatinator.validations.digits("asdf", 4)).toBeFalsy();
+        expect(validatinator.validations.digits(123, 5)).toBeFalsy();
+        expect(validatinator.validations.digits({}, 5)).toBeFalsy();
+
+        expect(validatinator.validations.digits(123, 3)).toBeTruthy();
+        expect(validatinator.validations.digits(0, 1)).toBeTruthy();
+
+        expect(function() {
+            validatinator.validations.digits(123)
+        }).toThrow("Length must be a numerical value.");
+
+        expect(function() {
+            validatinator.validations.digits(123, "asdf");
+        }).toThrow("Length must be a numerical value.");
+    });
+
+    it('digitsBetween should return true if the field\'s value is only numerical and is in-between the length of the two values supplied.', function() {
+        expect(validatinator.validations.digitsBetween("asdf", 4, 6)).toBeFalsy();
+        expect(validatinator.validations.digitsBetween(123, 1, 2)).toBeFalsy();
+
+        expect(validatinator.validations.digitsBetween(1234, 1, 5)).toBeTruthy();
+
+        expect(function() {
+            validatinator.validations.digitsBetween(113, "1", "234")
+        }).toThrow("minLength and maxLength must both be numerical values.");
+
+        expect(function() {
+            validatinator.validations.digitsBetween(123, 1, "234")
+        }).toThrow("minLength and maxLength must both be numerical values.");
+
+        expect(function() {
+            validatinator.validations.digitsBetween(123, "1", 234)
+        }).toThrow("minLength and maxLength must both be numerical values.");
+    });
+
+    it('email should return true if the field\'s value is a valid email address.', function() {
+        expect(validatinator.validations.email("asdfasdf")).toBeFalsy();
+        expect(validatinator.validations.email("asdfasdf@asdfasdf")).toBeFalsy();
+
+        expect(validatinator.validations.email("me@something.com")).toBeTruthy();
+        expect(validatinator.validations.email("me123@youtube.com")).toBeTruthy();
+    });
+
+    it('number should return true if the field\'s value is a valid number.', function() {
+        expect(validatinator.validations.number("123432")).toBeFalsy();
+        expect(validatinator.validations.number("test")).toBeFalsy();
+
+        expect(validatinator.validations.number(123)).toBeTruthy();
+        expect(validatinator.validations.number(123.123)).toBeTruthy();
+    });
+
+    it('ip should return true if the field\'s value is a valid ipv4 or ipv6 address.', function() {
+        expect(validatinator.validations.ip("127.0.0.1.0")).toBeFalsy();
+        expect(validatinator.validations.ip("123123.123123123.12312312423.4324234.233423")).toBeFalsy();
+        expect(validatinator.validations.ip("2001:0:93::asdf:::asdfasd:sadf:dsfa:::fasdfsdv@#$")).toBeFalsy();
+
+        expect(validatinator.validations.ip("0.0.0.0")).toBeTruthy();
+        expect(validatinator.validations.ip("255.255.255.255")).toBeTruthy();
+        expect(validatinator.validations.ip("2001:0:9d38:6abd:1c6c:106:3f57:3792")).toBeTruthy();
     });
 });
