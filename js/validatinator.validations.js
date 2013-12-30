@@ -188,7 +188,7 @@ Validatinator.prototype.validations = {
 
         if (this.utils.getRealType(fieldValue) !== "string")
             return false;
-        return fieldValue.match(emailReg);
+        return emailReg.test(fieldValue);
     },
 
     /**
@@ -199,10 +199,10 @@ Validatinator.prototype.validations = {
      *  @Added: 12/27/2013
      */
     ip: function(fieldValue) {
-        var ipvFourReg = /^((2[0-4]|1\d|[1-9])?\d|25[0-5])(\.(?1)){3}\z+$/;
+
         var ipvSixReg = /^((?=.*::)(?!.*::.+::)(::)?([\dA-F]{1,4}:(:|\b)|){5}|([\dA-F]{1,4}:){6})((([\dA-F]{1,4}((?!\3)::|:\b|$))|(?!\2\3)){2}|(((2[0-4]|1\d|[1-9])?\d|25[0-5])\.?\b){4})$/i;
 
-        if (this.utils.isValueFalsyInNature(fieldValue) || fieldValue.match(ipvFourReg) === null || fieldValue.match(ipvSixReg) === null)
+        if (this.utils.isValueFalsyInNature(fieldValue) || !ipvFourReg.test(fieldValue) || !ipvSixReg.test(fieldValue))
             return false;
         return true;
     },
