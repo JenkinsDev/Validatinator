@@ -7,17 +7,17 @@ Validatinator.prototype.validations = {
      *
      *  @Added: 12/23/2013
      */
-	accepted: function(fieldValue) {
-		// We can't call .toLowerCase(); on a non-string object so let's see if we are clear
-		// here.
-		if (this.utils.isValueFalsyInNature(fieldValue))
-			return false;
+    accepted: function(fieldValue) {
+        // We can't call .toLowerCase(); on a non-string object so let's see if we are clear
+        // here.
+        if (this.utils.isValueFalsyInNature(fieldValue))
+            return false;
 
-		// Case sensitivity shouldn't matter here as long as our value is a string.
-		fieldValue = (typeof fieldValue === "string") ? fieldValue.toLowerCase() : fieldValue;
+        // Case sensitivity shouldn't matter here as long as our value is a string.
+        fieldValue = (typeof fieldValue === "string") ? fieldValue.toLowerCase() : fieldValue;
 
         return (fieldValue === "yes" || fieldValue === "on" || fieldValue);
-	},
+    },
 
     /**
      *  Validatinator.validations.alpha(fieldValue);
@@ -102,12 +102,12 @@ Validatinator.prototype.validations = {
      *
      *  @Added: 12/23/2013
      */
-	confirmed: function(fieldValue, confirmationFieldValue, strict) {
+    confirmed: function(fieldValue, confirmationFieldValue, strict) {
         if (strict === undefined || strict === null)
             strict = true;
 
         if (strict)
-        	return fieldValue === confirmationFieldValue;
+            return fieldValue === confirmationFieldValue;
         return fieldValue.toLowerCase() === confirmationFieldValue.toLowerCase();
     },
 
