@@ -167,13 +167,11 @@ describe("Validations", function() {
         expect(validatinator.validations.number(123.123)).toBeTruthy();
     });
 
-    it('ip should return true if the field\'s value is a valid ipv4 or ipv6 address.', function() {
-        expect(validatinator.validations.ip("127.0.0.1.0")).toBeFalsy();
-        expect(validatinator.validations.ip("123123.123123123.12312312423.4324234.233423")).toBeFalsy();
-        expect(validatinator.validations.ip("2001:0:93::asdf:::asdfasd:sadf:dsfa:::fasdfsdv@#$")).toBeFalsy();
+    it('ipvFour should return true if the field\'s value is a valid ipv4 or ipv6 address.', function() {
+        expect(validatinator.validations.ipvFour("127.0.0.1.0")).toBeFalsy();
+        expect(validatinator.validations.ipvFour("123123.123123123.12312312423.4324234.233423")).toBeFalsy();
 
-        expect(validatinator.validations.ip("0.0.0.0")).toBeTruthy();
-        expect(validatinator.validations.ip("255.255.255.255")).toBeTruthy();
-        expect(validatinator.validations.ip("2001:0:9d38:6abd:1c6c:106:3f57:3792")).toBeTruthy();
+        expect(validatinator.validations.ipvFour("0.0.0.0")).toBeTruthy();
+        expect(validatinator.validations.ipvFour("255.255.255.255")).toBeTruthy();
     });
 });

@@ -192,19 +192,22 @@ Validatinator.prototype.validations = {
     },
 
     /**
-     *  Validatiantor.validations.ip(fieldValue);
+     *  Validatiantor.validations.ipvFour(fieldValue);
      *
-     *  Checks to make sure the field value supplied is a valid ip address; ipv4 or ipv6.
+     *  Checks to make sure the field value supplied is a valid ipv4 address based off
+     *  of the RFC specs provided.
      *
-     *  @Added: 12/27/2013
+     *  @Added: 12/30/2013
      */
-    ip: function(fieldValue) {
-        var ipvFourReg = /^((2[0-4]|1\d|[1-9])?\d|25[0-5])(\.(?1)){3}\z$/;
-        var ipvSixReg = /^((?=.*::)(?!.*::.+::)(::)?([\dA-F]{1,4}:(:|\b)|){5}|([\dA-F]{1,4}:){6})((([\dA-F]{1,4}((?!\3)::|:\b|$))|(?!\2\3)){2}|(((2[0-4]|1\d|[1-9])?\d|25[0-5])\.?\b){4})$/i;
-
-        if (this.utils.isValueFalsyInNature(fieldValue) || !ipvFourReg.test(fieldValue) || !ipvSixReg.test(fieldValue))
+    ipvFour: function(fieldValue) {
+        if (this.utils.isValueFalsyInNature(fieldValue))
             return false;
-        return true;
+
+        // Get an array with all four of our integer values.
+        var ipvFourReg = fieldValue.match(/^(\d+)\.(\d+)\.(\d+)\.(\d+)$/);
+        // Here we make sure all of our values are less than or equal to 255 as in the RFC for ipv4 it states that each decimal
+        // separated value is 1 byte and the max integer value we can create with 1 byte is 255.  0.0.0.0 >=< 255.255.255.255
+        return (ipvFourReg != null && ipvFourReg[1] <= 255 && ipvFourReg[2] <= 255 && ipvFourReg[3] <= 255 && ipvFourReg[4] <= 255);
     },
 
     /**
