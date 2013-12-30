@@ -98,12 +98,12 @@ describe("Validations", function() {
         expect(validatinator.validations.between(123, 1, 2)).toBeFalsy();
         expect(validatinator.validations.between({}, 1, 20)).toBeFalsy();
 
-        expect(validatinator.validations.between(123.432, 1, 20)).toBeTruthy();
+        expect(validatinator.validations.between(123.432, 1, 300)).toBeTruthy();
         expect(validatinator.validations.between("Testing", 5, 10)).toBeTruthy();
 
         expect(function() {
             validatinator.validations.between(123, "min", "max")
-        }).toThrow("minLength and maxLength must both be numbers in the `between` validation.");
+        }).toThrow("min and max must both be numbers in the `between` validation.");
     });
 
     it('different should return true if the field\'s value is different than the second field value supplied', function() {
@@ -115,40 +115,40 @@ describe("Validations", function() {
         expect(validatinator.validations.different(0, 124)).toBeTruthy();
     });
 
-    it('digits should return true if the field\'s value is only numerical and have the same exact length as supplied.', function() {
-        expect(validatinator.validations.digits("asdf", 4)).toBeFalsy();
-        expect(validatinator.validations.digits(123, 5)).toBeFalsy();
-        expect(validatinator.validations.digits({}, 5)).toBeFalsy();
+    it('digitsLength should return true if the field\'s value is only numerical and have the same exact length as supplied.', function() {
+        expect(validatinator.validations.digitsLength("asdf", 4)).toBeFalsy();
+        expect(validatinator.validations.digitsLength(123, 5)).toBeFalsy();
+        expect(validatinator.validations.digitsLength({}, 5)).toBeFalsy();
 
-        expect(validatinator.validations.digits(123, 3)).toBeTruthy();
-        expect(validatinator.validations.digits(0, 1)).toBeTruthy();
-
-        expect(function() {
-            validatinator.validations.digits(123)
-        }).toThrow("Length must be a numerical value.");
+        expect(validatinator.validations.digitsLength(123, 3)).toBeTruthy();
+        expect(validatinator.validations.digitsLength(0, 1)).toBeTruthy();
 
         expect(function() {
-            validatinator.validations.digits(123, "asdf");
-        }).toThrow("Length must be a numerical value.");
+            validatinator.validations.digitsLength(123)
+        }).toThrow("length must be of numerical value in the `digitsLength` validation.");
+
+        expect(function() {
+            validatinator.validations.digitsLength(123, "asdf");
+        }).toThrow("length must be of numerical value in the `digitsLength` validation.");
     });
 
-    it('digitsBetween should return true if the field\'s value is only numerical and is in-between the length of the two values supplied.', function() {
-        expect(validatinator.validations.digitsBetween("asdf", 4, 6)).toBeFalsy();
-        expect(validatinator.validations.digitsBetween(123, 1, 2)).toBeFalsy();
+    it('digitsLengthBetween should return true if the field\'s value is only numerical and is in-between the length of the two values supplied.', function() {
+        expect(validatinator.validations.digitsLengthBetween("asdf", 4, 6)).toBeFalsy();
+        expect(validatinator.validations.digitsLengthBetween(123, 1, 2)).toBeFalsy();
 
-        expect(validatinator.validations.digitsBetween(1234, 1, 5)).toBeTruthy();
-
-        expect(function() {
-            validatinator.validations.digitsBetween(113, "1", "234")
-        }).toThrow("minLength and maxLength must both be numerical values.");
+        expect(validatinator.validations.digitsLengthBetween(1234, 1, 5)).toBeTruthy();
 
         expect(function() {
-            validatinator.validations.digitsBetween(123, 1, "234")
-        }).toThrow("minLength and maxLength must both be numerical values.");
+            validatinator.validations.digitsLengthBetween(113, "1", "234")
+        }).toThrow("minLength and maxLength must both be numerical values in the `digitsLengthBetween` validation.");
 
         expect(function() {
-            validatinator.validations.digitsBetween(123, "1", 234)
-        }).toThrow("minLength and maxLength must both be numerical values.");
+            validatinator.validations.digitsLengthBetween(123, 1, "234")
+        }).toThrow("minLength and maxLength must both be numerical values in the `digitsLengthBetween` validation.");
+
+        expect(function() {
+            validatinator.validations.digitsLengthBetween(123, "1", 234)
+        }).toThrow("minLength and maxLength must both be numerical values in the `digitsLengthBetween` validation.");
     });
 
     it('email should return true if the field\'s value is a valid email address.', function() {
@@ -159,19 +159,36 @@ describe("Validations", function() {
         expect(validatinator.validations.email("me123@youtube.com")).toBeTruthy();
     });
 
-    it('number should return true if the field\'s value is a valid number.', function() {
-        expect(validatinator.validations.number("123432")).toBeFalsy();
-        expect(validatinator.validations.number("test")).toBeFalsy();
-
-        expect(validatinator.validations.number(123)).toBeTruthy();
-        expect(validatinator.validations.number(123.123)).toBeTruthy();
-    });
-
     it('ipvFour should return true if the field\'s value is a valid ipv4 or ipv6 address.', function() {
         expect(validatinator.validations.ipvFour("127.0.0.1.0")).toBeFalsy();
         expect(validatinator.validations.ipvFour("123123.123123123.12312312423.4324234.233423")).toBeFalsy();
 
         expect(validatinator.validations.ipvFour("0.0.0.0")).toBeTruthy();
         expect(validatinator.validations.ipvFour("255.255.255.255")).toBeTruthy();
+    });
+
+    it('max should return true if the field\'s value is below or equal too the maximum value supplied.', function() {
+        expect(validatinator.validations.max(40, 20)).toBeFalsy();
+        expect(validatinator.validations.max({}, 40)).toBeFalsy();
+        expect(validatinator.validations.max("asdfasdf", 1)).toBeFalsy();
+
+        expect(validatinator.validations.max(0, 20)).toBeTruthy();
+        expect(validatinator.validations.max(40.50, 41)).toBeTruthy();
+    });
+
+    it('min should return true if the field\'s value is below or equal too the maximum value supplied.', function() {
+        expect(validatinator.validations.min({}, 40)).toBeFalsy();
+        expect(validatinator.validations.min("asdfasdf", 1)).toBeFalsy();
+
+        expect(validatinator.validations.min(40, 20)).toBeTruthy();
+        expect(validatinator.validations.min(40.50, 40)).toBeTruthy();
+    });
+
+    it('number should return true if the field\'s value is a valid number.', function() {
+        expect(validatinator.validations.number("123432")).toBeFalsy();
+        expect(validatinator.validations.number("test")).toBeFalsy();
+
+        expect(validatinator.validations.number(123)).toBeTruthy();
+        expect(validatinator.validations.number(123.123)).toBeTruthy();
     });
 });

@@ -68,29 +68,30 @@ Validatinator.prototype.validations = {
     },
 
     /**
-     *  Validatinator.validations.between(fieldValue, minLength, maxLength);
+     *  Validatinator.validations.between(fieldValue, min, max);
      *
-     *  Checks to make sure our field's value's length is is between the minimum and maximum
-     *  value passed in.
+     *  Checks to make sure the field value supplied is between the minimum value and maximum
+     *  value.
+     *  
+     *  If the field value is of the numerical type then we test to make sure the numerical
+     *  value is between the minimum and maximum.  If the field value is of the string data type then
+     *  we test the string's length against the minimum and maximum values.
      *
      *  @Added: 12/25/2013 *CHRISTMAS DAY!*
      */
-    between: function(fieldValue, minLength, maxLength) {
+    between: function(fieldValue, min, max) {
         var fieldValueType = this.parent.utils.getRealType(fieldValue);
 
-        if (this.utils.getRealType(minLength) !== "number" || this.utils.getRealType(maxLength) !== "number")
-            throw new Error("minLength and maxLength must both be numbers in the `between` validation.");
+        if (this.utils.getRealType(min) !== "number" || this.utils.getRealType(max) !== "number")
+            throw new Error("min and max must both be numbers in the `between` validation.");
 
-        // We only want to deal with string's and numbers (int, float, etc.)  If something else is supplied then
-        // we will automatically fail.  Possible TODO: Change to throw an error?
-        if (fieldValueType !== "string" && fieldValueType !== "number")
-            return false;
+        if (fieldValueType === "number")
+            return (min <= fieldValue && fieldValue <= max);
+        else if (fieldValueType === "string")
+            return (min <= fieldValue.length && fieldValue.length <= max);
 
-        // If we are working with a number then we need to transfer it to a string so we can make use of the
-        // .length property.
-        fieldValue = (fieldValueType === "number") ? String(fieldValue) : fieldValue;
-
-        return (minLength <= fieldValue.length && fieldValue.length <= maxLength);
+        // If our field's value type is not a string or numerical value then we will just return false.
+        return false;
     },
 
     /**
@@ -134,16 +135,16 @@ Validatinator.prototype.validations = {
     },
 
     /**
-     *  Validatinator.validations.digits(fieldValue, length);
+     *  Validatinator.validations.digitsLength(fieldValue, length);
      *
      *  Checks to make sure the field value is only numerical and that the length of the value
      *  is exactly the length supplied.
      *
      *  @Added: 12/26/2013
      */ 
-    digits: function(fieldValue, length) {
+    digitsLength: function(fieldValue, length) {
         if (length === undefined || length === null || this.parent.utils.getRealType(length) !== "number")
-            throw new Error("Length must be a numerical value.");
+            throw new Error("length must be of numerical value in the `digitsLength` validation.");
 
         if (this.utils.getRealType(fieldValue) !== "number")
             return false;
@@ -161,10 +162,10 @@ Validatinator.prototype.validations = {
      *
      *  @Added: 12/26/2013
      */
-    digitsBetween: function(fieldValue, minLength, maxLength) {
+    digitsLengthBetween: function(fieldValue, minLength, maxLength) {
         if (this.utils.isValueFalsyInNature(minLength) || this.utils.isValueFalsyInNature(maxLength)
                 || this.utils.getRealType(minLength) !== "number" || this.utils.getRealType(maxLength) !== "number")
-            throw new Error("minLength and maxLength must both be numerical values.");
+            throw new Error("minLength and maxLength must both be numerical values in the `digitsLengthBetween` validation.");
 
         if (this.utils.getRealType(fieldValue) !== "number")
             return false;
@@ -205,9 +206,56 @@ Validatinator.prototype.validations = {
 
         // Get an array with all four of our integer values.
         var ipvFourReg = fieldValue.match(/^(\d+)\.(\d+)\.(\d+)\.(\d+)$/);
+
         // Here we make sure all of our values are less than or equal to 255 as in the RFC for ipv4 it states that each decimal
         // separated value is 1 byte and the max integer value we can create with 1 byte is 255.  0.0.0.0 >=< 255.255.255.255
         return (ipvFourReg != null && ipvFourReg[1] <= 255 && ipvFourReg[2] <= 255 && ipvFourReg[3] <= 255 && ipvFourReg[4] <= 255);
+    },
+
+    /**
+     *  Validatinator.validations.max(fieldValue, max);
+     *
+     *  Checks to make sure the field value supplied is less than or equal to the max
+     *  value supplied.
+     *
+     *  @Added: 12/30/2013
+     */
+    max: function(fieldValue, max) {
+        if (this.utils.isValueFalsyInNature(max) || this.utils.getRealType(max) !== "number")
+            throw new Error("max must be of numerical value in the `max` validation.");
+
+        if (this.utils.isValueFalsyInNature(fieldValue, false))
+            return false;
+
+        // If we are not working with a number then we need to go ahead and convert it to a number.
+        var fieldValue = (this.utils.getRealType(fieldValue) !== "number") ? Number(fieldValue) : fieldValue;
+
+        // Because we are handling the conversion of strings and such to "numbers" then we need to check to make sure
+        // our value is not currently "Not A Number," if it is then we need to abort and return false.
+        return (fieldValue !== NaN) ? fieldValue <= max : false;
+    },
+
+    /**
+     *  Validatinator.validations.min(fieldValue, min);
+     *
+     *  Checks to make sure the field value supplied is greater than or equal to the min
+     *  value supplied.
+     *
+     *  @Added: 12/30/2013
+     */
+    min: function(fieldValue, min) {
+        if (this.utils.isValueFalsyInNature(min) || this.utils.getRealType(min) !== "number")
+            throw new Error("min must be of numerical value in the `min` validation.");
+
+        if (this.utils.isValueFalsyInNature(fieldValue, false))
+            return false;
+
+        // If we are not working with a number then we need to go ahead and convert it to a number.
+        var fieldValue = (this.utils.getRealType(fieldValue) !== "number") ? Number(fieldValue) : fieldValue;
+
+        // Because we are handling the conversion of strings and such to "numbers" then we need to check to make sure
+        // our value is not currently "Not A Number," if it is then we need to abort and return false.
+        return (fieldValue !== NaN) ? fieldValue >= min : false;
     },
 
     /**
