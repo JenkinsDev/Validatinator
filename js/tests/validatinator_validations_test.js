@@ -146,7 +146,7 @@ describe("Validations", function() {
         expect(validatinator.validations.email("me123@youtube.com")).toBeTruthy();
     });
 
-    it('ipvFour should return true if the field\'s value is a valid ipv4 or ipv6 address.', function() {
+    it('ipvFour should return true if the field\'s value is a valid ipv4 address.', function() {
         expect(validatinator.validations.ipvFour("127.0.0.1.0")).toBeFalsy();
         expect(validatinator.validations.ipvFour("123123.123123123.12312312423.4324234.233423")).toBeFalsy();
 
@@ -192,5 +192,16 @@ describe("Validations", function() {
 
         expect(validatinator.validations.same("Test", "test")).toBeFalsy();
         expect(validatinator.validations.same(0, 124)).toBeFalsy();
-    })
+    });
+
+    it('url should return true if the field\'s value is a true URL.', function() {
+        expect(validatinator.validations.url("http://www.googl@")).toBeFalsy();
+        expect(validatinator.validations.url("#@$")).toBeFalsy();
+
+        expect(validatinator.validations.url("http://www.google.com")).toBeTruthy();
+        expect(validatinator.validations.url("www.google.com")).toBeTruthy();
+        expect(validatinator.validations.url("google.com")).toBeTruthy();
+        expect(validatinator.validations.url("https://www.microsoft.com")).toBeTruthy();
+        expect(validatinator.validations.url("https://microsoft.com")).toBeTruthy();
+    });
 });

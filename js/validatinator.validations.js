@@ -313,4 +313,9 @@ Validatinator.prototype.validations = {
         // and flop the returned value.
         return ! this.different(fieldValue, sameFieldValue, strict);
     },
+
+    url: function(fieldValue) {
+        var urlReg = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
+        return urlReg.test(fieldValue);
+    },
 }
