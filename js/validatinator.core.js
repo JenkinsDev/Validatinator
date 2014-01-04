@@ -6,7 +6,7 @@ function Validatinator(validationInformation) {
     
     // Users may want to add validation information later on so we will allow them to create an instance of Validatinator without passing
     // any validation information.
-    this.validationInformation = (this.utils.isValueFalsyInNature(validationInformation) !== undefined) ? this.utils.convertFieldValidationsToArray(validationInformation) : {};
+    this.validationInformation = (validationInformation !== undefined) ? this.utils.convertFieldValidationsToArray(validationInformation) : {};
     this.errors = {};
     this.currentValidatingForm;
     this.currentValidatingField;

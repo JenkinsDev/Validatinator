@@ -10,6 +10,7 @@ describe("Validatinator Utils", function() {
             }
         });
 
+        // Create a shorthand method to access the utils methods.
         utils = validatinator.utils;
     });
 

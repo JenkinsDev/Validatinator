@@ -1,15 +1,14 @@
 describe("Validator Core", function() {
-    var validatinator,
-        validationInformationMock = {
+    var validatinator;
+
+    // Let's make sure we have a fresh Validatinator instance before each `spec.`
+    beforeEach(function() {
+        validatinator = new Validatinator({
             "my-form": {
                 "first-name": "required|min:5|max:10",
                 "last-name": "required"
             }
-        };
-
-    // Let's make sure we have a fresh Validatinator instance before each `spec.`
-    beforeEach(function() {
-        validatinator = new Validatinator(validationInformationMock);
+        });
     });
 
     it('should be created.', function() {
@@ -30,7 +29,12 @@ describe("Validator Core", function() {
 
     describe('Field Validations', function() {
         it('should have validationInformation property populated with real data.', function() {
-            expect(validatinator.validationInformation).toEqual(validationInformationMock);
+            expect(validatinator.validationInformation).toEqual({
+                "my-form": {
+                    "first-name": ["required", "min:5", "max:10"],
+                    "last-name": ["required"]
+                }
+            });
         });
 
         it('should be turned into an array.', function() {

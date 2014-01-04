@@ -17,7 +17,7 @@ Validatinator.prototype.utils = {
                 // Get the current field's validation string.
                 fieldValidation = validationInformation[formName][fieldName];
 
-                console.log(fieldValidation);
+                console.log(fieldValidation.contains("|"));
                 
                 // Go ahead and create a nicely formated array of each field validation; if there is only a single field validation then 
                 // we will use an array literal to create our array ourselves.

@@ -1,6 +1,6 @@
 {
   "name": "Validatinator",
-  "version": "0.0.1",
+  "version": "0.0.2b",
   "devDependencies": {
     "grunt": "~0.4.2",
     "grunt-contrib-uglify": "~0.2.2",
