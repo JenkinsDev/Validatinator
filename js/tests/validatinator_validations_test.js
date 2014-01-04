@@ -148,7 +148,7 @@ describe("Validations", function() {
         expect(validatinator.validations.ipvFour("255.255.255.255")).toBeTruthy();
     });
 
-    it('max should return true if the field\'s value is below or equal too the maximum value supplied.', function() {
+    it('max should return true if the field\'s value is below or equal to the maximum value supplied.', function() {
         expect(validatinator.validations.max(40, 20)).toBeFalsy();
         expect(validatinator.validations.max({}, 40)).toBeFalsy();
         expect(validatinator.validations.max("asdfasdf", 1)).toBeFalsy();
@@ -157,9 +157,9 @@ describe("Validations", function() {
         expect(validatinator.validations.max(40.50, 41)).toBeTruthy();
     });
 
-    it('min should return true if the field\'s value is below or equal too the maximum value supplied.', function() {
+    it('min should return true if the field\'s value is below or equal to the minimum value supplied.', function() {
         expect(validatinator.validations.min({}, 40)).toBeFalsy();
-        expect(validatinator.validations.min("asdfasdf", 1)).toBeFalsy();
+        expect(validatinator.validations.min("asdfasdf", 100)).toBeFalsy();
 
         expect(validatinator.validations.min(40, 20)).toBeTruthy();
         expect(validatinator.validations.min(40.50, 40)).toBeTruthy();

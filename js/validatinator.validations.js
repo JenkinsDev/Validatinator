@@ -107,7 +107,7 @@ Validatinator.prototype.validations = {
         // We cast our field values to strings so all values are of the same data type and we
         // can make use of the toLowerCase method.
         fieldValue = String(fieldValue);
-        differentFieldValue = String(confirmationFieldValue);
+        confirmationFieldValue = String(confirmationFieldValue);
 
         if (strict)
             return fieldValue === confirmationFieldValue;
@@ -215,13 +215,15 @@ Validatinator.prototype.validations = {
         if (this.utils.isValueFalsyInNature(max) || typeof max !== "number")
             throw new Error("max must be of numerical value in the `max` validation.");
 
+        // Pass in false as a second parameter so we are not stuck in strict mode.  Strict mode
+        // makes 0 equate to a falsy value in nature.
         if (this.utils.isValueFalsyInNature(fieldValue, false))
             return false;
 
         if (fieldValueType === "number")
-            return fieldValue >= max;
+            return fieldValue <= max;
         else if (fieldValueType === "string")
-            return fieldValue.length >= max;
+            return fieldValue.length <= max;
         return false;
     },
 
@@ -239,6 +241,8 @@ Validatinator.prototype.validations = {
         if (this.utils.isValueFalsyInNature(min) || typeof min !== "number")
             throw new Error("min must be of numerical value in the `min` validation.");
 
+        // Pass in false as a second parameter so we are not stuck in strict mode.  Strict mode
+        // makes 0 equate to a falsy value in nature.
         if (this.utils.isValueFalsyInNature(fieldValue, false))
             return false;
 
