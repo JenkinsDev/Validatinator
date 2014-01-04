@@ -165,6 +165,12 @@ describe("Validations", function() {
         expect(validatinator.validations.min(40.50, 40)).toBeTruthy();
     });
 
+    it('notIn should return true if the field\'s value is not contained within the list of value supplied.', function() {
+        expect(validatinator.validations.notIn("in", ["in", "not"])).toBeFalsy();
+
+        expect(validatinator.validations.notIn("not", ["in", "it"])).toBeTruthy();
+    });
+
     it('number should return true if the field\'s value is a valid number.', function() {
         expect(validatinator.validations.number("123432")).toBeFalsy();
         expect(validatinator.validations.number("test")).toBeFalsy();

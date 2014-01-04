@@ -253,6 +253,10 @@ Validatinator.prototype.validations = {
         return false;
     },
 
+    notIn: function(fieldValue, containsArray) {
+        return containsArray.indexOf(fieldValue) === -1;
+    },
+
     /**
      *  Validatinator.validations.number(fieldValue);
      *
