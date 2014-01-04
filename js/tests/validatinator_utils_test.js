@@ -13,26 +13,6 @@ describe("Validatinator Utils", function() {
         utils = validatinator.utils;
     });
 
-    it("should return correct data types.", function() {
-        // Array Literal === "Array"
-        expect(utils.getRealType([])).toEqual("array");
-
-        // Object Literal === "object"
-        expect(utils.getRealType({})).toEqual("object");
-
-        // Validatinator "Object" === "object"
-        expect(utils.getRealType(validatinator)).toEqual("validatinator");
-
-        // String === "string"
-        expect(utils.getRealType("test string")).toEqual("string");
-
-        // Empty Argument === "undefined"
-        expect(utils.getRealType()).toEqual("undefined");
-
-        // Null === null
-        expect(utils.getRealType(null)).toEqual(null);
-    });
-
     it("isValueFalsyInNature should return true if value is null, undefined, empty or false; else true", function() {
         expect(utils.isValueFalsyInNature()).toBeTruthy();
         expect(utils.isValueFalsyInNature("")).toBeTruthy();

@@ -1,30 +1,5 @@
 Validatinator.prototype.utils = {
     /**
-     *  Validatinator.utils.getRealType(obj);
-     *
-     *  Here we get the real type.  This is a nice little fix as typeof
-     *  return "Object" with arrays, array literals and a few others.
-     *
-     *  @Added: 12/15/2013
-     */
-    getRealType: function(obj) {
-        var type = (typeof obj).toLowerCase();
-
-        // If the type of our object is "object" then there is a chance
-        // that it is null, test that first.
-        if (type === "object") {
-            if (obj === null)
-                return null;
-
-            // If it's not null then let's get the constructor's name
-            // so we have the `true` object type.
-            return obj.constructor.name.toLowerCase();
-        }
-
-        return type;
-    },
-
-    /**
      *  Validatinator.utils.convertFieldValidationsToArray(validationInformation);
      *
      *  Convert string field validations to array field validations.
@@ -39,12 +14,14 @@ Validatinator.prototype.utils = {
         for (formName in validationInformation) {
             // Loop through each, individual, field that has validation tests attached to it.
             for (fieldName in validationInformation[formName]) {
+                // Get the current field's validation string.
                 fieldValidation = validationInformation[formName][fieldName];
 
-                // If the user has passed in an array then we want to go ahead and skip this portion as we `trust` them
-                // to understand that there shouldn't be any pipe characters.
-                if (this.getRealType(fieldValidation) !== "array")
-                    validationInformation[formName][fieldName] = (fieldValidation.contains("|")) ? fieldValidation.split("|") : [fieldValidation];
+                console.log(fieldValidation);
+                
+                // Go ahead and create a nicely formated array of each field validation; if there is only a single field validation then 
+                // we will use an array literal to create our array ourselves.
+                validationInformation[formName][fieldName] = (fieldValidation.contains("|")) ? fieldValidation.split("|") : [fieldValidation];
             }
         }
 

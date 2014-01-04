@@ -6,12 +6,12 @@ function Validatinator(validationInformation) {
     
     // Users may want to add validation information later on so we will allow them to create an instance of Validatinator without passing
     // any validation information.
-    this.validationInformation = (typeof validationInformation !== undefined) ? this.utils.convertFieldValidationsToArray(validationInformation) : {};
+    this.validationInformation = (this.utils.isValueFalsyInNature(validationInformation) !== undefined) ? this.utils.convertFieldValidationsToArray(validationInformation) : {};
     this.errors = {};
     this.currentValidatingForm;
     this.currentValidatingField;
-    // We will give each of our sub classes a parent property so they can easily, interchangebly, call each other's methods.
-    this.utils.parent = this;
+
+    // Give our validations prototype object the properties needed to access the parent and utils methods.
     this.validations.parent = this;
     this.validations.utils = this.utils;
 
@@ -44,12 +44,12 @@ function Validatinator(validationInformation) {
 
         for (fieldName in this.validationInformation[formName]) {
             this.currentValidatingField = fieldName;
-            this.testValidations(this.validationInformation[formName][fieldName]);
+            this.testValidationArray(this.validationInformation[formName][fieldName]);
         }
     }
 
     /**
-     *  Validatinator.testValidations();
+     *  Validatinator.testValidationArray();
      *
      *  Loops through each individual validation and attempts
      *  to call the validation if the validation method exists.

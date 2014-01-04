@@ -12,25 +12,6 @@ describe("Validations", function() {
                 "last-name": "required"
             }
         });
-
-        // Setting up the DOM elements for use within testing.
-        myForm = document.createElement('form');
-        myForm2 = document.createElement('form');
-
-        firstName = document.createElement('input');
-        lastName = document.createElement('input');
-
-        firstName.setAttribute('name', 'first-name');
-        lastName.setAttribute('name', 'last-name');
-
-        firstName.value = "";
-        lastName.value = "Jenkins";
-
-        document.body.appendChild(myForm);
-        document.body.appendChild(myForm2);
-
-        myForm.appendChild(firstName);
-        myForm2.appendChild(lastName);
     });
 
     it('required should return false on empty, undefined or null and true on anything else.', function() {

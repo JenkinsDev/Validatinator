@@ -3,8 +3,7 @@ describe("Validator Core", function() {
         validationInformationMock = {
             "my-form": {
                 "first-name": "required|min:5|max:10",
-                "last-name": "required",
-                "email": ['required', 'email']
+                "last-name": "required"
             }
         };
 
@@ -39,8 +38,6 @@ describe("Validator Core", function() {
             expect(validatinator.validationInformation["my-form"]["first-name"]).toEqual(['required', 'min:5', 'max:10']);
             // Field validation, no pipe separators, then turn that single string into a single indexed array.
             expect(validatinator.validationInformation["my-form"]["last-name"]).toEqual(['required']);
-            // Field validation as array; let's make sure it doesn't change it's form.
-            expect(validatinator.validationInformation["my-form"]["email"]).toEqual(['required', 'email']);
         });
 
         it('should handle bad and good method calls.', function() {
