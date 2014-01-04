@@ -298,6 +298,19 @@ Validatinator.prototype.validations = {
     required: function(fieldValue) {
         // Flip the boolean return value because if the value is falsy in nature then it returns
         // true; we want to return true if the value exists, not if it is falsy.
-        return !this.utils.isValueFalsyInNature(fieldValue, false);
+        return ! this.utils.isValueFalsyInNature(fieldValue, false);
+    },
+
+    /**
+     *  Validatinator.validations.same(fieldValue, sameFieldValue, strict);
+     *
+     *  Checks to make sure the two field value's provided are, in fact, the same in value.
+     *
+     *  @Added: 1/4/2014
+     */
+    same: function(fieldValue, sameFieldValue, strict) {
+        // Since our `different` field validation checks to see if two values are different we can use it
+        // and flop the returned value.
+        return ! this.different(fieldValue, sameFieldValue, strict);
     },
 }

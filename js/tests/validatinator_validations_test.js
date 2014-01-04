@@ -184,4 +184,13 @@ describe("Validations", function() {
         expect(validatinator.validations.number(123)).toBeTruthy();
         expect(validatinator.validations.number(123.123)).toBeTruthy();
     });
+
+    it('same should return true if the field\'s value is equal to the value passed in.', function() {
+        expect(validatinator.validations.same("test", "test")).toBeTruthy();
+        expect(validatinator.validations.same(123, 123)).toBeTruthy();
+        expect(validatinator.validations.same("TEST", "test", false)).toBeTruthy();
+
+        expect(validatinator.validations.same("Test", "test")).toBeFalsy();
+        expect(validatinator.validations.same(0, 124)).toBeFalsy();
+    })
 });
