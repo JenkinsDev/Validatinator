@@ -115,6 +115,18 @@ Validatinator.prototype.validations = {
     },
 
     /**
+     *  Validatinator.validations.contains(fieldValue, containsArray);
+     *
+     *  Checks to make sure the field's value is contained within the
+     *  contains array.
+     *
+     *  @Added: 1/4/2014
+     */
+    contains: function(fieldValue, containsArray) {
+        return containsArray.indexOf(fieldValue) !== -1;
+    },
+
+    /**
      *  Validatinator.validations.different(fieldValue, differentFieldValue, strict);
      *
      *  Checks to make sure the two field value's provided are, in fact, different in value.
@@ -253,8 +265,16 @@ Validatinator.prototype.validations = {
         return false;
     },
 
+    /**
+     *  Validatinator.validations.notIn(fieldValue, containsArray);
+     *
+     *  Checks to make sure the field's value is not contained within the
+     *  contains array.
+     *
+     *  @Added: 1/4/2014
+     */
     notIn: function(fieldValue, containsArray) {
-        return containsArray.indexOf(fieldValue) === -1;
+        return ! this.contains(fieldValue, containsArray);
     },
 
     /**

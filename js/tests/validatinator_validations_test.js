@@ -74,7 +74,7 @@ describe("Validations", function() {
         expect(validatinator.validations.alphaNum("This-Is-A-Test_0-9")).toBeTruthy();
     });
 
-    it('between should return true if the field value\'s length is between the min and max number', function() {
+    it('between should return true if the field\'s value length is between the min and max number', function() {
         expect(validatinator.validations.between("value", 20, 30)).toBeFalsy();
         expect(validatinator.validations.between(123, 1, 2)).toBeFalsy();
         expect(validatinator.validations.between({}, 1, 20)).toBeFalsy();
@@ -85,6 +85,12 @@ describe("Validations", function() {
         expect(function() {
             validatinator.validations.between(123, "min", "max")
         }).toThrow("min and max must both be numbers in the `between` validation.");
+    });
+
+    it('contains should return true if the field\'s value is contained within the array of values', function() {
+        expect(validatinator.validations.contains("in", ["in", "not"])).toBeTruthy();
+
+        expect(validatinator.validations.contains("not", ["in", "it"])).toBeFalsy();
     });
 
     it('different should return true if the field\'s value is different than the second field value supplied', function() {
