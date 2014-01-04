@@ -59,18 +59,37 @@ function Validatinator(validationInformation) {
     this.testValidationArray = function(fieldValidationArray) {
         var form,
             fieldValue,
+            fieldElementsArray,
+            fieldElement,
             i;
 
         form = document.getElementsByName(this.currentValidatingForm)[0];
-        fieldValue = form.getElementsByName(this.currentValidatingField)[0].value;
+        // Instead of getting the first element in the returned array we will loop
+        // through each of the returned items and check to make sure the input we will
+        // be validating against is truly within the form we are currently validating.
+        fieldElementsArray = document.getElementsByName(this.currentValidatingField);
+
+        for (i=0; i<fieldElementsArray.length; i++) {
+            fieldElement = fieldElementsArray[i];
+
+            // Making sure the element is truly within the form we are validating against.
+            if (fieldElement.form.name === this.currentValidatingForm) {
+                fieldValue = fieldElement.value;
+                break;
+            }
+        }
+
+        // If no field value was stored then we will assume that the field couldn't be found.
+        if (!fieldValue)
+            throw new Error("Couldn't find the field element: " + this.currentValidatingField);
         
         // Now that we are inside the actual validation array, let's loop through each validation.
-        for (i=0; i<fieldValidationArray.length; i++) {
+        for (j=0; j<fieldValidationArray.length; j++) {
             // We need to check to see if the validation actually exists; if it doesn't then we need to throw an error.
             if (! (fieldValidationArray[i] in this["validations"]))
                 throw new Error("Validation does not exist: " + fieldValidationArray[i]);
             
-            // If the validation does exist then call it.
+            // Validation exists, let's call it (Yes it's a bit of a weird method).
             this["validations"][fieldValidationArray[i]](fieldValue);
         }
     }

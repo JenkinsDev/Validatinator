@@ -12,7 +12,7 @@ describe("Validator Core", function() {
     });
 
     it('should be created.', function() {
-        expect(validatinator).toEqual(jasmine.any(Object));
+        expect(validatinator).toEqual(jasmine.any(Validatinator));
     });
 
     // During initial development I had Validatinator set up under the singleton design pattern,
@@ -27,7 +27,26 @@ describe("Validator Core", function() {
         expect(validatinator.validationInformation).not.toEqual(validatinatorNew.validationInformation);
     });
 
-    describe('Field Validations', function() {
+    describe('Handling Field Validations', function() {
+        beforeEach(function() {
+            // Creating our testing form.
+            var myForm = document.createElement('form'),
+                firstName = document.createElement('input'),
+                lastName = document.createElement('input');
+
+            myForm.name = "my-form";
+            firstName.name = "first-name";
+            lastName.name = "last-name";
+
+            document.body.appendChild(myForm);
+            // Now that our element is in the dom let's select it again.
+            myForm = document.getElementsByName("my-form")[0];
+
+            // Place our inputs into the form now and then we are done!
+            myForm.appendChild(firstName);
+            myForm.appendChild(lastName);
+        });
+
         it('should have validationInformation property populated with real data.', function() {
             expect(validatinator.validationInformation).toEqual({
                 "my-form": {
@@ -46,7 +65,7 @@ describe("Validator Core", function() {
 
         it('should handle bad and good method calls.', function() {
             // Make sure to add a wrapping, anonymous, function when checking to make sure your methods throw an exception.
-            expect(function() { validatinator.testValidationArray(["fakeValidationMethod"]) }).toThrow();
+            expect(function() { validatinator.testValidationArray(["fakeValidationMethod"]) }).toThrow("Validation does not exist: fakeValidationMethod");
             // If the validation method does exist then let's go ahead and make sure it doesn't throw an exception.
             expect(function() { validatinator.testValidationArray(["required"]) }).not.toThrow("Validation does not exist: required");
         });
