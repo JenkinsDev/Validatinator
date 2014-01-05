@@ -27,4 +27,17 @@ describe("Validatinator Utils", function() {
         expect(utils.isValueFalsyInNature("test")).toBeFalsy();
         expect(utils.isValueFalsyInNature(1)).toBeFalsy();
     });
+
+    it("convertStringToBoolean should return true if 'true' is supplied and false if 'false' is supplied", function() {
+        expect(utils.convertStringToBoolean("TRUE")).toBeTruthy();
+        expect(utils.convertStringToBoolean("FALSE")).toBeFalsy();
+
+        expect(utils.convertStringToBoolean("true")).toBeTruthy();
+        expect(utils.convertStringToBoolean("false")).toBeFalsy();
+
+        expect(utils.convertStringToBoolean(undefined)).toEqual(undefined);
+        expect(utils.convertStringToBoolean(null)).toEqual(null);
+
+        expect(utils.convertStringToBoolean("FOO")).toEqual("FOO");
+    })
 });

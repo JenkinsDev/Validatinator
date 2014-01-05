@@ -8,7 +8,9 @@ Validatinator.prototype.utils = {
      *  @Added: 12/16/2013
      */
     convertFieldValidationsToArray: function(validationInformation) {
-        var fieldValidation;
+        var i,
+            j,
+            fieldValidation;
 
         // Loop through the top level forms.
         for (formName in validationInformation) {
@@ -16,8 +18,6 @@ Validatinator.prototype.utils = {
             for (fieldName in validationInformation[formName]) {
                 // Get the current field's validation string.
                 fieldValidation = validationInformation[formName][fieldName];
-
-                console.log(fieldValidation.contains("|"));
                 
                 // Go ahead and create a nicely formated array of each field validation; if there is only a single field validation then 
                 // we will use an array literal to create our array ourselves.
@@ -26,6 +26,26 @@ Validatinator.prototype.utils = {
         }
 
         return validationInformation;
+    },
+
+    /**
+     *  Validationator.utils.convertStringToBoolean(stringRepresentation);
+     *
+     *  Converts string representations of the boolean values to their actual boolean
+     *  values.  "true" => true, "false" => false.
+     *
+     *  @Added: 1/5/2014
+     */
+    convertStringToBoolean: function(stringRepresentation) {
+        if (typeof stringRepresentation !== "string")
+            return stringRepresentation;
+
+        if (stringRepresentation.toLowerCase() === "false")
+            return false;
+        else if (stringRepresentation.toLowerCase() === "true")
+            return true;
+
+        return stringRepresentation
     },
 
     /**

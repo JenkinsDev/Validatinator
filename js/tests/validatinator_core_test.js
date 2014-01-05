@@ -44,21 +44,25 @@ describe("Validator Core", function() {
     });
 
     it('should return an array with the first element being the validation method and the second element containing any extra parameters', function() {
+        expect(validatinator.getValidationMethodAndParameters("min:5")).toEqual(["min", ["5"]]);
 
+        expect(validatinator.getValidationMethodAndParameters("between:5,10")).toEqual(["between", ["5", "10"]]);
+
+        expect(validatinator.getValidationMethodAndParameters("notIn:Foo,Bar,Baz")).toEqual(["notIn", ["Foo", "Bar", "Baz"]]);
+
+        expect(validatinator.getValidationMethodAndParameters("notIn:Foo,Bar,Baz:false")).toEqual(["notIn", [["Foo", "Bar", "Baz"], false]]);
     });
 
-    it('should return an array with any extra parameters for the validation functions.', function() {
-        expect(validatinator.stripExtraParameters("5")).toEqual(["5"]);
+    it('prepareParameters should return an array with any extra parameters for the validation functions.', function() {
+        expect(validatinator.prepareParameters(["5"])).toEqual(["5"]);
 
-        expect(validatinator.stripExtraParameters("")).toEqual([""]);
+        expect(validatinator.prepareParameters(["5", "10"])).toEqual(["5", "10"]);
 
-        expect(validatinator.stripExtraParameters("5:10")).toEqual(["5", "10"]);
+        expect(validatinator.prepareParameters(["someFieldName", "false"])).toEqual(["someFieldName", false]);
 
-        expect(validatinator.stripExtraParameters("someFieldName:false")).toEqual(["someFieldName", false]);
+        expect(validatinator.prepareParameters(["someFieldName", "true"])).toEqual(["someFieldName", true]);
 
-        expect(validatinator.stripExtraParameters("someFieldName:true")).toEqual(["someFieldName", true]);
-
-        expect(validatinator.stripExtraParameters("foo, bar ,baz:false")).toEqual([["foo", "bar", "baz"], false]);
+        expect(validatinator.prepareParameters(["foo,  bar  , baz", "False"])).toEqual([["foo", "bar", "baz"], false]);
     });
 
     describe('Handling Field Validations', function() {
@@ -81,7 +85,7 @@ describe("Validator Core", function() {
             myForm.appendChild(lastName);
         });
 
-        it('get validation array for a specified field.', function() {
+        it('getFieldValidationArray should get validation array for a specified field.', function() {
             validatinator.currentValidatingForm = "my-form";
             validatinator.currentValidatingField = "first-name";
             expect(validatinator.getFieldValidationArray()).toEqual(['required', 'min:5', 'max:10']);

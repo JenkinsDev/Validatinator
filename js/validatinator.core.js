@@ -49,38 +49,36 @@ function Validatinator(validationInformation) {
         }
     }
 
-    this.stripExtraParameters = function(validation) {
-        var i,
-            j,
-            validationParameters = (validation.contains(":")) ? validation.split(":") : validation;
 
-        if (typeof validationParameters === "string")
-            return [validationParameters];
+    /**
+     *  Validatinator.prepareParameters(validationParameters)
+     *
+     *  Preps the parameters so they can be used when making the validation calls.
+     *
+     *  @Added: 1/5/2014
+     */
+    this.prepareParameters = function(validationParameters) {
+        var i,
+            j;
 
         // We need to loop through each of the "extra parameters" and furthur split the `parameters`
         // even more.
         for (i=0; i<validationParameters.length; i++) {
-            // Trim any whitespace from the left and right of the extra parameters.
-            validationParameters[i] === validationParameters[i].trim();
-
             // Check to see if we have third level "parameters" that will be transformed into an array for specific
             // validation methods.  i.e:  not_in:foo,bar,baz.
             if (validationParameters[i].contains(",")) {
                 validationParameters[i] = validationParameters[i].split(",");
                 
                 // Since there was third level "parameters" we will go ahead and loop through each of the elements and
-                // trim away any whitespace again.
+                // trim away any whitespace and convert falsey or truthy values to their boolean representations.
                 for (j=0; j<validationParameters[i].length; j++) {
-                    validationParameters[i][thirdLevelValidationArray] = validationParameters[i][thirdLevelValidationArray].trim();
+                    validationParameters[i][j] = this.utils.convertStringToBoolean(validationParameters[i][j].trim());
                 }
+            } else {
+                // Trim any whitespace and convert falsey or truthy values to their boolean representations
+                validationParameters[i] = this.utils.convertStringToBoolean(validationParameters[i].trim());
             }
-
-            if (validationParameters[i].toLowerCase() === "false") {
-                validationParameters[i] = false;
-            }
-            else if (validationParameters[i].toLowerCase() === "true") {
-                validationParameters[i] = true;
-            }
+        }
 
         return validationParameters;
     }
