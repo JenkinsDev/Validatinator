@@ -8,8 +8,9 @@ function Validatinator(validationInformation) {
     // any validation information.
     this.validationInformation = (validationInformation !== undefined) ? this.utils.convertFieldValidationsToArray(validationInformation) : {};
     this.errors = {};
-    this.currentValidatingForm;
-    this.currentValidatingField;
+    // Current form & field we are validating against.
+    this.currentForm;
+    this.currentField;
 
     // Give our validations prototype object the properties needed to access the parent and utils methods.
     this.validations.parent = this;
@@ -31,21 +32,57 @@ function Validatinator(validationInformation) {
     }
 
     /**
-     *  Validatinator.getValidationArray();
+     *  Validatinator.startValidations();
      *
-     *  Loops through each field that the form contains and passes their validation arrays to
-     *  testValidationArray();
+     *  Start the process of getting the each field that we will be validating for
+     *  and retrieving the actual valdations we will be performing on that field.
      *
-     *  @Added: 12/17/2013
+     *  @Added: 1/4/2014
      */
-    this.getValidationArray = function(formName) {
-        var fieldName;
-        this.currentValidatingForm = formName;
+    this.startValidations = function(formName) {
+        this.currentForm = formName;
 
+        // Go through each of the fields we will be validating against.
         for (fieldName in this.validationInformation[formName]) {
-            this.currentValidatingField = fieldName;
-            this.testValidationArray(this.validationInformation[formName][fieldName]);
+            var currentFieldValidations = this.validationInformation[formName][fieldName];
+            this.currentField = fieldName;
         }
+    }
+
+    this.stripExtraParameters = function(validation) {
+        var i,
+            j,
+            validationParameters = (validation.contains(":")) ? validation.split(":") : validation;
+
+        if (typeof validationParameters === "string")
+            return [validationParameters];
+
+        // We need to loop through each of the "extra parameters" and furthur split the `parameters`
+        // even more.
+        for (i=0; i<validationParameters.length; i++) {
+            // Trim any whitespace from the left and right of the extra parameters.
+            validationParameters[i] === validationParameters[i].trim();
+
+            // Check to see if we have third level "parameters" that will be transformed into an array for specific
+            // validation methods.  i.e:  not_in:foo,bar,baz.
+            if (validationParameters[i].contains(",")) {
+                validationParameters[i] = validationParameters[i].split(",");
+                
+                // Since there was third level "parameters" we will go ahead and loop through each of the elements and
+                // trim away any whitespace again.
+                for (j=0; j<validationParameters[i].length; j++) {
+                    validationParameters[i][thirdLevelValidationArray] = validationParameters[i][thirdLevelValidationArray].trim();
+                }
+            }
+
+            if (validationParameters[i].toLowerCase() === "false") {
+                validationParameters[i] = false;
+            }
+            else if (validationParameters[i].toLowerCase() === "true") {
+                validationParameters[i] = true;
+            }
+
+        return validationParameters;
     }
 
     /**

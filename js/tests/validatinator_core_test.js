@@ -27,6 +27,40 @@ describe("Validator Core", function() {
         expect(validatinator.validationInformation).not.toEqual(validatinatorNew.validationInformation);
     });
 
+    it('should have validationInformation property populated with real data.', function() {
+        expect(validatinator.validationInformation).toEqual({
+            "my-form": {
+                "first-name": ["required", "min:5", "max:10"],
+                "last-name": ["required"]
+            }
+        });
+    });
+
+    it('validations should be turned into an array.', function() {
+        // Field validation as strings, with pip separator(s), let's make sure they are turned into arrays.
+        expect(validatinator.validationInformation["my-form"]["first-name"]).toEqual(['required', 'min:5', 'max:10']);
+        // Field validation, no pipe separators, then turn that single string into a single indexed array.
+        expect(validatinator.validationInformation["my-form"]["last-name"]).toEqual(['required']);
+    });
+
+    it('should return an array with the first element being the validation method and the second element containing any extra parameters', function() {
+
+    });
+
+    it('should return an array with any extra parameters for the validation functions.', function() {
+        expect(validatinator.stripExtraParameters("5")).toEqual(["5"]);
+
+        expect(validatinator.stripExtraParameters("")).toEqual([""]);
+
+        expect(validatinator.stripExtraParameters("5:10")).toEqual(["5", "10"]);
+
+        expect(validatinator.stripExtraParameters("someFieldName:false")).toEqual(["someFieldName", false]);
+
+        expect(validatinator.stripExtraParameters("someFieldName:true")).toEqual(["someFieldName", true]);
+
+        expect(validatinator.stripExtraParameters("foo, bar ,baz:false")).toEqual([["foo", "bar", "baz"], false]);
+    });
+
     describe('Handling Field Validations', function() {
         beforeEach(function() {
             // Creating our testing form.
@@ -47,31 +81,13 @@ describe("Validator Core", function() {
             myForm.appendChild(lastName);
         });
 
-        it('should have validationInformation property populated with real data.', function() {
-            expect(validatinator.validationInformation).toEqual({
-                "my-form": {
-                    "first-name": ["required", "min:5", "max:10"],
-                    "last-name": ["required"]
-                }
-            });
-        });
+        it('get validation array for a specified field.', function() {
+            validatinator.currentValidatingForm = "my-form";
+            validatinator.currentValidatingField = "first-name";
+            expect(validatinator.getFieldValidationArray()).toEqual(['required', 'min:5', 'max:10']);
 
-        it('should be turned into an array.', function() {
-            // Field validation as strings, with pip separator(s), let's make sure they are turned into arrays.
-            expect(validatinator.validationInformation["my-form"]["first-name"]).toEqual(['required', 'min:5', 'max:10']);
-            // Field validation, no pipe separators, then turn that single string into a single indexed array.
-            expect(validatinator.validationInformation["my-form"]["last-name"]).toEqual(['required']);
-        });
-
-        it('should handle bad and good method calls.', function() {
-            // Make sure to add a wrapping, anonymous, function when checking to make sure your methods throw an exception.
-            expect(function() { validatinator.testValidationArray(["fakeValidationMethod"]) }).toThrow("Validation does not exist: fakeValidationMethod");
-            // If the validation method does exist then let's go ahead and make sure it doesn't throw an exception.
-            expect(function() { validatinator.testValidationArray(["required"]) }).not.toThrow("Validation does not exist: required");
-        });
-
-        it('should not throw exception when getting field validation arrays.', function() {
-            expect(function() { validatinator.getValidationArray(["required"]) }).not.toThrow();
+            validatinator.currentValidatingField = "last-name";
+            expect(validatinator.getFieldValidationArray()).toEqual(['required']);
         });
     });
 });
