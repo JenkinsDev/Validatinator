@@ -24,7 +24,7 @@ Validatinator.prototype = {
      */
     fails: function(formName) {
         // Start up the validation process.
-        this.getValidationArray(formName);
+        this.startValidations(formName);
     },
 
     /**
@@ -38,7 +38,7 @@ Validatinator.prototype = {
      */
     passes: function(formName) {
         // Start up the validation process.
-        this.getValidationArray(formName);
+        this.startValidations(formName);
     },
 
     /**
@@ -61,9 +61,19 @@ Validatinator.prototype = {
             this.currentField = fieldName;
             
             for (; i < currentFieldsValidations.length; i++) {
+                var method,
+                    parameters = [];
+
                 currentValidationMethodAndParameters = this.getValidationMethodAndParameters(currentFieldsValidations[i]);
                 currentFieldsValue = this.getCurrentFieldsValue();
                 
+                method = currentValidationMethodAndParameters[0];
+        
+                // Here we check to see if our parameters actually exist and if it does then store it.
+                if (currentValidationMethodAndParameters.length === 2)
+                    parameters = currentValidationMethodAndParameters[1];
+                
+                this.callValidationMethodWithParameters(method, parameters, currentFieldsValue);
             }
         }
     },
@@ -165,35 +175,33 @@ Validatinator.prototype = {
             
         return fieldValue;
     },
-
+    
     /**
-     *  Validatinator.testValidationArray();
-     *
-     *  Loops through each individual validation and attempts
-     *  to call the validation if the validation method exists.
-     *
-     *  @Added: 12/16/2013
+     *  Validatinator.callValidationMethodWithParameters(Array methodAndParameters, Object fieldValue);
+     *  
+     *  Attempts to call the validation method supplied with the provided parameters if
+     *  any parameters exist, if they don't then just call the validation method with
+     *  the current validating field's value.
+     * 
+     *  @Added: 1/9/2014
      */
-    testValidationArray: function(fieldValidationArray) {
-        var form,
-            fieldValue,
-            fieldElementsArray,
-            fieldElement,
-            i;
+    callValidationMethodWithParameters: function(method, parameters, fieldValue) {
+        // We will be using this variable to prepend the fieldValue variable to the parameters variable.  We
+        // do this so we can use the .apply Function method.
+        var fieldValueWithParameters;
 
-
-
-
+        if (! (method in this["validations"]))
+            throw new Error("Validation does not exist: " + method);
         
-        // Now that we are inside the actual validation array, let's loop through each validation.
-        for (j=0; j<fieldValidationArray.length; j++) {
-            // We need to check to see if the validation actually exists; if it doesn't then we need to throw an error.
-            if (! (fieldValidationArray[i] in this["validations"]))
-                throw new Error("Validation does not exist: " + fieldValidationArray[i]);
-            
-            // Validation exists, let's call it (Yes it's a bit of a weird method).
-            this["validations"][fieldValidationArray[i]](fieldValue);
-        }
+        if (!parameters)
+            return this["validations"][method](fieldValue);
+        
+        // We do this so we can use the .apply Function method below.  All parameters for each method call will be based
+        // on the parameters array.
+        parameters.unshift(fieldValue);
+        
+        // Validation exists, let's call it (Yes it's a bit of a weird method).
+        return this["validations"][method].apply(this, parameters);
     },
 };
 

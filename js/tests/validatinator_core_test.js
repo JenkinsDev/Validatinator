@@ -63,7 +63,17 @@ describe("Validator Core", function() {
         expect(validatinator.prepareParameters(["foo,  bar  , baz", "False"])).toEqual([["foo", "bar", "baz"], false]);
     });
     
-    xit('callValidationMethodWithParameters should throw an error if the validation method doesn\'t exist, else a boolean value.', function() {});
+    it('callValidationMethodWithParameters should throw an error if the validation method doesn\'t exist, else a boolean value.', function() {
+        var fakeValue = 'value';
+        
+        expect(function() { validatinator.callValidationMethodWithParameters('required', undefined, fakeValue); }).not.toThrow("Validation does not exist: required");
+        
+        expect(function() { validatinator.callValidationMethodWithParameters('min', ['5'], fakeValue); }).not.toThrow("Validation does not exist: min");
+        
+        expect(function() { validatinator.callValidationMethodWithParameters('between', ['5', '20'], fakeValue); }).not.toThrow("Validation does not exist: between");
+        
+        expect(function() { validatinator.callValidationMethodWithParameters('fakeValidation', ['FOO'], fakeValue); }).toThrow("Validation does not exist: fakeValidation");
+    });
 
     describe('Handling Field Validations', function() {
         beforeEach(function() {
