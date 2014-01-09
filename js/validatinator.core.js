@@ -1,9 +1,4 @@
-function Validatinator(validationInformation) {
-
-    /****************************************/
-    /*            Core Properties           */
-    /****************************************/
-    
+function Validatinator(validationInformation) {   
     // Users may want to add validation information later on so we will allow them to create an instance of Validatinator without passing
     // any validation information.
     this.validationInformation = (validationInformation !== undefined) ? this.utils.convertFieldValidationsToArray(validationInformation) : {};
@@ -15,12 +10,9 @@ function Validatinator(validationInformation) {
     // Give our validations prototype object the properties needed to access the parent and utils methods.
     this.validations.parent = this;
     this.validations.utils = this.utils;
+}
 
-
-    /****************************************/
-    /*             Core Methods             */
-    /****************************************/
-    
+Validatinator.prototype = {
     /**
      *  Validatinator.fails(String formName);
      * 
@@ -30,10 +22,10 @@ function Validatinator(validationInformation) {
      * 
      *  @Added: 12/23/2013
      */
-    this.fails = function(formName) {
+    fails: function(formName) {
         // Start up the validation process.
         this.getValidationArray(formName);
-    };
+    },
 
     /**
      *  Validatinator.passes(String formName);
@@ -44,10 +36,10 @@ function Validatinator(validationInformation) {
      * 
      *  @Added: 12/23/2013
      */
-    this.passes = function(formName) {
+    passes: function(formName) {
         // Start up the validation process.
         this.getValidationArray(formName);
-    };
+    },
 
     /**
      *  Validatinator.startValidations(String formName);
@@ -57,11 +49,11 @@ function Validatinator(validationInformation) {
      *
      *  @Added: 1/4/2014
      */
-    this.startValidations = function(formName) {
-    	var currentFieldsValidations,
-    	    currentFieldsValue,
-    	    currentValidationMethodAndParameters,
-    	    i = 0;
+    startValidations: function(formName) {
+        var currentFieldsValidations,
+            currentFieldsValue,
+            currentValidationMethodAndParameters,
+            i = 0;
         this.currentForm = formName;
 
         for (fieldName in this.validationInformation[formName]) {
@@ -69,12 +61,12 @@ function Validatinator(validationInformation) {
             this.currentField = fieldName;
             
             for (; i < currentFieldsValidations.length; i++) {
-            	currentValidationMethodAndParameters = this.getValidationMethodAndParameters(currentFieldsValidations[i]);
-            	currentFieldsValue = this.getCurrentFieldsValue();
-            	
+                currentValidationMethodAndParameters = this.getValidationMethodAndParameters(currentFieldsValidations[i]);
+                currentFieldsValue = this.getCurrentFieldsValue();
+                
             }
         }
-    };
+    },
     
     /**
      *  Validatinator.getValidationMethodAndParameters(String validationString);
@@ -85,15 +77,15 @@ function Validatinator(validationInformation) {
      * 
      *  @Added: 1/8/2014
      */
-    this.getValidationMethodAndParameters = function(validationString) {
-    	var validationArray,
-    	    validationParameters,
-    	    validationMethod,
-    	    i = 1;
-    	
-    	// If our validationString doesn't have any colons then we will assume
-    	// that the validation does not have any parameters and there is nothing furthur
-    	// we need to do.        
+    getValidationMethodAndParameters: function(validationString) {
+        var validationArray,
+            validationParameters,
+            validationMethod,
+            i = 1;
+        
+        // If our validationString doesn't have any colons then we will assume
+        // that the validation does not have any parameters and there is nothing furthur
+        // we need to do.        
         if (! validationString.contains(":"))
             return [validationString];
             
@@ -104,7 +96,7 @@ function Validatinator(validationInformation) {
         
         // Add the the validation method back onto the front of the array.
         return [validationMethod, this.prepareParameters(validationParameters)];
-    };
+    },
 
 
     /**
@@ -114,7 +106,7 @@ function Validatinator(validationInformation) {
      *
      *  @Added: 1/5/2014
      */
-    this.prepareParameters = function(validationParameters) {
+    prepareParameters: function(validationParameters) {
         var i = 0,
             j = 0;
 
@@ -137,7 +129,7 @@ function Validatinator(validationInformation) {
         }
 
         return validationParameters;
-    };
+    },
     
     /**
      *  Validatinator.getCurrentFieldsValue();
@@ -147,9 +139,9 @@ function Validatinator(validationInformation) {
      * 
      *  @Added: 1/8/2014
      */
-    this.getCurrentFieldsValue = function()  {
-    	var fieldsArray,
-    	    fieldValue;
+    getCurrentFieldsValue: function()  {
+        var fieldsArray,
+            fieldValue;
 
         // Instead of trusting that the first element returned is the actual field, we will go ahead
         // and test if the field is truly within the form that we are validating against.
@@ -172,7 +164,7 @@ function Validatinator(validationInformation) {
             throw new Error("Couldn't find the field element, " + this.currentField + ", for the form, " + this.currentForm + ".");
             
         return fieldValue;
-    };
+    },
 
     /**
      *  Validatinator.testValidationArray();
@@ -182,7 +174,7 @@ function Validatinator(validationInformation) {
      *
      *  @Added: 12/16/2013
      */
-    this.testValidationArray = function(fieldValidationArray) {
+    testValidationArray: function(fieldValidationArray) {
         var form,
             fieldValue,
             fieldElementsArray,
@@ -202,8 +194,9 @@ function Validatinator(validationInformation) {
             // Validation exists, let's call it (Yes it's a bit of a weird method).
             this["validations"][fieldValidationArray[i]](fieldValue);
         }
-    };
-}
+    },
+};
+
 
 // Add the Validatinator "function" to the window object.
 if (typeof window === "object" && typeof window.document === "object")

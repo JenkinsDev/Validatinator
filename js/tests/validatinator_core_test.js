@@ -11,10 +11,6 @@ describe("Validator Core", function() {
         });
     });
 
-    it('should be created.', function() {
-        expect(validatinator).toEqual(jasmine.any(Validatinator));
-    });
-
     // During initial development I had Validatinator set up under the singleton design pattern,
     // not on purpose though.  Let's make sure it stays non-singleton.
     it('should not be singleton pattern enabled.', function() {
