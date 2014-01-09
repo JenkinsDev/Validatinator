@@ -24,12 +24,12 @@ function Validatinator(validationInformation) {
     this.fails = function(formName) {
         // Start up the validation process.
         this.getValidationArray(formName);
-    }
+    };
 
     this.passes = function(formName) {
         // Start up the validation process.
         this.getValidationArray(formName);
-    }
+    };
 
     /**
      *  Validatinator.startValidations();
@@ -47,7 +47,7 @@ function Validatinator(validationInformation) {
             var currentFieldValidations = this.validationInformation[formName][fieldName];
             this.currentField = fieldName;
         }
-    }
+    };
 
 
     /**
@@ -81,7 +81,7 @@ function Validatinator(validationInformation) {
         }
 
         return validationParameters;
-    }
+    };
 
     /**
      *  Validatinator.testValidationArray();
@@ -127,7 +127,7 @@ function Validatinator(validationInformation) {
             // Validation exists, let's call it (Yes it's a bit of a weird method).
             this["validations"][fieldValidationArray[i]](fieldValue);
         }
-    }
+    };
 }
 
 /**

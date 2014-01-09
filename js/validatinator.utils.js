@@ -69,4 +69,4 @@ Validatinator.prototype.utils = {
         // If strict mode is set to true then 0 will be the same as false.
         return (strict) ? !value : value === false;
     }
-}
+};

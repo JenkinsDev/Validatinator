@@ -318,4 +318,4 @@ Validatinator.prototype.validations = {
         var urlReg = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
         return urlReg.test(fieldValue);
     },
-}
+};
