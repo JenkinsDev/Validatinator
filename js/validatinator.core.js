@@ -148,11 +148,9 @@ function Validatinator(validationInformation) {
      *  @Added: 1/8/2014
      */
     this.getCurrentFieldsValue = function()  {
-    	var form,
-    	    fieldsArray,
+    	var fieldsArray,
     	    fieldValue;
 
-        form = document.getElementsByName(this.currentForm)[0];
         // Instead of trusting that the first element returned is the actual field, we will go ahead
         // and test if the field is truly within the form that we are validating against.
         fieldsArray = document.getElementsByName(this.currentField);
