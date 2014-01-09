@@ -21,18 +21,36 @@ function Validatinator(validationInformation) {
     /*             Core Methods             */
     /****************************************/
     
+    /**
+     *  Validatinator.fails(String formName);
+     * 
+     *  Starts the testing phase for each of the form field's validation methods,
+     *  if any of them fails then we return true here and the user can expect the 
+     *  errors object will have populated information.
+     * 
+     *  @Added: 12/23/2013
+     */
     this.fails = function(formName) {
         // Start up the validation process.
         this.getValidationArray(formName);
     };
 
+    /**
+     *  Validatinator.passes(String formName);
+     * 
+     *  Starts the testing phase for each of the form field's validation methods,
+     *  if any of them fail then we return false here and the user can expect the 
+     *  errors object will have populated information.
+     * 
+     *  @Added: 12/23/2013
+     */
     this.passes = function(formName) {
         // Start up the validation process.
         this.getValidationArray(formName);
     };
 
     /**
-     *  Validatinator.startValidations();
+     *  Validatinator.startValidations(String formName);
      *
      *  Start the process of getting the each field that we will be validating for
      *  and retrieving the actual valdations we will be performing on that field.
@@ -40,30 +58,67 @@ function Validatinator(validationInformation) {
      *  @Added: 1/4/2014
      */
     this.startValidations = function(formName) {
+    	var currentFieldsValidations,
+    	    currentValidationMethodAndParameters,
+    	    i = 0;
         this.currentForm = formName;
 
-        // Go through each of the fields we will be validating against.
         for (fieldName in this.validationInformation[formName]) {
-            var currentFieldValidations = this.validationInformation[formName][fieldName];
+            currentFieldsValidations = this.validationInformation[formName][fieldName];
             this.currentField = fieldName;
+            
+            for (; i < currentFieldsValidations.length; i++) {
+            	currentValidationMethodAndParameters = this.getValidationMethodAndParameters(currentFieldsValidations[i]);
+            	
+            	
+            }
         }
+    };
+    
+    /**
+     *  Validatinator.getValidationMethodAndParameters(String validationString);
+     * 
+     *  Take the current validationString and retreive the validation method and
+     *  it's prepared parameters.  Makes a call to prepareParameters to get the
+     *  parameters in a good enough state for the validation method calls.
+     * 
+     *  @Added: 1/8/2014
+     */
+    this.getValidationMethodAndParameters = function(validationString) {
+    	var validationArray,
+    	    validationParameters,
+    	    validationMethod,
+    	    i = 1;
+    	
+    	// If our validationString doesn't have any colons then we will assume
+    	// that the validation does not have any parameters and there is nothing furthur
+    	// we need to do.        
+        if (! validationString.contains(":"))
+            return [validationString];
+            
+        validationParameters = validationString.split(":");
+        // Remove the first element off the array as that is always going to be the validation
+        // method, we are only worried about the parameters at this time.
+        validationMethod = validationParameters.shift();
+        
+        // Add the the validation method back onto the front of the array.
+        return [validationMethod, this.prepareParameters(validationParameters)];
     };
 
 
     /**
-     *  Validatinator.prepareParameters(validationParameters)
+     *  Validatinator.prepareParameters(Array validationParameters)
      *
      *  Preps the parameters so they can be used when making the validation calls.
      *
      *  @Added: 1/5/2014
      */
     this.prepareParameters = function(validationParameters) {
-        var i,
-            j;
+        var i = 0,
+            j = 0;
 
-        // We need to loop through each of the "extra parameters" and furthur split the `parameters`
-        // even more.
-        for (i=0; i<validationParameters.length; i++) {
+        // We need to loop through each of the "extra parameters" and furthur split the `parameters` if need be.
+        for (; i < validationParameters.length; i++) {
             // Check to see if we have third level "parameters" that will be transformed into an array for specific
             // validation methods.  i.e:  not_in:foo,bar,baz.
             if (validationParameters[i].contains(",")) {
@@ -71,7 +126,7 @@ function Validatinator(validationInformation) {
                 
                 // Since there was third level "parameters" we will go ahead and loop through each of the elements and
                 // trim away any whitespace and convert falsey or truthy values to their boolean representations.
-                for (j=0; j<validationParameters[i].length; j++) {
+                for (; j < validationParameters[i].length; j++) {
                     validationParameters[i][j] = this.utils.convertStringToBoolean(validationParameters[i][j].trim());
                 }
             } else {
