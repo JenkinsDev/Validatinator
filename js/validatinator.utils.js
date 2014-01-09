@@ -45,7 +45,7 @@ Validatinator.prototype.utils = {
         else if (stringRepresentation.toLowerCase() === "true")
             return true;
 
-        return stringRepresentation
+        return stringRepresentation;
     },
 
     /**

@@ -59,6 +59,7 @@ function Validatinator(validationInformation) {
      */
     this.startValidations = function(formName) {
     	var currentFieldsValidations,
+    	    currentFieldsValue,
     	    currentValidationMethodAndParameters,
     	    i = 0;
         this.currentForm = formName;
@@ -69,7 +70,7 @@ function Validatinator(validationInformation) {
             
             for (; i < currentFieldsValidations.length; i++) {
             	currentValidationMethodAndParameters = this.getValidationMethodAndParameters(currentFieldsValidations[i]);
-            	
+            	currentFieldsValue = this.getCurrentFieldsValue();
             	
             }
         }
@@ -137,6 +138,43 @@ function Validatinator(validationInformation) {
 
         return validationParameters;
     };
+    
+    /**
+     *  Validatinator.getCurrentFieldsValue();
+     * 
+     *  Attempts to get the current validating field's value from the dom.  If the field cannot be found then
+     *  we will simply throw an Error stating as such.
+     * 
+     *  @Added: 1/8/2014
+     */
+    this.getCurrentFieldsValue = function()  {
+    	var form,
+    	    fieldsArray,
+    	    fieldValue;
+
+        form = document.getElementsByName(this.currentForm)[0];
+        // Instead of trusting that the first element returned is the actual field, we will go ahead
+        // and test if the field is truly within the form that we are validating against.
+        fieldsArray = document.getElementsByName(this.currentField);
+
+        for (i=0; i<fieldsArray.length; i++) {
+            fieldElement = fieldsArray[i];
+
+            // We are running a simple test to see if the current field in the returned array is part of
+            // our validating field or not.  If it is then grab it's value and break out of this test loop.
+            if (fieldElement.form.name === this.currentForm) {
+                fieldValue = fieldElement.value;
+                break;
+            }
+        }
+ 
+        // If no field value was stored then we will assume that the field couldn't be found.  An empty string is
+        // not considered a "non-stored field value."
+        if (!fieldValue && fieldValue !== "")
+            throw new Error("Couldn't find the field element, " + this.currentField + ", for the form, " + this.currentForm + ".");
+            
+        return fieldValue;
+    };
 
     /**
      *  Validatinator.testValidationArray();
@@ -153,25 +191,9 @@ function Validatinator(validationInformation) {
             fieldElement,
             i;
 
-        form = document.getElementsByName(this.currentValidatingForm)[0];
-        // Instead of getting the first element in the returned array we will loop
-        // through each of the returned items and check to make sure the input we will
-        // be validating against is truly within the form we are currently validating.
-        fieldElementsArray = document.getElementsByName(this.currentValidatingField);
 
-        for (i=0; i<fieldElementsArray.length; i++) {
-            fieldElement = fieldElementsArray[i];
 
-            // Making sure the element is truly within the form we are validating against.
-            if (fieldElement.form.name === this.currentValidatingForm) {
-                fieldValue = fieldElement.value;
-                break;
-            }
-        }
 
-        // If no field value was stored then we will assume that the field couldn't be found.
-        if (!fieldValue)
-            throw new Error("Couldn't find the field element: " + this.currentValidatingField);
         
         // Now that we are inside the actual validation array, let's loop through each validation.
         for (j=0; j<fieldValidationArray.length; j++) {
@@ -185,8 +207,6 @@ function Validatinator(validationInformation) {
     };
 }
 
-/**
- *  Add Validatinator to the window object.
- */
+// Add the Validatinator "function" to the window object.
 if (typeof window === "object" && typeof window.document === "object")
     window.Validatinator = Validatinator;

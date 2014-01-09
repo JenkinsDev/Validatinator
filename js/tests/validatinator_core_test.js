@@ -89,8 +89,13 @@ describe("Validator Core", function() {
             myForm.appendChild(lastName);
         });
 
-	    it('getFieldsValue should throw an error if there is no field to grab a value from, else return the field\'s value.', function() {
+	    it('getCurrentFieldsValue should throw an error if there is no field to grab a value from, else return the field\'s value.', function() {
+	    	validatinator.currentForm = "my-form";
+	    	validatinator.currentField = "first-name";
+	    	expect(validatinator.getCurrentFieldsValue()).toEqual("");
 	    	
+	    	validatinator.currentField = "some-fake-field";
+	    	expect(function() { validatinator.getCurrentFieldsValue(); }).toThrow("Couldn't find the field element, some-fake-field, for the form, my-form.");
 	    });
     });
 });
