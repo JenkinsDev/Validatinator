@@ -68,5 +68,19 @@ Validatinator.prototype.utils = {
 
         // If strict mode is set to true then 0 will be the same as false.
         return (strict) ? !value : value === false;
+    },
+    
+    /**
+     *  Validatinator.utils.isEmptyObject(Object obj);
+     *
+     *  Tests to see if an object is empty or not. Credit to jQuery.
+     *
+     *  @Added: 12/23/2013
+     */
+    isEmptyObject: function(obj) {
+        var name;
+        for (name in obj)
+            return false;
+        return true;
     }
 };

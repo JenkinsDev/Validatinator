@@ -23,8 +23,9 @@ Validatinator.prototype = {
      *  @Added: 12/23/2013
      */
     fails: function(formName) {
-        // Start up the validation process.
-        return this.startValidations(formName);
+        // startValidations will always return true if we pass so let's go ahead and
+        // flip that response.
+        return ! this.startValidations(formName);
     },
 
     /**
@@ -37,7 +38,6 @@ Validatinator.prototype = {
      *  @Added: 12/23/2013
      */
     passes: function(formName) {
-        // Start up the validation process.
         return this.startValidations(formName);
     },
 
@@ -73,9 +73,13 @@ Validatinator.prototype = {
                 if (currentValidationMethodAndParameters.length === 2)
                     parameters = currentValidationMethodAndParameters[1];
                 
-                return this.callValidationMethodWithParameters(method, parameters, currentFieldsValue);
+                if (! this.callValidationMethodWithParameters(method, parameters, currentFieldsValue))
+                    this.addValidationErrorMessage(method);
             }
         }
+        
+        // If there are no errors populated in the errors property then we passed.
+        return this.utils.isEmptyObject(this.errors);
     },
     
     /**
@@ -133,7 +137,7 @@ Validatinator.prototype = {
                     validationParameters[i][j] = this.utils.convertStringToBoolean(validationParameters[i][j].trim());
                 }
             } else {
-                // Trim any whitespace and convert falsey or truthy values to their boolean representations
+                // Trim any whitespace and convert falsy or truthy values to their boolean representations
                 validationParameters[i] = this.utils.convertStringToBoolean(validationParameters[i].trim());
             }
         }
@@ -227,22 +231,22 @@ Validatinator.prototype = {
     },
     
     /**
+     *  Validatinator.addValidationErrorMessage(String methodName);
+     * 
      *  Adds the validation's error message based on the method that was called.  Populates
      *  the currentForm and field being used if it needs to.  Layout will match along the lines
      *  of this: { "form": { "field": { "method": "method's error message." } } };
-     *  
-     *  @param {Object} method
      *
      *  @Added: 1/10/2014
      */
-    addValidationErrorMessage: function(method) {
+    addValidationErrorMessage: function(methodName) {
         if (! this.errors.hasOwnProperty(this.currentForm))
             this.errors[this.currentForm] = {};
             
         if (! this.errors[this.currentForm].hasOwnProperty(this.currentField))
             this.errors[this.currentForm][this.currentField] = {};
         
-        this.errors[this.currentForm][this.currentField][method] = this.validationMessages[method];
+        this.errors[this.currentForm][this.currentField][methodName] = this.validationMessages[methodName];
     }
 };
 

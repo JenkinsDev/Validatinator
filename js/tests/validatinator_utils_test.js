@@ -39,5 +39,10 @@ describe("Validatinator Utils", function() {
         expect(utils.convertStringToBoolean(null)).toEqual(null);
 
         expect(utils.convertStringToBoolean("FOO")).toEqual("FOO");
-    })
+    });
+    
+    it("isEmptyObject should return true if an object is empty, else false", function() {
+        expect(utils.isEmptyObject({})).toBeTruthy();
+        expect(utils.isEmptyObject({"foo":"bar"})).toBeFalsy(); 
+    });
 });
