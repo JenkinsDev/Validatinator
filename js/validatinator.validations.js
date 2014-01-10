@@ -81,8 +81,10 @@ Validatinator.prototype.validations = {
      */
     between: function(fieldValue, min, max) {
         var fieldValueType = typeof fieldValue;
+        min = Number(min);
+        max = Number(max);
 
-        if (typeof min !== "number" || typeof max !== "number")
+        if (isNaN(min) || isNaN(max))
             throw new Error("min and max must both be numbers in the `between` validation.");
 
         if (fieldValueType === "number")
@@ -148,10 +150,12 @@ Validatinator.prototype.validations = {
      *  @Added: 12/26/2013
      */ 
     digitsLength: function(fieldValue, length) {
-        if (length === undefined || length === null || typeof length !== "number")
+        if (!length || typeof length !== "number")
             throw new Error("length must be of numerical value in the `digitsLength` validation.");
+        
+        fieldValue = Number(fieldValue);
 
-        if (typeof fieldValue !== "number")
+        if (isNaN(fieldValue))
             return false;
 
         // Even though we only want a numerical value, we cast our value to a string so we can
@@ -168,10 +172,15 @@ Validatinator.prototype.validations = {
      *  @Added: 12/26/2013
      */
     digitsLengthBetween: function(fieldValue, minLength, maxLength) {
-        if (this.utils.isValueFalsyInNature(minLength) || this.utils.isValueFalsyInNature(maxLength) || typeof minLength !== "number" || typeof maxLength !== "number")
+        minLength = Number(minLength);
+        maxLength = Number(maxLength);
+        
+        if (this.utils.isValueFalsyInNature(minLength) || this.utils.isValueFalsyInNature(maxLength) || isNaN(minLength) || isNaN(maxLength))
             throw new Error("minLength and maxLength must both be numerical values in the `digitsLengthBetween` validation.");
 
-        if (typeof fieldValue !== "number")
+        fieldValue = Number(fieldValue);
+
+        if (fieldValue === NaN)
             return false;
 
         // Even though we only want a numerical value, we cast our value to a string so we can
@@ -223,8 +232,9 @@ Validatinator.prototype.validations = {
      */
     max: function(fieldValue, max) {
         var fieldValueType = typeof fieldValue;
+        max = Number(max);
 
-        if (this.utils.isValueFalsyInNature(max) || typeof max !== "number")
+        if (this.utils.isValueFalsyInNature(max) || isNaN(max))
             throw new Error("max must be of numerical value in the `max` validation.");
 
         // Pass in false as a second parameter so we are not stuck in strict mode.  Strict mode
@@ -249,8 +259,10 @@ Validatinator.prototype.validations = {
      */
     min: function(fieldValue, min) {
         var fieldValueType = typeof fieldValue;
+        
+        min = Number(min);
 
-        if (this.utils.isValueFalsyInNature(min) || typeof min !== "number")
+        if (this.utils.isValueFalsyInNature(min) || isNaN(min))
             throw new Error("min must be of numerical value in the `min` validation.");
 
         // Pass in false as a second parameter so we are not stuck in strict mode.  Strict mode
@@ -285,7 +297,9 @@ Validatinator.prototype.validations = {
      *  @Added: 12/27/2013
      */
     number: function(fieldValue) {
-        return typeof fieldValue === "number";
+        fieldValue = Number(fieldValue);
+        // If it != NaN then it is a number.
+        return (! isNaN(fieldValue));
     },
 
     /**

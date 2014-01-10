@@ -33,7 +33,7 @@ describe("Validator Core", function() {
     });
 
     it('validations should be turned into an array.', function() {
-        // Field validation as strings, with pip separator(s), let's make sure they are turned into arrays.
+        // Field validation as strings, with pipe separator(s), let's make sure they are turned into arrays.
         expect(validatinator.validationInformation["my-form"]["first-name"]).toEqual(['required', 'min:5', 'max:10']);
         // Field validation, no pipe separators, then turn that single string into a single indexed array.
         expect(validatinator.validationInformation["my-form"]["last-name"]).toEqual(['required']);

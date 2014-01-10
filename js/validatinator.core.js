@@ -24,7 +24,7 @@ Validatinator.prototype = {
      */
     fails: function(formName) {
         // Start up the validation process.
-        this.startValidations(formName);
+        return this.startValidations(formName);
     },
 
     /**
@@ -38,7 +38,7 @@ Validatinator.prototype = {
      */
     passes: function(formName) {
         // Start up the validation process.
-        this.startValidations(formName);
+        return this.startValidations(formName);
     },
 
     /**
@@ -73,7 +73,7 @@ Validatinator.prototype = {
                 if (currentValidationMethodAndParameters.length === 2)
                     parameters = currentValidationMethodAndParameters[1];
                 
-                this.callValidationMethodWithParameters(method, parameters, currentFieldsValue);
+                return this.callValidationMethodWithParameters(method, parameters, currentFieldsValue);
             }
         }
     },

@@ -83,7 +83,7 @@ describe("Validations", function() {
         expect(validatinator.validations.between("Testing", 5, 10)).toBeTruthy();
 
         expect(function() {
-            validatinator.validations.between(123, "min", "max")
+            validatinator.validations.between(123, "min", "max");
         }).toThrow("min and max must both be numbers in the `between` validation.");
     });
 
@@ -111,7 +111,7 @@ describe("Validations", function() {
         expect(validatinator.validations.digitsLength(0, 1)).toBeTruthy();
 
         expect(function() {
-            validatinator.validations.digitsLength(123)
+            validatinator.validations.digitsLength(123);
         }).toThrow("length must be of numerical value in the `digitsLength` validation.");
 
         expect(function() {
@@ -126,16 +126,20 @@ describe("Validations", function() {
         expect(validatinator.validations.digitsLengthBetween(1234, 1, 5)).toBeTruthy();
 
         expect(function() {
-            validatinator.validations.digitsLengthBetween(113, "1", "234")
+            validatinator.validations.digitsLengthBetween(113, "min", "234");
         }).toThrow("minLength and maxLength must both be numerical values in the `digitsLengthBetween` validation.");
 
         expect(function() {
-            validatinator.validations.digitsLengthBetween(123, 1, "234")
+            validatinator.validations.digitsLengthBetween(123, 1, "max");
         }).toThrow("minLength and maxLength must both be numerical values in the `digitsLengthBetween` validation.");
 
         expect(function() {
-            validatinator.validations.digitsLengthBetween(123, "1", 234)
+            validatinator.validations.digitsLengthBetween(123, "1f", 234);
         }).toThrow("minLength and maxLength must both be numerical values in the `digitsLengthBetween` validation.");
+        
+        expect(function() {
+            validatinator.validations.digitsLengthBetween(123, "1", 234);
+        }).not.toThrow("minLength and maxLength must both be numerical values in the `digitsLengthBetween` validation.");
     });
 
     it('email should return true if the field\'s value is a valid email address.', function() {
@@ -178,7 +182,7 @@ describe("Validations", function() {
     });
 
     it('number should return true if the field\'s value is a valid number.', function() {
-        expect(validatinator.validations.number("123432")).toBeFalsy();
+        expect(validatinator.validations.number("123432asdf")).toBeFalsy();
         expect(validatinator.validations.number("test")).toBeFalsy();
 
         expect(validatinator.validations.number(123)).toBeTruthy();
