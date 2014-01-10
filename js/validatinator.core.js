@@ -224,6 +224,25 @@ Validatinator.prototype = {
         required: "This field is required.",
         same: "This field must be the same value as {sameValue}.",
         url: "This field only allows valid urls."
+    },
+    
+    /**
+     *  Adds the validation's error message based on the method that was called.  Populates
+     *  the currentForm and field being used if it needs to.  Layout will match along the lines
+     *  of this: { "form": { "field": { "method": "method's error message." } } };
+     *  
+     *  @param {Object} method
+     *
+     *  @Added: 1/10/2014
+     */
+    addValidationErrorMessage: function(method) {
+        if (! this.errors.hasOwnProperty(this.currentForm))
+            this.errors[this.currentForm] = {};
+            
+        if (! this.errors[this.currentForm].hasOwnProperty(this.currentField))
+            this.errors[this.currentForm][this.currentField] = {};
+        
+        this.errors[this.currentForm][this.currentField][method] = this.validationMessages[method];
     }
 };
 

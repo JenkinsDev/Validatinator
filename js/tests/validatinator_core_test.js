@@ -74,6 +74,20 @@ describe("Validator Core", function() {
         
         expect(function() { validatinator.callValidationMethodWithParameters('fakeValidation', ['FOO'], fakeValue); }).toThrow("Validation does not exist: fakeValidation");
     });
+    
+    it('addValidationErrorMessage should populate the errors object with the corresponding validation message.', function() {
+        validatinator.currentForm = "my-form";
+        validatinator.currentField = "first-name";
+        
+        validatinator.addValidationErrorMessage("required");
+        expect(validatinator.errors).toEqual({
+            "my-form": {
+                "first-name": {
+                    "required": "This field is required."
+                }
+            }
+        });
+    });
 
     describe('Handling Field Validations', function() {
         beforeEach(function() {
