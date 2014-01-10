@@ -1,6 +1,6 @@
 Validatinator.prototype.validations = {
     /**
-     *  Validatinator.validations.accepted(fieldValue);
+     *  Validatinator.validations.accepted(String/Number fieldValue);
      *
      *  Check to make sure the field value is of an accepted type.
      *  Accepted Types: "yes", "on", true and 1.
@@ -20,7 +20,7 @@ Validatinator.prototype.validations = {
     },
 
     /**
-     *  Validatinator.validations.alpha(fieldValue);
+     *  Validatinator.validations.alpha(String/Number fieldValue);
      *
      *  Check to make sure the field's value is only of alpha characters.
      *
@@ -37,7 +37,7 @@ Validatinator.prototype.validations = {
     },
 
     /**
-     *  Validatinator.validations.alphaDash(fieldValue);
+     *  Validatinator.validations.alphaDash(String/Number fieldValue);
      *
      *  Check to make sure the field's value is only of alpha, underscore and hyphen characters.
      *
@@ -52,7 +52,7 @@ Validatinator.prototype.validations = {
     },
 
     /**
-     *  Validatinator.validations.alphaNum(fieldValue);
+     *  Validatinator.validations.alphaNum(String/Number fieldValue);
      *
      *  Checks to make sure our field's value only contains alpha, underscore, hyphen and numerical
      *  characters.
@@ -68,7 +68,7 @@ Validatinator.prototype.validations = {
     },
 
     /**
-     *  Validatinator.validations.between(fieldValue, min, max);
+     *  Validatinator.validations.between(String/Number fieldValue, Number min, Number max);
      *
      *  Checks to make sure the field value supplied is between the minimum value and maximum
      *  value.
@@ -95,7 +95,7 @@ Validatinator.prototype.validations = {
     },
 
     /**
-     *  Validatinator.validations.confirmed(fieldValue, confirmationFieldValue, strict);
+     *  Validatinator.validations.confirmed(String/Number fieldValue, String/Number confirmationFieldValue, Boolean strict);
      *
      *  Checks to make sure the fieldValue equals the confirmationFieldValue.  If strict
      *  mode is set to on then case matters, if strict mode is off then it's case-insensitive.
@@ -117,7 +117,7 @@ Validatinator.prototype.validations = {
     },
 
     /**
-     *  Validatinator.validations.contains(fieldValue, containsArray);
+     *  Validatinator.validations.contains(String/Number fieldValue, Array containsArray);
      *
      *  Checks to make sure the field's value is contained within the
      *  contains array.
@@ -129,7 +129,7 @@ Validatinator.prototype.validations = {
     },
 
     /**
-     *  Validatinator.validations.different(fieldValue, differentFieldValue, strict);
+     *  Validatinator.validations.different(String/Number fieldValue, String/Number differentFieldValue, Boolean strict);
      *
      *  Checks to make sure the two field value's provided are, in fact, different in value.
      *
@@ -142,7 +142,7 @@ Validatinator.prototype.validations = {
     },
 
     /**
-     *  Validatinator.validations.digitsLength(fieldValue, length);
+     *  Validatinator.validations.digitsLength(String/Number fieldValue, Number length);
      *
      *  Checks to make sure the field value is only numerical and that the length of the value
      *  is exactly the length supplied.
@@ -166,7 +166,7 @@ Validatinator.prototype.validations = {
     },
 
     /**
-     *  Validatinator.validations.digitsBetween(fieldValue, minLength, maxLength);
+     *  Validatinator.validations.digitsBetween(String/Number fieldValue, Number minLength, Number maxLength);
      *
      *  Checks to make sure the field value supplied is only numerical and that the length of the value
      *  is between or equal to the min and max length supplied.
@@ -193,7 +193,7 @@ Validatinator.prototype.validations = {
     },
 
     /**
-     *  Validatinator.validations.email(fieldValue);
+     *  Validatinator.validations.email(String/Number fieldValue);
      *
      *  Checks to make sure the field value supplied is a valid email address, in format.
      *
@@ -205,7 +205,7 @@ Validatinator.prototype.validations = {
     },
 
     /**
-     *  Validatiantor.validations.ipvFour(fieldValue);
+     *  Validatiantor.validations.ipvFour(String/Number fieldValue);
      *
      *  Checks to make sure the field value supplied is a valid ipv4 address based off
      *  of the RFC specs provided.
@@ -225,7 +225,7 @@ Validatinator.prototype.validations = {
     },
 
     /**
-     *  Validatinator.validations.max(fieldValue, max);
+     *  Validatinator.validations.max(String/Number fieldValue, Number max);
      *
      *  Checks to make sure the field value supplied is less than or equal to the max
      *  value supplied.
@@ -252,7 +252,7 @@ Validatinator.prototype.validations = {
     },
 
     /**
-     *  Validatinator.validations.min(fieldValue, min);
+     *  Validatinator.validations.min(String/Number fieldValue, Number min);
      *
      *  Checks to make sure the field value supplied is greater than or equal to the min
      *  value supplied.
@@ -280,7 +280,7 @@ Validatinator.prototype.validations = {
     },
 
     /**
-     *  Validatinator.validations.notIn(fieldValue, containsArray);
+     *  Validatinator.validations.notIn(String/Number fieldValue, Array containsArray);
      *
      *  Checks to make sure the field's value is not contained within the
      *  contains array.
@@ -292,7 +292,7 @@ Validatinator.prototype.validations = {
     },
 
     /**
-     *  Validatinator.validations.number(fieldValue);
+     *  Validatinator.validations.number(String/Number fieldValue);
      *
      *  Check to make sure the field value supplied is a valid number; int, float, double, etc.
      *
@@ -305,7 +305,7 @@ Validatinator.prototype.validations = {
     },
 
     /**
-     *  Validatinator.validations.required(fieldValue);
+     *  Validatinator.validations.required(String/Number fieldValue);
      *
      *  Simply checks to see if our value exists or not.
      *
@@ -318,9 +318,9 @@ Validatinator.prototype.validations = {
     },
 
     /**
-     *  Validatinator.validations.same(fieldValue, sameFieldValue, strict);
+     *  Validatinator.validations.same(String/Number fieldValue, String/Number sameFieldValue, Boolean strict);
      *
-     *  Checks to make sure the two field value's provided are, in fact, the same in value.
+     *  Checks to make sure the two field values provided are, in fact, the same in value.
      *
      *  @Added: 1/4/2014
      */
@@ -330,6 +330,13 @@ Validatinator.prototype.validations = {
         return ! this.different(fieldValue, sameFieldValue, strict);
     },
 
+    /**
+     *  Validatinator.validations.url(String fieldValue);
+     *
+     *  Checks to make sure the field's value is, in fact, a real url.
+     *
+     *  @Added: 1/4/2014
+     */
     url: function(fieldValue) {
         var urlReg = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
         return urlReg.test(fieldValue);
