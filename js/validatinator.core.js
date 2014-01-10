@@ -201,7 +201,7 @@ Validatinator.prototype = {
         parameters.unshift(fieldValue);
         
         // Validation exists, let's call it (Yes it's a bit of a weird method).
-        return this["validations"][method].apply(this, parameters);
+        return this["validations"][method].apply(this.validations, parameters);
     },
 };
 

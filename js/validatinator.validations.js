@@ -150,7 +150,9 @@ Validatinator.prototype.validations = {
      *  @Added: 12/26/2013
      */ 
     digitsLength: function(fieldValue, length) {
-        if (!length || typeof length !== "number")
+        length = Number(length);
+        
+        if (!length || isNaN(length))
             throw new Error("length must be of numerical value in the `digitsLength` validation.");
         
         fieldValue = Number(fieldValue);
