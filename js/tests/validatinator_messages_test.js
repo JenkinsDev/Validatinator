@@ -24,4 +24,11 @@ describe("Validator Messages", function() {
             }
         });
     });
+    
+    it('validationMessages should easily be accessable via validatinator.messages.validationMessages["validationName"].', function() {
+        expect(validatinator.messages.validationMessages["required"]).toEqual("This field is required.");
+        expect(validatinator.messages.validationMessages["accepted"]).toEqual("This field must be accepted.");
+        expect(validatinator.messages.validationMessages["alpha"]).toEqual("This field only allows alpha characters.");
+        expect(validatinator.messages.validationMessages["same"]).toEqual("This field must be the same value as {sameValue}.");
+    });
 });
