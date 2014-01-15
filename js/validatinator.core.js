@@ -73,9 +73,9 @@ Validatinator.prototype = {
                 // Here we check to see if our parameters actually exist and if it does then store it.
                 if (currentValidationMethodAndParameters.length === 2)
                     parameters = currentValidationMethodAndParameters[1];
-                
+
                 if (! this.callValidationMethodWithParameters(method, parameters, currentFieldsValue))
-                    this.addValidationErrorMessage(method);
+                    this.messages.addValidationErrorMessage(method, parameters);
             }
         }
         
@@ -205,7 +205,10 @@ Validatinator.prototype = {
         // on the parameters array.
         parameters.unshift(fieldValue);
         
-        // Validation exists, let's call it (Yes it's a bit of a weird method).
+        // this.validations makes sure the scope that is used during the validation call is within the validations scope and
+        // first value of the parameters array is actually the field's value.  We have to do this as .apply will distribute
+        // out the parameters array as different parameters for each index.  So ["value", "5", "10"] passed to between would be
+        // between(value, 5, 10);
         return this["validations"][method].apply(this.validations, parameters);
     }
 };
