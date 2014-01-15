@@ -10,10 +10,11 @@ module.exports = function(grunt) {
             all: {
                 files: {
                     'js/<%= pkg.name %>.min.js': [
-                        'js/<%= pkg.name %>.core.js',
                         'js/<%= pkg.name %>.polyfill.js',
+                        'js/<%= pkg.name %>.validations.js',
                         'js/<%= pkg.name %>.utils.js',
-                        'js/<%= pkg.name %>.validations.js'
+                        'js/<%= pkg.name %>.messages.js',
+                        'js/<%= pkg.name %>.core.js'
                     ]
                 }
             }
@@ -39,9 +40,10 @@ module.exports = function(grunt) {
             scriptsUglify: {
                 files: [
                     'js/<%= pkg.name %>.polyfill.js',
-                    'js/<%= pkg.name %>.core.js',
                     'js/<%= pkg.name %>.validations.js',
-                    'js/<%= pkg.name %>.utils.js'
+                    'js/<%= pkg.name %>.utils.js',
+                    'js/<%= pkg.name %>.messages.js',
+                    'js/<%= pkg.name %>.core.js'
                 ],
                 tasks: ['uglify'],
                 options: {

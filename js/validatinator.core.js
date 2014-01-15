@@ -9,6 +9,7 @@ function Validatinator(validationInformation) {
 
     // Give our validations prototype object the properties needed to access the parent and utils methods.
     this.validations.parent = this;
+    this.messages.parent = this;
     this.validations.utils = this.utils;
 }
 
@@ -206,25 +207,6 @@ Validatinator.prototype = {
         
         // Validation exists, let's call it (Yes it's a bit of a weird method).
         return this["validations"][method].apply(this.validations, parameters);
-    },
-    
-    /**
-     *  Validatinator.addValidationErrorMessage(String methodName);
-     * 
-     *  Adds the validation's error message based on the method that was called.  Populates
-     *  the currentForm and field being used if it needs to.  Layout will match along the lines
-     *  of this: { "form": { "field": { "method": "method's error message." } } };
-     *
-     *  @Added: 1/10/2014
-     */
-    addValidationErrorMessage: function(methodName) {
-        if (! this.errors.hasOwnProperty(this.currentForm))
-            this.errors[this.currentForm] = {};
-            
-        if (! this.errors[this.currentForm].hasOwnProperty(this.currentField))
-            this.errors[this.currentForm][this.currentField] = {};
-        
-        this.errors[this.currentForm][this.currentField][methodName] = this.validationMessages[methodName];
     },
     
     validationMessages: {
