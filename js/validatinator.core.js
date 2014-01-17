@@ -171,7 +171,7 @@ Validatinator.prototype = {
         if (! (method in this["validations"]))
             throw new Error("Validation does not exist: " + method);
         
-        if (!parameters)
+        if (! parameters)
             return this["validations"][method](fieldValue);
         
         // We do this so we can use the .apply Function method below.  All parameters for each method call will be based
@@ -181,7 +181,7 @@ Validatinator.prototype = {
         // this.validations makes sure the scope that is used during the validation call is within the validations scope and
         // first value of the parameters array is actually the field's value.  We have to do this as .apply will distribute
         // out the parameters array as different parameters for each index.  So ["value", ["5", "10"]] passed to between would be
-        // between(value, 5, 10);
+        // between(value, [5, 10]);
         return this["validations"][method].apply(this.validations, parameters);
     }
 };
