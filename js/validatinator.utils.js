@@ -128,6 +128,14 @@ Validatinator.prototype.utils = {
         return true;
     },
     
+    /**
+     *  Validatinator.utils.getFieldValue(String form, String field);
+     * 
+     *  Gets a field's value based off of the field's name attribute, but first we test
+     *  to make sure that field's form name attribute is that of our currently validating field.
+     * 
+     *  @Added: 1/17/2014
+     */
     getFieldsValue: function(form, field) {
         var fieldsArray,
             fieldValue;
