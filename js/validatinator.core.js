@@ -62,6 +62,8 @@ Validatinator.prototype = {
             currentValidationMethodAndParameters,
             i = 0;
         this.currentForm = formName;
+        // Since we are doing a fresh validation let's make sure our errors are all fresh as well!
+        this.errors = {};
 
         for (fieldName in this.validationInformation[formName]) {
             currentFieldsValidations = this.validationInformation[formName][fieldName];
