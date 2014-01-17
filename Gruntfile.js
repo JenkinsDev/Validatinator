@@ -51,8 +51,8 @@ module.exports = function(grunt) {
                 }
             },
             jasmineTests: {
-            	files: ['js/tests/*.js', 'js/<%= pkg.name %>.min.js'],
-            	tasks: ['jasmine:validatinatorTests']
+                files: ['js/tests/*.js', 'js/<%= pkg.name %>.min.js'],
+                tasks: ['jasmine:validatinatorTests']
             }
         }
     });
