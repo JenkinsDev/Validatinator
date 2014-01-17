@@ -14,7 +14,7 @@ Validatinator.prototype.messages = {
         confirmed: "This field must be the same as {$0}.",
         contains: "This field must be one of the following values, {$0}.",
         different: "This field must not be the same as {$0}.",
-        digitsLength: "This field must be a numerical values and {$0} characters long.",
+        digitsLength: "This field must be a numerical value and {$0} characters long.",
         digitsLengthBetween: "This field must be a numerical value and between {$0} characters long.",
         email: "This field only allows valid email addresses.",
         ipvFour: "This field only allows valid ipv4 addresses.",
