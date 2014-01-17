@@ -60,22 +60,23 @@ Validatinator.prototype = {
         var currentFieldsValidations,
             currentFieldsValue,
             currentValidationMethodAndParameters,
-            i = 0;
+            i;
+
         this.currentForm = formName;
         // Since we are doing a fresh validation let's make sure our errors are all fresh as well!
         this.errors = {};
 
         for (fieldName in this.validationInformation[formName]) {
-            currentFieldsValidations = this.validationInformation[formName][fieldName];
             this.currentField = fieldName;
+            currentFieldsValidations = this.validationInformation[formName][fieldName];
+            currentFieldsValue = this.utils.getFieldsValue(this.currentForm, this.currentField);
             
-            for (; i < currentFieldsValidations.length; i++) {
+            // We need to set i here because it doesn't reset to zero by default and it is more idomatic to do it here.
+            for (i = 0; i < currentFieldsValidations.length; i++) {
                 var method,
                     parameters = [];
 
-                currentValidationMethodAndParameters = this.getValidationMethodAndParameters(currentFieldsValidations[i]);
-                currentFieldsValue = this.getCurrentFieldsValue();
-                
+                currentValidationMethodAndParameters = this.getValidationMethodAndParameters(currentFieldsValidations[i]);                
                 method = currentValidationMethodAndParameters[0];
         
                 // Here we check to see if our parameters actually exist and if it does then store it.
@@ -84,6 +85,7 @@ Validatinator.prototype = {
 
                 if (! this.callValidationMethodWithParameters(method, parameters, currentFieldsValue))
                     this.messages.addValidationErrorMessage(method, parameters);
+                console.log(parameters);
             }
         }
         
@@ -117,7 +119,8 @@ Validatinator.prototype = {
         // method, we are only worried about the parameters at this time.
         validationMethod = validationParameters.shift();
         
-        // Add the the validation method back onto the front of the array.
+        // Add the the validation method back onto the front of a new array after we prepare the
+        // parameters.
         return [validationMethod, this.prepareParameters(validationParameters)];
     },
 
@@ -155,42 +158,7 @@ Validatinator.prototype = {
     },
     
     /**
-     *  Validatinator.getCurrentFieldsValue();
-     * 
-     *  Attempts to get the current validating field's value from the dom.  If the field cannot be found then
-     *  we will simply throw an Error stating as such.
-     * 
-     *  @Added: 1/8/2014
-     */
-    getCurrentFieldsValue: function()  {
-        var fieldsArray,
-            fieldValue;
-
-        // Instead of trusting that the first element returned is the actual field, we will go ahead
-        // and test if the field is truly within the form that we are validating against.
-        fieldsArray = document.getElementsByName(this.currentField);
-
-        for (i=0; i<fieldsArray.length; i++) {
-            fieldElement = fieldsArray[i];
-
-            // We are running a simple test to see if the current field in the returned array is part of
-            // our validating field or not.  If it is then grab it's value and break out of this test loop.
-            if (fieldElement.form.name === this.currentForm) {
-                fieldValue = fieldElement.value;
-                break;
-            }
-        }
- 
-        // If no field value was stored then we will assume that the field couldn't be found.  An empty string is
-        // not considered a "non-stored field value."
-        if (!fieldValue && fieldValue !== "")
-            throw new Error("Couldn't find the field element, " + this.currentField + ", for the form, " + this.currentForm + ".");
-            
-        return fieldValue;
-    },
-    
-    /**
-     *  Validatinator.callValidationMethodWithParameters(Array methodAndParameters, Object fieldValue);
+     *  Validatinator.callValidationMethodWithParameters(String method, Array parameters Object fieldValue);
      *  
      *  Attempts to call the validation method supplied with the provided parameters if
      *  any parameters exist, if they don't then just call the validation method with
@@ -206,7 +174,7 @@ Validatinator.prototype = {
         if (! (method in this["validations"]))
             throw new Error("Validation does not exist: " + method);
         
-        if (!parameters)
+        if (! parameters)
             return this["validations"][method](fieldValue);
         
         // We do this so we can use the .apply Function method below.  All parameters for each method call will be based
@@ -216,7 +184,7 @@ Validatinator.prototype = {
         // this.validations makes sure the scope that is used during the validation call is within the validations scope and
         // first value of the parameters array is actually the field's value.  We have to do this as .apply will distribute
         // out the parameters array as different parameters for each index.  So ["value", ["5", "10"]] passed to between would be
-        // between(value, 5, 10);
+        // between(value, [5, 10]);
         return this["validations"][method].apply(this.validations, parameters);
     }
 };

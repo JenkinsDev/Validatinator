@@ -63,4 +63,34 @@ describe("Validatinator Utils", function() {
         expect(utils.isValueAnArray(true)).toBeFalsy();
         expect(utils.isValueAnArray("not an array")).toBeFalsy();
     });
+    
+    describe('Set Test Form For Value Retrieval', function() {
+        beforeEach(function() {
+            // Creating our testing form.
+            var myForm = document.createElement('form'),
+                firstName = document.createElement('input'),
+                lastName = document.createElement('input');
+
+            myForm.name = "my-form";
+            firstName.name = "first-name";
+            lastName.name = "last-name";
+            
+            lastName.value = "test";
+
+            document.body.appendChild(myForm);
+            // Now that our element is in the dom let's select it again.
+            myForm = document.getElementsByName("my-form")[0];
+
+            // Place our inputs into the form now and then we are done!
+            myForm.appendChild(firstName);
+            myForm.appendChild(lastName);
+        });
+        
+        it('getFieldsValue should throw an error if there is no field to grab a value from, else return the field\'s value.', function() {
+            expect(utils.getFieldsValue("my-form", "first-name")).toEqual("");
+            expect(utils.getFieldsValue("my-form", "last-name")).toEqual("test");
+
+            expect(function() { utils.getFieldsValue("my-form", "some-fake-field"); }).toThrow("Couldn't find the field element some-fake-field for the form my-form.");
+        });
+    });
 });

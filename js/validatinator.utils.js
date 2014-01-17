@@ -126,5 +126,42 @@ Validatinator.prototype.utils = {
         for (name in obj)
             return false;
         return true;
+    },
+    
+    /**
+     *  Validatinator.utils.getFieldValue(String form, String field);
+     * 
+     *  Gets a field's value based off of the field's name attribute, but first we test
+     *  to make sure that field's form name attribute is that of our currently validating field.
+     * 
+     *  @Added: 1/17/2014
+     */
+    getFieldsValue: function(form, field) {
+        var fieldsArray,
+            fieldValue,
+            fieldElement,
+            i = 0;
+
+        // Instead of trusting that the first element returned is the actual field, we will go ahead
+        // and test if the field is truly within the form that we are validating against.
+        fieldsArray = document.getElementsByName(field);
+
+        for (; i<fieldsArray.length; i++) {
+            fieldElement = fieldsArray[i];
+
+            // We are running a simple test to see if the current field in the returned array is part of
+            // our validating field or not.  If it is then grab it's value and break out of this test loop.
+            if (fieldElement.form.name === form) {
+                fieldValue = fieldElement.value;
+                break;
+            }
+        }
+ 
+        // If no field value was stored then we will assume that the field couldn't be found.  An empty string is
+        // not considered a "non-stored field value."
+        if (! fieldValue && fieldValue !== "")
+            throw new Error("Couldn't find the field element " + field + " for the form " + form + ".");
+
+        return fieldValue;
     }
 };

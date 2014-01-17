@@ -26,12 +26,19 @@ describe("Validator Messages", function() {
     
     it('addValidationErrorMessage should populate the errors object with the corresponding validation message.', function() {
         validatinator.currentForm = "my-form";
-        validatinator.currentField = "first-name";
         
+        validatinator.currentField = "first-name";
         validatinator.messages.addValidationErrorMessage("required");
+        
+        validatinator.currentField = "last-name";
+        validatinator.messages.addValidationErrorMessage("required");
+        
         expect(validatinator.errors).toEqual({
             "my-form": {
                 "first-name": {
+                    "required": "This field is required."
+                },
+                "last-name": {
                     "required": "This field is required."
                 }
             }

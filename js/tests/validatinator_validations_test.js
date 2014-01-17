@@ -4,33 +4,7 @@ describe("Validations", function() {
         myForm2;
 
     beforeEach(function() {
-        validatinator = new Validatinator({
-            "my-form": {
-                "first-name": "required"
-            },
-            "my-form-two": {
-                "last-name": "required"
-            }
-        });
-    });
-
-    it('required should return false on empty, undefined or null and true on anything else.', function() {
-        expect(validatinator.validations.required("")).toBeFalsy();
-        expect(validatinator.validations.required(null)).toBeFalsy();
-        expect(validatinator.validations.required()).toBeFalsy();
-
-        expect(validatinator.validations.required("Jenkins")).toBeTruthy();
-        expect(validatinator.validations.required(0)).toBeTruthy();
-    });
-
-    it('confirmed should return false if normal field and confirmation field are not equal, else be false', function() {
-        // By default the third parameter is set to true for strict mode.  If confirmed is strict then
-        // character case does matter.
-        expect(validatinator.validations.confirmed("password", "nope")).toBeFalsy();
-        expect(validatinator.validations.confirmed("password", "Password")).toBeFalsy();
-
-        expect(validatinator.validations.confirmed("password", "Password", false)).toBeTruthy();
-        expect(validatinator.validations.confirmed("password", "password")).toBeTruthy();
+        validatinator = new Validatinator();
     });
 
     it('accepted should return true when the field value is yes, on, true or 1; else false.', function() {
@@ -91,15 +65,6 @@ describe("Validations", function() {
         expect(validatinator.validations.contains("in", ["in", "not"])).toBeTruthy();
 
         expect(validatinator.validations.contains("not", ["in", "it"])).toBeFalsy();
-    });
-
-    it('different should return true if the field\'s value is different than the second field value supplied', function() {
-        expect(validatinator.validations.different("test", "test")).toBeFalsy();
-        expect(validatinator.validations.different(123, 123)).toBeFalsy();
-        expect(validatinator.validations.different("TEST", "test", false)).toBeFalsy();
-
-        expect(validatinator.validations.different("Test", "test")).toBeTruthy();
-        expect(validatinator.validations.different(0, 124)).toBeTruthy();
     });
 
     it('digitsLength should return true if the field\'s value is only numerical and have the same exact length as supplied.', function() {
@@ -188,14 +153,14 @@ describe("Validations", function() {
         expect(validatinator.validations.number(123)).toBeTruthy();
         expect(validatinator.validations.number(123.123)).toBeTruthy();
     });
+    
+    it('required should return false on empty, undefined or null and true on anything else.', function() {
+        expect(validatinator.validations.required("")).toBeFalsy();
+        expect(validatinator.validations.required(null)).toBeFalsy();
+        expect(validatinator.validations.required()).toBeFalsy();
 
-    it('same should return true if the field\'s value is equal to the value passed in.', function() {
-        expect(validatinator.validations.same("test", "test")).toBeTruthy();
-        expect(validatinator.validations.same(123, 123)).toBeTruthy();
-        expect(validatinator.validations.same("TEST", "test", false)).toBeTruthy();
-
-        expect(validatinator.validations.same("Test", "test")).toBeFalsy();
-        expect(validatinator.validations.same(0, 124)).toBeFalsy();
+        expect(validatinator.validations.required("Jenkins")).toBeTruthy();
+        expect(validatinator.validations.required(0)).toBeTruthy();
     });
 
     it('url should return true if the field\'s value is a true URL.', function() {
@@ -207,5 +172,42 @@ describe("Validations", function() {
         expect(validatinator.validations.url("google.com")).toBeTruthy();
         expect(validatinator.validations.url("https://www.microsoft.com")).toBeTruthy();
         expect(validatinator.validations.url("https://microsoft.com")).toBeTruthy();
+    });
+    
+    describe('Adding required DOM elements for these validation methods to run correctly.', function() {
+        beforeEach(function() {
+            var myForm = document.createElement('form'),
+                firstName = document.createElement('input');
+
+            myForm.name = "my-form";
+            firstName.name = "first-name";
+
+            document.body.appendChild(myForm);
+
+            // Now that our element is in the dom let's select it again.
+            myForm = document.getElementsByName("my-form")[0];
+            myForm.appendChild(firstName);
+            
+            firstName = document.getElementsByName("first-name")[0];
+            firstName.value = "test";
+        });
+        
+        it('same should return true if the two field\'s are the same, else return false', function() {
+            validatinator.currentForm = "my-form";
+            expect(validatinator.validations.same("test", "first-name")).toBeTruthy();
+            expect(validatinator.validations.same("TEST", "first-name", false)).toBeTruthy();
+    
+            expect(validatinator.validations.same("Test", "first-name")).toBeFalsy();
+            expect(validatinator.validations.same(0, "first-name")).toBeFalsy();
+        });
+        
+        it('different should return true if the field\'s value is different than the second field value supplied', function() {
+            validatinator.currentForm = "my-form";
+            expect(validatinator.validations.different("test", "first-name")).toBeFalsy();
+            expect(validatinator.validations.different("TEST", "first-name", false)).toBeFalsy();
+    
+            expect(validatinator.validations.different("Test", "first-name")).toBeTruthy();
+            expect(validatinator.validations.different(324, "first-name")).toBeTruthy();
+        });
     });
 });
