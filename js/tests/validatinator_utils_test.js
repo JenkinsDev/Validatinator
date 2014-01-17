@@ -45,4 +45,22 @@ describe("Validatinator Utils", function() {
         expect(utils.isEmptyObject({})).toBeTruthy();
         expect(utils.isEmptyObject({"foo":"bar"})).toBeFalsy(); 
     });
+    
+    it("convertArrayValuesToEnglishString should return an English list of items; comma delimited", function() {
+        expect(utils.convertArrayValuesToEnglishString(
+            ["this", "should", "be", "right"]
+        )).toEqual("this, should, be and right");
+    });
+    
+    it("isValueAnArray should return true if a value is truly an Array, else false", function() {
+        expect(utils.isValueAnArray([])).toBeTruthy();
+        expect(utils.isValueAnArray(new Array('test'))).toBeTruthy();
+        expect(utils.isValueAnArray(new Array())).toBeTruthy();
+        
+        expect(utils.isValueAnArray({})).toBeFalsy();
+        expect(utils.isValueAnArray(12)).toBeFalsy();
+        expect(utils.isValueAnArray(false)).toBeFalsy();
+        expect(utils.isValueAnArray(true)).toBeFalsy();
+        expect(utils.isValueAnArray("not an array")).toBeFalsy();
+    });
 });

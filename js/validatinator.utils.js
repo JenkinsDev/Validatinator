@@ -5,7 +5,7 @@
 
 Validatinator.prototype.utils = {
     /**
-     *  Validatinator.utils.convertFieldValidationsToArray(validationInformation);
+     *  Validatinator.utils.convertFieldValidationsToArray(Object validationInformation);
      *
      *  Convert string field validations to array field validations.
      *  "required|min:5|max:10" => ["required", "min:5", "max:10"];
@@ -34,7 +34,7 @@ Validatinator.prototype.utils = {
     },
 
     /**
-     *  Validationator.utils.convertStringToBoolean(stringRepresentation);
+     *  Validatinator.utils.convertStringToBoolean(String stringRepresentation);
      *
      *  Converts string representations of the boolean values to their actual boolean
      *  values.  "true" => true, "false" => false.
@@ -52,9 +52,36 @@ Validatinator.prototype.utils = {
 
         return stringRepresentation;
     },
+    
+    /**
+     *  Validatinator.utils.convertArrayValuesToEnglishString(Array arrayOfValues);
+     * 
+     *  We loop through each of the array's values and concat it to an English string
+     *  containing AND between the second to last and last element.
+     * 
+     *  @Added: 1/17/2014
+     */
+    convertArrayValuesToEnglishString: function(arrayOfValues) {
+        var i = 0,
+            currentLength,
+            finishedString = '';
+        
+        for (; i < arrayOfValues.length; i++) {
+            currentLength = i + 1;
+            
+            if (currentLength === arrayOfValues.length)
+                finishedString += ' and ' + arrayOfValues[i];
+            else if (i === 0)
+                finishedString += arrayOfValues[i];
+            else
+                finishedString += ', ' + arrayOfValues[i];
+        }
+        
+        return finishedString;
+    },
 
     /**
-     *  Validatinator.utils.isValueFalsyInNature(value, strict);
+     *  Validatinator.utils.isValueFalsyInNature(Object value, Boolean strict);
      *
      *  Tests to see if the value provided is falsy in it's nature; i.e: undefined, null or false.
      *  If strict mode is set to true or no boolean is passed in for strict then 0 equates to false,
@@ -73,6 +100,18 @@ Validatinator.prototype.utils = {
 
         // If strict mode is set to true then 0 will be the same as false.
         return (strict) ? !value : value === false;
+    },
+    
+    /**
+     *  Validatinator.utils.isValueAnArray(Object value);
+     * 
+     *  Checks to see if the value is an array, this will work for new Array(); and array
+     *  literals.
+     * 
+     *  @Added: 1/17/2014
+     */
+    isValueAnArray: function(value) {
+        return Object.prototype.toString.call(value) === "[object Array]";
     },
     
     /**

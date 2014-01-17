@@ -10,12 +10,12 @@ Validatinator.prototype.messages = {
         alpha: "This field only allows alpha characters.",
         alphaDash: "This field only allows alpha, dash and underscore characters.",
         alphaNum: "This field only allows alpha, dash, underscore and numerical characters.",
-        between: "This field must be between {$0} and {$1}.",
+        between: "This field must be between {$0}.",
         confirmed: "This field must be the same as {$0}.",
         contains: "This field must be one of the following values, {$0}.",
         different: "This field must not be the same as {$0}.",
         digitsLength: "This field must be a numerical values and {$0} characters long.",
-        digitsLengthBetween: "This field must be between {$0} and {$1}.",
+        digitsLengthBetween: "This field must be between {$0}.",
         email: "This field only allows valid email addresses.",
         ipvFour: "This field only allows valid ipv4 addresses.",
         max: "This field must only be {$0} long or a numerical value must be less than or equal to {$0}.",
@@ -78,17 +78,28 @@ Validatinator.prototype.messages = {
      *  @Added: 1/15/2014
      */
     replaceCurlyBracesWithValues: function(validationMessage, curlyBraceParameters, parametersArray) {
-        var i = 0;
+        var i = 0,
+            currentParameterValue,
+            currentValueToReplace;
         
         // The first value in the parametersArray seems to always be an empty string, let's fix that here.
         if (parametersArray[0] === "")
             parametersArray.shift();
         
         for (; i < curlyBraceParameters.length; i++) {
-            if (validationMessage.contains("{$" + i + "}") && (parametersArray[i] !== null && parametersArray[i] !== undefined)) {
-                // Beats having to use a regex; whenever possible always steer clear of regex, they can be bad mojo!
-                validationMessage = validationMessage.split("{$" + i + "}").join(parametersArray[i]);
-            }
+            currentParameterValue = parametersArray[i];
+            currentValueToReplace = "{$" + i + "}";
+            
+            // If the index in the parameterArray doesn't exist or if the validation doesn't contain the {$i} value then continue to the next index.
+            if (! validationMessage.contains(currentValueToReplace) && (currentParameterValue === null && currentParameterValue === undefined))
+                continue;
+            
+            // If the value is not an array then we will go ahead and just replace the string with the value.  Also note: regex
+            // is bad mojo!  Try to use anything that is not a regex before reverting to one.
+            if (! this.utils.isValueAnArray(parametersArray[i]))
+                validationMessage = validationMessage.split(currentValueToReplace).join(currentParameterValue);
+            else
+                validationMessage = validationMessage.split(currentValueToReplace).join(this.utils.convertArrayValuesToEnglishString(currentParameterValue));
         }
         
         return validationMessage;

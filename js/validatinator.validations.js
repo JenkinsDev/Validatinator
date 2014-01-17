@@ -84,10 +84,10 @@ Validatinator.prototype.validations = {
      *
      *  @Added: 12/25/2013 *CHRISTMAS DAY!*
      */
-    between: function(fieldValue, min, max) {
-        var fieldValueType = typeof fieldValue;
-        min = Number(min);
-        max = Number(max);
+    between: function(fieldValue, minMax) {
+        var fieldValueType = typeof fieldValue,
+            min = Number(minMax[0]),
+            max = Number(minMax[1]);
 
         if (isNaN(min) || isNaN(max))
             throw new Error("min and max must both be numbers in the `between` validation.");
@@ -178,9 +178,9 @@ Validatinator.prototype.validations = {
      *
      *  @Added: 12/26/2013
      */
-    digitsLengthBetween: function(fieldValue, minLength, maxLength) {
-        minLength = Number(minLength);
-        maxLength = Number(maxLength);
+    digitsLengthBetween: function(fieldValue, minMaxLength) {
+        var minLength = Number(minMaxLength[0]),
+            maxLength = Number(minMaxLength[1]);
         
         if (this.utils.isValueFalsyInNature(minLength) || this.utils.isValueFalsyInNature(maxLength) || isNaN(minLength) || isNaN(maxLength))
             throw new Error("minLength and maxLength must both be numerical values in the `digitsLengthBetween` validation.");

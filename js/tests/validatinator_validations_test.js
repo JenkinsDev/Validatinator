@@ -75,15 +75,15 @@ describe("Validations", function() {
     });
 
     it('between should return true if the field\'s value length is between the min and max number', function() {
-        expect(validatinator.validations.between("value", 20, 30)).toBeFalsy();
-        expect(validatinator.validations.between(123, 1, 2)).toBeFalsy();
-        expect(validatinator.validations.between({}, 1, 20)).toBeFalsy();
+        expect(validatinator.validations.between("value", [20, 30])).toBeFalsy();
+        expect(validatinator.validations.between(123, [1, 2])).toBeFalsy();
+        expect(validatinator.validations.between({}, [1, 20])).toBeFalsy();
 
-        expect(validatinator.validations.between(123.432, 1, 300)).toBeTruthy();
-        expect(validatinator.validations.between("Testing", 5, 10)).toBeTruthy();
+        expect(validatinator.validations.between(123.432, [1, 300])).toBeTruthy();
+        expect(validatinator.validations.between("Testing", [5, 10])).toBeTruthy();
 
         expect(function() {
-            validatinator.validations.between(123, "min", "max");
+            validatinator.validations.between(123, ["min", "max"]);
         }).toThrow("min and max must both be numbers in the `between` validation.");
     });
 
