@@ -120,25 +120,25 @@ describe("Validations", function() {
     });
 
     it('digitsLengthBetween should return true if the field\'s value is only numerical and is in-between the length of the two values supplied.', function() {
-        expect(validatinator.validations.digitsLengthBetween("asdf", 4, 6)).toBeFalsy();
-        expect(validatinator.validations.digitsLengthBetween(123, 1, 2)).toBeFalsy();
+        expect(validatinator.validations.digitsLengthBetween("asdf", [4, 6])).toBeFalsy();
+        expect(validatinator.validations.digitsLengthBetween(123, [1, 2])).toBeFalsy();
 
-        expect(validatinator.validations.digitsLengthBetween(1234, 1, 5)).toBeTruthy();
+        expect(validatinator.validations.digitsLengthBetween(1234, [1, 5])).toBeTruthy();
 
         expect(function() {
-            validatinator.validations.digitsLengthBetween(113, "min", "234");
+            validatinator.validations.digitsLengthBetween(113, ["min", "234"]);
         }).toThrow("minLength and maxLength must both be numerical values in the `digitsLengthBetween` validation.");
 
         expect(function() {
-            validatinator.validations.digitsLengthBetween(123, 1, "max");
+            validatinator.validations.digitsLengthBetween(123, [1, "max"]);
         }).toThrow("minLength and maxLength must both be numerical values in the `digitsLengthBetween` validation.");
 
         expect(function() {
-            validatinator.validations.digitsLengthBetween(123, "1f", 234);
+            validatinator.validations.digitsLengthBetween(123, ["1f", 234]);
         }).toThrow("minLength and maxLength must both be numerical values in the `digitsLengthBetween` validation.");
         
         expect(function() {
-            validatinator.validations.digitsLengthBetween(123, "1", 234);
+            validatinator.validations.digitsLengthBetween(123, ["1", 234]);
         }).not.toThrow("minLength and maxLength must both be numerical values in the `digitsLengthBetween` validation.");
     });
 
