@@ -14,25 +14,6 @@ describe("Validations", function() {
         });
     });
 
-    it('required should return false on empty, undefined or null and true on anything else.', function() {
-        expect(validatinator.validations.required("")).toBeFalsy();
-        expect(validatinator.validations.required(null)).toBeFalsy();
-        expect(validatinator.validations.required()).toBeFalsy();
-
-        expect(validatinator.validations.required("Jenkins")).toBeTruthy();
-        expect(validatinator.validations.required(0)).toBeTruthy();
-    });
-
-    it('confirmed should return false if normal field and confirmation field are not equal, else be false', function() {
-        // By default the third parameter is set to true for strict mode.  If confirmed is strict then
-        // character case does matter.
-        expect(validatinator.validations.confirmed("password", "nope")).toBeFalsy();
-        expect(validatinator.validations.confirmed("password", "Password")).toBeFalsy();
-
-        expect(validatinator.validations.confirmed("password", "Password", false)).toBeTruthy();
-        expect(validatinator.validations.confirmed("password", "password")).toBeTruthy();
-    });
-
     it('accepted should return true when the field value is yes, on, true or 1; else false.', function() {
         expect(validatinator.validations.accepted()).toBeFalsy();
         expect(validatinator.validations.accepted(null)).toBeFalsy();
@@ -187,6 +168,15 @@ describe("Validations", function() {
 
         expect(validatinator.validations.number(123)).toBeTruthy();
         expect(validatinator.validations.number(123.123)).toBeTruthy();
+    });
+    
+    it('required should return false on empty, undefined or null and true on anything else.', function() {
+        expect(validatinator.validations.required("")).toBeFalsy();
+        expect(validatinator.validations.required(null)).toBeFalsy();
+        expect(validatinator.validations.required()).toBeFalsy();
+
+        expect(validatinator.validations.required("Jenkins")).toBeTruthy();
+        expect(validatinator.validations.required(0)).toBeTruthy();
     });
 
     it('same should return true if the field\'s value is equal to the value passed in.', function() {

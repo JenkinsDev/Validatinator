@@ -74,7 +74,7 @@ Validatinator.prototype = {
                     parameters = [];
 
                 currentValidationMethodAndParameters = this.getValidationMethodAndParameters(currentFieldsValidations[i]);
-                currentFieldsValue = this.getCurrentFieldsValue();
+                currentFieldsValue = this.utils.getFieldsValue(this.currentForm, this.currentField);
                 
                 method = currentValidationMethodAndParameters[0];
         
@@ -152,41 +152,6 @@ Validatinator.prototype = {
         }
 
         return validationParameters;
-    },
-    
-    /**
-     *  Validatinator.getCurrentFieldsValue();
-     * 
-     *  Attempts to get the current validating field's value from the dom.  If the field cannot be found then
-     *  we will simply throw an Error stating as such.
-     * 
-     *  @Added: 1/8/2014
-     */
-    getCurrentFieldsValue: function()  {
-        var fieldsArray,
-            fieldValue;
-
-        // Instead of trusting that the first element returned is the actual field, we will go ahead
-        // and test if the field is truly within the form that we are validating against.
-        fieldsArray = document.getElementsByName(this.currentField);
-
-        for (i=0; i<fieldsArray.length; i++) {
-            fieldElement = fieldsArray[i];
-
-            // We are running a simple test to see if the current field in the returned array is part of
-            // our validating field or not.  If it is then grab it's value and break out of this test loop.
-            if (fieldElement.form.name === this.currentForm) {
-                fieldValue = fieldElement.value;
-                break;
-            }
-        }
- 
-        // If no field value was stored then we will assume that the field couldn't be found.  An empty string is
-        // not considered a "non-stored field value."
-        if (!fieldValue && fieldValue !== "")
-            throw new Error("Couldn't find the field element, " + this.currentField + ", for the form, " + this.currentForm + ".");
-            
-        return fieldValue;
     },
     
     /**
