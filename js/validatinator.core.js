@@ -1,3 +1,8 @@
+/**
+ * Copyright (c) 2013-2014 David Jenkins
+ * See the file license.txt for copying permission.
+ */
+
 function Validatinator(validationInformation) {   
     // Users may want to add validation information later on so we will allow them to create an instance of Validatinator without passing
     // any validation information.

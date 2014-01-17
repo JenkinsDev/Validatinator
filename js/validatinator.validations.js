@@ -1,3 +1,8 @@
+/**
+ * Copyright (c) 2013-2014 David Jenkins
+ * See the file license.txt for copying permission.
+ */
+
 Validatinator.prototype.validations = {
     /**
      *  Validatinator.validations.accepted(String/Number fieldValue);

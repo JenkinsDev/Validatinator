@@ -4,7 +4,18 @@ module.exports = function(grunt) {
         pkg: grunt.file.readJSON('package.json'),
         uglify: {
             options: {
-                banner: '/*\n * <%= pkg.name %> \n * Simple yet effective vanilla JavaScript front-end validation add-on.\n * <%= grunt.template.today("mm/dd/yyyy") %>\n */\n (function(window, undefined) {',
+                banner: '/* \n' +
+                        ' * Copyright (c) 2013-2014 David Jenkins (<%= pkg.name %>) \n' +
+                        ' * See the file license.txt for copying permission. \n' +
+                        ' * \n' +
+                        ' * Simple, yet effective, vanilla JavaScript form validation "plugin." Validatinator is based off \n' +
+                        ' * of one of PHP\'s most famous framework, Laravel.  Using Validatinator is as easy as instantiating \n' +
+                        ' * a Validatinator object, calling the passes or fails methods and if there are failed validations then grabbing \n' +
+                        ' * those validations from the errors property on the main object. \n' +
+                        ' * \n' +
+                        ' * Latest Update: 0.0.2beta (<%= grunt.template.today("mm/dd/yyyy") %>) \n' +
+                        ' */ \n' +
+                        '(function(window, undefined) {',
                 footer: '})(window);'
             },
             all: {

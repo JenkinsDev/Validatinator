@@ -1,9 +1,9 @@
 /**
- *  Adds support for String.prototype.contains for browsers that do not
- *  currently have it implemented.
- *
- *  @Added: 12/15/2013
+ * Copyright (c) 2013-2014 David Jenkins
+ * See the file license.txt for copying permission.
  */
+
+
 if (!String.prototype.contains) {
     String.prototype.contains = function(str, startIndex) {
         return -1 !== String.prototype.indexOf.call(this, str, startIndex);
