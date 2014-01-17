@@ -138,13 +138,15 @@ Validatinator.prototype.utils = {
      */
     getFieldsValue: function(form, field) {
         var fieldsArray,
-            fieldValue;
+            fieldValue,
+            fieldElement,
+            i = 0;
 
         // Instead of trusting that the first element returned is the actual field, we will go ahead
         // and test if the field is truly within the form that we are validating against.
         fieldsArray = document.getElementsByName(field);
 
-        for (i=0; i<fieldsArray.length; i++) {
+        for (; i<fieldsArray.length; i++) {
             fieldElement = fieldsArray[i];
 
             // We are running a simple test to see if the current field in the returned array is part of
@@ -157,9 +159,9 @@ Validatinator.prototype.utils = {
  
         // If no field value was stored then we will assume that the field couldn't be found.  An empty string is
         // not considered a "non-stored field value."
-        if (!fieldValue && fieldValue !== "")
-            throw new Error("Couldn't find the field element, " + field + ", for the form, " + form + ".");
-            
+        if (! fieldValue && fieldValue !== "")
+            throw new Error("Couldn't find the field element " + field + " for the form " + form + ".");
+
         return fieldValue;
     }
 };

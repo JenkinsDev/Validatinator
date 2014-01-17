@@ -74,6 +74,8 @@ describe("Validatinator Utils", function() {
             myForm.name = "my-form";
             firstName.name = "first-name";
             lastName.name = "last-name";
+            
+            lastName.value = "test";
 
             document.body.appendChild(myForm);
             // Now that our element is in the dom let's select it again.
@@ -85,12 +87,10 @@ describe("Validatinator Utils", function() {
         });
         
         it('getFieldsValue should throw an error if there is no field to grab a value from, else return the field\'s value.', function() {
-            currentForm = "my-form";
-            currentField = "first-name";
-            expect(utils.getFieldsValue(currentForm, currentField)).toEqual("");
-            
-            currentField = "some-fake-field";
-            expect(function() { utils.getFieldsValue(currentForm, currentField); }).toThrow("Couldn't find the field element, some-fake-field, for the form, my-form.");
+            expect(utils.getFieldsValue("my-form", "first-name")).toEqual("");
+            expect(utils.getFieldsValue("my-form", "last-name")).toEqual("test");
+
+            expect(function() { utils.getFieldsValue("my-form", "some-fake-field"); }).toThrow("Couldn't find the field element some-fake-field for the form my-form.");
         });
     });
 });

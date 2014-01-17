@@ -82,9 +82,8 @@ Validatinator.prototype.messages = {
             currentParameterValue,
             currentValueToReplace;
         
-        // The first value in the parametersArray seems to always be an empty string, let's fix that here.
-        if (parametersArray[0] === "")
-            parametersArray.shift();
+       // Shift off the first value as it is the validation field's value.
+       parametersArray.shift();
         
         for (; i < curlyBraceParameters.length; i++) {
             currentParameterValue = parametersArray[i];

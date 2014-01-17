@@ -282,6 +282,9 @@ Validatinator.prototype.validations = {
      *  @Added: 12/27/2013
      */
     number: function(fieldValue) {
+        if (! fieldValue)
+            return false;
+
         fieldValue = Number(fieldValue);
         // If it != NaN then it is a number.
         return (! isNaN(fieldValue));
@@ -307,18 +310,20 @@ Validatinator.prototype.validations = {
      *
      *  @Added: 1/4/2014
      */
-    same: function(fieldValue, sameFieldValue, strict) {
+    same: function(fieldValue, sameFieldName, strict) {
+        var sameFieldValue = this.utils.getFieldsValue(this.parent.currentForm, sameFieldName);
+        
         if (strict === undefined || strict === null)
             strict = true;
 
         // We cast our field values to strings so all values are of the same data type and we
         // can make use of the toLowerCase method.
         fieldValue = String(fieldValue);
-        confirmationFieldValue = String(confirmationFieldValue);
+        sameFieldValue = String(sameFieldValue);
 
         if (strict)
-            return fieldValue === confirmationFieldValue;
-        return fieldValue.toLowerCase() === confirmationFieldValue.toLowerCase();
+            return fieldValue === sameFieldValue;
+        return fieldValue.toLowerCase() === sameFieldValue.toLowerCase();
     },
 
     /**
