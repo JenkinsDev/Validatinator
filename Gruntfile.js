@@ -13,7 +13,7 @@ module.exports = function(grunt) {
                         ' * a Validatinator object, calling the passes or fails methods and if there are failed validations then grabbing \n' +
                         ' * those validations from the errors property on the main object. \n' +
                         ' * \n' +
-                        ' * Latest Update: 0.2.0-beta (<%= grunt.template.today("mm/dd/yyyy") %>) \n' +
+                        ' * Latest Update: 0.2.1-beta (<%= grunt.template.today("mm/dd/yyyy") %>) \n' +
                         ' */ \n' +
                         '(function(window, undefined) {',
                 footer: '})(window);'
