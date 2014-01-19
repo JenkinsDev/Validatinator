@@ -96,10 +96,12 @@ if (validatinator.fails("i-am-another-form")) {
 }
 
 // The above would output the following if all validation methods failed.
-"i-am-another-form": {
-    "i-am-a-field-in-the-new-form": {
-        "required": "This field is required.",
-        "alphaNum": "This field only allows alpha, dash, underscore and numerical characters."
+{
+    "i-am-another-form": {
+        "i-am-a-field-in-the-new-form": {
+            "required": "This field is required.",
+            "alphaNum": "This field only allows alpha, dash, underscore and numerical characters."
+        }
     }
 }
 ```
