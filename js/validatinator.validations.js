@@ -85,18 +85,16 @@ Validatinator.prototype.validations = {
      *  @Added: 12/25/2013 *CHRISTMAS DAY!*
      */
     between: function(fieldValue, minMax) {
-        var fieldValueType = typeof fieldValue,
-            min = Number(minMax[0]),
+        var min = Number(minMax[0]),
             max = Number(minMax[1]);
 
         if (isNaN(min) || isNaN(max))
             throw new Error("min and max must both be numbers in the `between` validation.");
 
-        if (fieldValueType === "number")
-            return (min <= fieldValue && fieldValue <= max);
-        else if (fieldValueType === "string")
+        // If it is not not a number then we check it's value versus min and max.  If it is a NaN then we check it's length.
+        if (isNaN(Number(fieldValue)))
             return (min <= fieldValue.length && fieldValue.length <= max);
-        return false;
+        return (min <= fieldValue && fieldValue <= max);
     },
 
     /**
@@ -216,7 +214,6 @@ Validatinator.prototype.validations = {
      *  @Added: 12/30/2013
      */
     max: function(fieldValue, max) {
-        var fieldValueType = typeof fieldValue;
         max = Number(max);
 
         if (this.utils.isValueFalsyInNature(max) || isNaN(max))
@@ -227,11 +224,10 @@ Validatinator.prototype.validations = {
         if (this.utils.isValueFalsyInNature(fieldValue, false))
             return false;
 
-        if (fieldValueType === "number")
-            return fieldValue <= max;
-        else if (fieldValueType === "string")
+        // If it is not not a number then we check it's value versus max.  If it is a NaN then we check it's length.
+        if (isNaN(Number(fieldValue)))
             return fieldValue.length <= max;
-        return false;
+        return fieldValue <= max;
     },
 
     /**
@@ -242,9 +238,7 @@ Validatinator.prototype.validations = {
      *
      *  @Added: 12/30/2013
      */
-    min: function(fieldValue, min) {
-        var fieldValueType = typeof fieldValue;
-        
+    min: function(fieldValue, min) {        
         min = Number(min);
 
         if (this.utils.isValueFalsyInNature(min) || isNaN(min))
@@ -255,11 +249,10 @@ Validatinator.prototype.validations = {
         if (this.utils.isValueFalsyInNature(fieldValue, false))
             return false;
 
-        if (fieldValueType === "number")
-            return fieldValue >= min;
-        else if (fieldValueType === "string")
+        // If it is not not a number then we check it's value versus max.  If it is a NaN then we check it's length.
+        if (isNaN(Number(fieldValue)))
             return fieldValue.length >= min;
-        return false;
+        return fieldValue >= min;
     },
 
     /**
