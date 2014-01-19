@@ -148,17 +148,19 @@ Here is an example of adding and overwriting Validatinator error messages:
 // We create our Validatinator instance we normally would, but we throw in a second parameter to the mix; this second
 // parameter accepts an object literal with the name of the validation method as the key and the error message as
 // the value.
-var validatinator = new Validatinator({
-    "my-forms-name-attribute": {
-        "my-fields-name-attribute": "required|min:5|max:20",
-        "i-am-another-field-in-the-above-form": "required|between:20,30",
+var validatinator = new Validatinator(
+    {
+        "my-forms-name-attribute": {
+            "my-fields-name-attribute": "required|min:5|max:20",
+            "i-am-another-field-in-the-above-form": "required|between:20,30",
+        },
+        "i-am-another-form": {
+            "i-am-a-field-in-the-new-form": "required|alphaNum",
+        }
     },
-    "i-am-another-form": {
-        "i-am-a-field-in-the-new-form": "required|alphaNum",
+    {
+        "required": "I will overwrite the validation error message for the `required` validation method.",
+        "newErrorMessage": "I am a totally new validation error message that will be called if the `newErrorMessage` validation method were to run and fail on a form field."
     }
-},
-{
-    "required": "I will overwrite the validation error message for the `required` validation method.",
-    "newErrorMessage": "I am a totally new validation error message that will be called if the `newErrorMessage` validation method were to run and fail on a form field."
-});
+);
 ```
