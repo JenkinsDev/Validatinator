@@ -106,10 +106,59 @@ if (validatinator.fails("i-am-another-form")) {
 
 ## Customizing Validatinator
 
-#### Adding Custom Validations
+#### Adding Custom Validation Methods
 
-Coming Soon
+To add a new validation method you must extend the Validatinator.prototype.validations object.  Also to make sure your validation works 100% perfectly you need to make sure that the first parameter it receives is the field's value and that your validation method returns true if it passes and false otherwise.  If your method expects a value from another form field you will need to retrieve that value yourself within the method as, at this time, we do not support grabbing field values other than that of the currently validated field.
+
+Here are two quick examples for adding custom validation methods:
+
+```javascript
+Validatinator.prototype.validations.newValidation = function(fieldValue) {
+    if (fieldValue === "foo")
+        return true;
+    return false;
+}
+```
+
+In this example we will accept another field's value as the second parameter:
+
+```javascript
+Validatinator.prototype.validations.newestValidation = function(fieldValue, anotherFieldsName) {
+    // Here we are using a Validatinator utility method that will get a field's value based on the field's
+    // and form's name attribute.  We can use the shortcut `this.parent.currentForm` to grab the current validating
+    // form's name attribute.  If you are getting the value from another, separate, form you can manually pass in that
+    // form's name attribute as the first parameter.
+    var anotherFieldsValue = this.utils.getFieldsValue(this.parent.currentForm, anotherFieldsName);
+    
+    if (anotherFieldsValue !== fieldValue && anotherFieldsValue === "foobar")
+        return true;
+    return false;
+}
+```
+
+Remember whenever you create a new validation method you must always accompany it with a custom validation error message.  See the next section to learn how to add custom error messages.
 
 #### Adding Custom Validation Error Messages
 
-Coming Soon
+Overwriting or adding a new validation error message is easy as pie, we offer a quick and simple way to add custom error messages when you instantiate Validatinator.  When running `new Validatinator()` you can pass in an optional second parameter that will take an object that you can use to override or add custom validation error messages.
+
+Here is an example of adding and overwriting Validatinator error messages:
+
+```javascript
+// We create our Validatinator instance we normally would, but we throw in a second parameter to the mix; this second
+// parameter accepts an object literal with the name of the validation method as the key and the error message as
+// the value.
+var validatinator = new Validatinator({
+    "my-forms-name-attribute": {
+        "my-fields-name-attribute": "required|min:5|max:20",
+        "i-am-another-field-in-the-above-form": "required|between:20,30",
+    },
+    "i-am-another-form": {
+        "i-am-a-field-in-the-new-form": "required|alphaNum",
+    }
+},
+{
+    "required": "I will overwrite the validation error message for the `required` validation method.",
+    "newErrorMessage": "I am a totally new validation error message that will be called if the `newErrorMessage` validation method were to run and fail on a form field."
+});
+```

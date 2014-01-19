@@ -10,7 +10,7 @@ Validatinator.prototype.messages = {
         alpha: "This field only allows alpha characters.",
         alphaDash: "This field only allows alpha, dash and underscore characters.",
         alphaNum: "This field only allows alpha, dash, underscore and numerical characters.",
-        between: "This field must be between {$0}.",
+        between: "This field must be between {$0} characters long.",
         confirmed: "This field must be the same as {$0}.",
         contains: "This field must be one of the following values, {$0}.",
         different: "This field must not be the same as {$0}.",
@@ -18,8 +18,8 @@ Validatinator.prototype.messages = {
         digitsLengthBetween: "This field must be a numerical value and between {$0} characters long.",
         email: "This field only allows valid email addresses.",
         ipvFour: "This field only allows valid ipv4 addresses.",
-        max: "This field must only be {$0} long or a numerical value must be less than or equal to {$0}.",
-        min: "This field must be at least {$0} long or a numerical value must be greater than or equal to {$0}.",
+        max: "This field must be {$0} or less characters long.",
+        min: "This field must be at least {$0} characters long.",
         notIn: "This field must not be contained within the following values, {$0}.",
         number: "This field only allows valid numerical values.",
         required: "This field is required.",
@@ -28,7 +28,22 @@ Validatinator.prototype.messages = {
     },
     
     /**
-     *  Validatinator.addCurrentFormAndField();
+     *  Validatinator.messages.overwriteAndAddNewMessages(Object newValidationErrorMessages);
+     * 
+     *  Overrides or adds new validation error messages based on the user supplied data.
+     * 
+     *  @Added: 1/18/2014
+     */
+    overwriteAndAddNewMessages: function(newValidationErrorMessages) {
+        var errorMessage;
+        
+        for (errorMessage in newValidationErrorMessages) {
+            this.validationMessages[errorMessage] = newValidationErrorMessages[errorMessage];
+        }
+    },
+    
+    /**
+     *  Validatinator.messages.addCurrentFormAndField();
      * 
      *  Populates the currentForm and field being used if it needs to.
      * 
@@ -45,7 +60,7 @@ Validatinator.prototype.messages = {
     },
     
     /**
-     *  Validatinator.addValidationErrorMessage(String methodName);
+     *  Validatinator.messages.addValidationErrorMessage(String methodName, Array parametersArray);
      * 
      *  Adds the validation's error message based on the method that was called. Layout will match along the lines
      *  of this: { "form": { "field": { "method": "method's error message." } } };
@@ -54,38 +69,34 @@ Validatinator.prototype.messages = {
      */
     addValidationErrorMessage: function(methodName, parametersArray) {
         var validationMessage,
-            curlyBraceStrings,
-            valueReplaceRegex = /{(.*?)}/g;
+            numberOfValuesToReplace,
+            valueReplaceRegex = /{(\$.*?)}/g;
         
         // Go ahead and add our currentForm and currentField to the errors object so we know it's there.
         this.addCurrentFormAndField();
         
         validationMessage = this.validationMessages[methodName];
-        curlyBraceParameters = validationMessage.match(valueReplaceRegex);
         
-        if (curlyBraceParameters)
-            validationMessage = this.replaceCurlyBracesWithValues(validationMessage, curlyBraceParameters, parametersArray);
+        if (parametersArray.length > 0)
+            validationMessage = this.replaceCurlyBracesWithValues(validationMessage, parametersArray);
         
         // Form and field are both added so let's add our failed validation message.
         this.parent.errors[this.parent.currentForm][this.parent.currentField][methodName] = validationMessage;
     },
     
     /**
-     *  Validatinator.replaceCurlyBracesWithValues(String validationMessage, Array curlBraceParameters, Array parametersArray);
+     *  Validatinator.messages.replaceCurlyBracesWithValues(String validationMessage, Array curlBraceParameters, Array parametersArray);
      *  
      *  Replaces the curly brackets within the validationMessage with the corresponding values.
      * 
      *  @Added: 1/15/2014
      */
-    replaceCurlyBracesWithValues: function(validationMessage, curlyBraceParameters, parametersArray) {
+    replaceCurlyBracesWithValues: function(validationMessage, parametersArray) {
         var i = 0,
             currentParameterValue,
             currentValueToReplace;
         
-       // Shift off the first value as it is the validation field's value.
-       parametersArray.shift();
-        
-        for (; i < curlyBraceParameters.length; i++) {
+        for (; i < parametersArray.length; i++) {
             currentParameterValue = parametersArray[i];
             currentValueToReplace = "{$" + i + "}";
             

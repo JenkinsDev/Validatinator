@@ -3,11 +3,12 @@
  * See the file license.txt for copying permission.
  */
 
-function Validatinator(validationInformation) {   
+function Validatinator(validationInformation, validationErrorMessages) {   
     // Users may want to add validation information later on so we will allow them to create an instance of Validatinator without passing
     // any validation information.
     this.validationInformation = (validationInformation !== undefined) ? this.utils.convertFieldValidationsToArray(validationInformation) : {};
     this.errors = {};
+    
     // Current form & field we are validating against.
     this.currentForm;
     this.currentField;
@@ -17,6 +18,10 @@ function Validatinator(validationInformation) {
     this.messages.parent = this;
     this.validations.utils = this.utils;
     this.messages.utils = this.utils;
+    
+    // Overwrite and create new validationErrorMessages if the user provided any.
+    if (validationErrorMessages !== undefined)
+        this.messages.overwriteAndAddNewMessages(validationErrorMessages);
 }
 
 Validatinator.prototype = {
@@ -83,9 +88,10 @@ Validatinator.prototype = {
                 if (currentValidationMethodAndParameters.length === 2)
                     parameters = currentValidationMethodAndParameters[1];
 
-                if (! this.callValidationMethodWithParameters(method, parameters, currentFieldsValue))
+                if (! this.callValidationMethodWithParameters(method, parameters, currentFieldsValue)) {
+                    parameters.shift();
                     this.messages.addValidationErrorMessage(method, parameters);
-                console.log(parameters);
+                }
             }
         }
         
