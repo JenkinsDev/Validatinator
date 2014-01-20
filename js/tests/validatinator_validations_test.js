@@ -1,3 +1,8 @@
+/**
+ *  All validation tests are in alphabetical order, if you want to find a specific test you can run CMD+F or CTRL+F (Windows) and search
+ *  for the validation method's name.
+ */
+
 describe("Validations", function() {
     var validatinator,
         myForm,
@@ -48,20 +53,40 @@ describe("Validations", function() {
         expect(validatinator.validations.alphaNum("This-Is-A-Test_0-9")).toBeTruthy();
     });
 
-    it('between should return true if the field\'s value length is between the min and max number', function() {
+    it('between should return true if the field\'s value is between the min and max number', function() {
         expect(validatinator.validations.between("value", [20, 30])).toBeFalsy();
-        expect(validatinator.validations.between("123", [1, 2])).toBeFalsy();
         expect(validatinator.validations.between({}, [1, 20])).toBeFalsy();
+        expect(validatinator.validations.between("Testing", [5, 10])).toBeFalsy();
+        expect(validatinator.validations.between("123", [1, 2])).toBeFalsy();
 
         expect(validatinator.validations.between(123.432, [1, 300])).toBeTruthy();
-        expect(validatinator.validations.between("Testing", [5, 10])).toBeTruthy();
 
         expect(function() {
             validatinator.validations.between(123, ["min", "max"]);
         }).toThrow("min and max must both be numbers in the `between` validation.");
     });
+    
+    it('betweenLength should return true if the field\'s value length is between the min and max value supplied.', function() {
+        expect(validatinator.validations.betweenLength("value", [20, 30])).toBeFalsy();
+        expect(validatinator.validations.betweenLength("123", [1, 2])).toBeFalsy();
+        
+        expect(validatinator.validations.betweenLength(123, [1, 5])).toBeTruthy();
+        
+        //
+        // Below is a list of exmamples that might yield unexpected results.
+        //
+        
+        // This is turned into "false".length
+        expect(validatinator.validations.betweenLength(false, [2, 3])).toBeFalsy();
+        // This is false because we type cast to a string. "123".length === 3
+        expect(validatinator.validations.betweenLength(123, [2, 3])).toBeTruthy();
+        // When type casted to a string this array turns into "foo,bar,foobar,baz"
+        expect(validatinator.validations.betweenLength(["foo", "bar", "foobar", "baz"], [0, 10])).toBeFalsy();
+        // When an object is type casted it returns "[object Object]" so be careful.
+        expect(validatinator.validations.betweenLength({"foo": "bar"}, [5, 9])).toBeFalsy();
+    });
 
-    it('contains should return true if the field\'s value is contained within the array of values', function() {
+    it('contains should return true if the field\'s value is contained within the array of values supplied.', function() {
         expect(validatinator.validations.contains("in", ["in", "not"])).toBeTruthy();
 
         expect(validatinator.validations.contains("not", ["in", "it"])).toBeFalsy();
@@ -124,20 +149,65 @@ describe("Validations", function() {
     });
 
     it('max should return true if the field\'s value is below or equal to the maximum value supplied.', function() {
-        expect(validatinator.validations.max(40, 20)).toBeFalsy();
+        // All values are type casted to a Number.  If the value contains anything that is not considered a number then this method
+        // automatically returns false.
         expect(validatinator.validations.max({}, 40)).toBeFalsy();
-        expect(validatinator.validations.max("asdfasdf", 1)).toBeFalsy();
+        expect(validatinator.validations.max("asdfasdf", 100)).toBeFalsy();
+        expect(validatinator.validations.max(100, 10)).toBeFalsy();
 
-        expect(validatinator.validations.max(0, 20)).toBeTruthy();
+        expect(validatinator.validations.max(40, 200)).toBeTruthy();
         expect(validatinator.validations.max(40.50, 41)).toBeTruthy();
+        expect(validatinator.validations.max(100, 1000)).toBeTruthy();
+    });
+    
+    it('maxLength should return true if the field\'s value length is equal to or less than the maximum length supplied.', function() {
+        expect(validatinator.validations.maxLength("some length", 20)).toBeTruthy();
+        
+        expect(validatinator.validations.maxLength("this is a test string, here we go", 10)).toBeFalsy();
+        
+        //
+        // Below is a list of exmamples that might yield unexpected results.
+        //
+        
+        // This is turned into "false".length
+        expect(validatinator.validations.maxLength(false, 2)).toBeFalsy();
+        // This is false because we type cast to a string. "123".length === 3
+        expect(validatinator.validations.maxLength(123, 30)).toBeTruthy();
+        // When type casted to a string this array turns into "foo,bar,foobar,baz"
+        expect(validatinator.validations.maxLength(["foo", "bar", "foobar", "baz"], 14)).toBeFalsy();
+        // When an object is type casted it returns "[object Object]" so be careful.
+        expect(validatinator.validations.maxLength({"foo": "bar"}, 10)).toBeFalsy();
     });
 
-    it('min should return true if the field\'s value is below or equal to the minimum value supplied.', function() {
+    it('min should return true if the field\'s value is above or equal to the minimum value supplied.', function() {
+        // All values are type casted to a Number.  If the value contains anything that is not considered a number then this method
+        // automatically returns false.
         expect(validatinator.validations.min({}, 40)).toBeFalsy();
         expect(validatinator.validations.min("asdfasdf", 100)).toBeFalsy();
+        expect(validatinator.validations.min(100, 1000)).toBeFalsy();
 
         expect(validatinator.validations.min(40, 20)).toBeTruthy();
         expect(validatinator.validations.min(40.50, 40)).toBeTruthy();
+        expect(validatinator.validations.min(100, 10)).toBeTruthy();
+    });
+    
+    it('minLength should return true if the field\'s value length is equal to or more than the minimum length supplied.', function() {
+        expect(validatinator.validations.minLength("some length", 20)).toBeFalsy();
+
+        expect(validatinator.validations.minLength("this is a test string, here we go", 10)).toBeTruthy();
+        
+        //
+        // Below is a list of examples that might yield unexpected results.
+        //
+        
+        // This is turned into "false".length
+        expect(validatinator.validations.minLength(false, 2)).toBeTruthy();
+        // This is false because we type cast to a string. "123".length === 3
+        expect(validatinator.validations.minLength(123, 30)).toBeFalsy();
+        // When type casted to a string this array turns into "foo,bar,foobar,baz"
+        expect(validatinator.validations.minLength(["foo", "bar", "foobar", "baz"], 14)).toBeTruthy();
+        // When an object is type casted it returns "[object Object]" so be careful.
+        expect(validatinator.validations.minLength({"foo": "bar"}, 10)).toBeTruthy();
     });
 
     it('notIn should return true if the field\'s value is not contained within the list of value supplied.', function() {

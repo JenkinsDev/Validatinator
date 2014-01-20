@@ -73,14 +73,10 @@ Validatinator.prototype.validations = {
     },
 
     /**
-     *  Validatinator.validations.between(String/Number fieldValue, Number min, Number max);
+     *  Validatinator.validations.between(String/Number fieldValue, Array minMax));
      *
      *  Checks to make sure the field value supplied is between the minimum value and maximum
      *  value.
-     *  
-     *  If the field value is of the numerical type then we test to make sure the numerical
-     *  value is between the minimum and maximum.  If the field value is of the string data type then
-     *  we test the string's length against the minimum and maximum values.
      *
      *  @Added: 12/25/2013 *CHRISTMAS DAY!*
      */
@@ -91,10 +87,27 @@ Validatinator.prototype.validations = {
         if (isNaN(min) || isNaN(max))
             throw new Error("min and max must both be numbers in the `between` validation.");
 
-        // If it is not not a number then we check it's value versus min and max.  If it is a NaN then we check it's length.
-        if (isNaN(Number(fieldValue)))
-            return (min <= fieldValue.length && fieldValue.length <= max);
         return (min <= fieldValue && fieldValue <= max);
+    },
+    
+    /**
+     *  Validatinator.validations.betweenLength(String/Number fieldValue, Array minMax);
+     * 
+     *  Checks to make sure the field value supplied has a length that is between the min and max
+     *  values supplied.  The fieldValue will be type casted to a String as a safe measure, but this
+     *  can yield unexpected results so be wary of passing in objects, arrays and boolean values.
+     * 
+     *  @Added: 1/20/2014
+     */
+    betweenLength: function(fieldValue, minMax) {
+        var min = Number(minMax[0]),
+            max = Number(minMax[1]);
+        fieldValueLength = String(fieldValue).length;
+            
+        if (isNaN(min) || isNaN(max))
+            throw new Error("min and max must both be numbers in the `betweenLength` validation.");
+        
+        return (min <= fieldValueLength && fieldValueLength <= max);
     },
 
     /**
@@ -131,19 +144,16 @@ Validatinator.prototype.validations = {
      *  @Added: 12/26/2013
      */ 
     digitsLength: function(fieldValue, length) {
-        length = Number(length);
+        var fieldValueLength = String(fieldValue).length;
+        length = Number(length)
         
-        if (!length || isNaN(length))
+        if (isNaN(length))
             throw new Error("length must be of numerical value in the `digitsLength` validation.");
-        
-        fieldValue = Number(fieldValue);
 
-        if (isNaN(fieldValue))
+        if (! this.number(fieldValue))
             return false;
 
-        // Even though we only want a numerical value, we cast our value to a string so we can
-        // make use of the the .length property.
-        return String(fieldValue).length === length;
+        return fieldValueLength === length;
     },
 
     /**
@@ -156,21 +166,16 @@ Validatinator.prototype.validations = {
      */
     digitsLengthBetween: function(fieldValue, minMaxLength) {
         var minLength = Number(minMaxLength[0]),
-            maxLength = Number(minMaxLength[1]);
+            maxLength = Number(minMaxLength[1]),
+            fieldValueLength = String(fieldValue).length;
         
-        if (this.utils.isValueFalsyInNature(minLength) || this.utils.isValueFalsyInNature(maxLength) || isNaN(minLength) || isNaN(maxLength))
+        if (isNaN(minLength) || isNaN(maxLength))
             throw new Error("minLength and maxLength must both be numerical values in the `digitsLengthBetween` validation.");
 
-        fieldValue = Number(fieldValue);
-
-        if (fieldValue === NaN)
+        if (! this.number(fieldValue))
             return false;
 
-        // Even though we only want a numerical value, we cast our value to a string so we can
-        // make use of the the .length property.
-        fieldValueLength = String(fieldValue).length;
-
-        return ((minLength <= fieldValueLength) && (fieldValueLength <= maxLength));
+        return (minLength <= fieldValueLength && fieldValueLength <= maxLength);
     },
 
     /**
@@ -216,18 +221,31 @@ Validatinator.prototype.validations = {
     max: function(fieldValue, max) {
         max = Number(max);
 
-        if (this.utils.isValueFalsyInNature(max) || isNaN(max))
+        if (isNaN(max))
             throw new Error("max must be of numerical value in the `max` validation.");
 
-        // Pass in false as a second parameter so we are not stuck in strict mode.  Strict mode
-        // makes 0 equate to a falsy value in nature.
-        if (this.utils.isValueFalsyInNature(fieldValue, false))
-            return false;
-
-        // If it is not not a number then we check it's value versus max.  If it is a NaN then we check it's length.
-        if (isNaN(Number(fieldValue)))
-            return fieldValue.length <= max;
-        return fieldValue <= max;
+        // Since we are only checking the max value we will go ahead and call the between method
+        // but we will pass -Infinity in as the min value as there is no min.
+        return this.between(fieldValue, [-Infinity, max]);
+    },
+    
+    /**
+     *  Validatinator.validations.maxLength(String/Number fieldValue, Number maxLength);
+     * 
+     *  Checks to make sure the field value supplied has a length that is less than or equal to the
+     *  max value supplied.
+     * 
+     *  @Added: 1/20/2014
+     */
+    maxLength: function(fieldValue, max) {
+        max = Number(max);
+        
+        if (isNaN(max))
+            throw new Error("max must be a numerical value in the `max` validation.");
+        
+        // Since we are only checking the max value we will go ahead and call the betweenLength method
+        // but we will pass -Infinity in as the min value as there is no min.
+        return this.betweenLength(fieldValue, [-Infinity, max]);
     },
 
     /**
@@ -241,18 +259,31 @@ Validatinator.prototype.validations = {
     min: function(fieldValue, min) {        
         min = Number(min);
 
-        if (this.utils.isValueFalsyInNature(min) || isNaN(min))
+        if (isNaN(min))
             throw new Error("min must be of numerical value in the `min` validation.");
 
-        // Pass in false as a second parameter so we are not stuck in strict mode.  Strict mode
-        // makes 0 equate to a falsy value in nature.
-        if (this.utils.isValueFalsyInNature(fieldValue, false))
-            return false;
-
-        // If it is not not a number then we check it's value versus max.  If it is a NaN then we check it's length.
-        if (isNaN(Number(fieldValue)))
-            return fieldValue.length >= min;
-        return fieldValue >= min;
+        // Since we are only checking the min value we will go ahead and call the between method
+        // but we will pass Inifinity in as the max value as there is no max.
+        return this.between(fieldValue, [min, Infinity]);
+    },
+    
+    /**
+     *  Validatinator.validations.minLength(String/Number fieldValue, Number min);
+     * 
+     *  Checks to make sure the field value supplied has a length that is greater than or equal to the
+     *  min value supplied.
+     * 
+     *  @Added: 1/20/2014
+     */
+    minLength: function(fieldValue, min) {
+        min = Number(min);
+        
+        if (isNaN(min))
+            throw new Error("min must be a numerical value in the `minLength` validation.");
+        
+        // Since we are only checking the min value we will go ahead and call the betweenLength method
+        // but we will pass Inifinity in as the max value as there is no max.
+        return this.betweenLength(fieldValue, [min, Infinity]);
     },
 
     /**
@@ -275,7 +306,7 @@ Validatinator.prototype.validations = {
      *  @Added: 12/27/2013
      */
     number: function(fieldValue) {
-        if (! fieldValue)
+        if (fieldValue === null || fieldValue === undefined)
             return false;
 
         fieldValue = Number(fieldValue);
