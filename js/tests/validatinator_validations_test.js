@@ -262,8 +262,27 @@ describe("Validations", function() {
             firstName.value = "test";
         });
         
+	    it('requiredIf should return false if the field provided equals the value provided, else true.', function() {
+	    	validatinator.currentForm = "my-form";
+	    	
+	    	expect(validatinator.validations.requiredIf("field value", "first-name", "test")).toBeTruthy();
+	    	expect(validatinator.validations.requiredIf("", "first-name", "not the real value")).toBeTruthy();
+	    	
+	    	expect(validatinator.validations.requiredIf("", "first-name", "test")).toBeFalsy();
+	    });
+	    
+	    it('requiredIfNot should return false if the field provided does NOT equal the value provided AND the value is not present, else true.', function() {
+	    	validatinator.currentForm = "my-form";
+	    	
+	    	expect(validatinator.validations.requiredIfNot("field value", "first-name", "not the real value")).toBeTruthy();
+	    	expect(validatinator.validations.requiredIfNot("", "first-name", "test")).toBeTruthy();
+	    	
+	    	expect(validatinator.validations.requiredIfNot("", "first-name", "not the real value")).toBeFalsy();
+	    });
+
         it('same should return true if the two field\'s are the same, else return false', function() {
             validatinator.currentForm = "my-form";
+            
             expect(validatinator.validations.same("test", "first-name")).toBeTruthy();
             expect(validatinator.validations.same("TEST", "first-name", false)).toBeTruthy();
     
@@ -273,6 +292,7 @@ describe("Validations", function() {
         
         it('different should return true if the field\'s value is different than the second field value supplied', function() {
             validatinator.currentForm = "my-form";
+            
             expect(validatinator.validations.different("test", "first-name")).toBeFalsy();
             expect(validatinator.validations.different("TEST", "first-name", false)).toBeFalsy();
     

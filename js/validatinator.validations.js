@@ -326,6 +326,39 @@ Validatinator.prototype.validations = {
         // true; we want to return true if the value exists, not if it is falsy.
         return ! this.utils.isValueFalsyInNature(fieldValue, false);
     },
+    
+    /**
+     *  Validatinator.validations.requiredIf(String/Number fieldValue, String testedFieldsName, String/Number valueToTestAgainst);
+     * 
+     *  The field under validation must be present if the field 
+     *  that is being tested, not the validation one, is equal to value.
+     * 
+     *  @Added: 1/26/2014
+     */
+    requiredIf: function(fieldValue, testedFieldsName, valueToTestAgainst) {
+    	var testedFieldsNameValue = this.utils.getFieldsValue(this.parent.currentForm, testedFieldsName);
+    	
+    	if (testedFieldsNameValue === valueToTestAgainst)
+    	    return this.required(fieldValue);
+    	return true;
+    },
+    
+    /**
+     *  Validatinator.validations.requiredIfNot(String/Number fieldValue, String testedFieldsName, String/Number valueToTestAgainst);
+     * 
+     *  This validation is exactly the same as the requiredIf validation except
+     *  that the field we are validating against is only required IF the field
+     *  being tested, not the validation one, is NOT equal to the value.
+     * 
+     *  @Added: 1/26/2014
+     */
+    requiredIfNot: function(fieldValue, testedFieldsName, valuetoTestAgainst) {
+    	var testedFieldsNameValue = this.utils.getFieldsValue(this.parent.currentForm, testedFieldsName);
+    	
+    	if (testedFieldsNameValue !== valuetoTestAgainst)
+    	    return this.required(fieldValue);
+    	return true;
+    },
 
     /**
      *  Validatinator.validations.same(String/Number fieldValue, String/Number sameFieldValue, Boolean strict);
