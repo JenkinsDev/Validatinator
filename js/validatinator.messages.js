@@ -26,6 +26,8 @@ Validatinator.prototype.messages = {
         notIn: "This field must not be contained within the following values, {$0}.",
         number: "This field only allows valid numerical values.",
         required: "This field is required.",
+        requiredIf: "This field is required if the value of {$0} equals {$1}.",
+        requiredIfNot: "This field is required if the value of {$0} does not equal {$1}.",
         same: "This field must be the same value as {$0}.",
         url: "This field only allows valid urls."
     },
