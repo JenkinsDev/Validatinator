@@ -1,11 +1,5 @@
 Gruntfile.js
 package.json
 node_modules/*
-<<<<<<< HEAD
 index.html
 .project
-=======
-css/*
-*.html
-js/tests/*
->>>>>>> master
