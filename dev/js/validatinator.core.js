@@ -3,12 +3,12 @@
  * See the file license.txt for copying permission.
  */
 
-function Validatinator(validationInformation, validationErrorMessages) {   
+function Validatinator(validationInformation, validationErrorMessages) {
     // Users may want to add validation information later on so we will allow them to create an instance of Validatinator without passing
     // any validation information.
     this.validationInformation = (validationInformation !== undefined) ? this.utils.convertFieldValidationsToArray(validationInformation) : {};
     this.errors = {};
-    
+
     // Current form & field we are validating against.
     this.currentForm;
     this.currentField;
@@ -18,7 +18,7 @@ function Validatinator(validationInformation, validationErrorMessages) {
     this.messages.parent = this;
     this.validations.utils = this.utils;
     this.messages.utils = this.utils;
-    
+
     // Overwrite and create new validationErrorMessages if the user provided any.
     if (validationErrorMessages !== undefined)
         this.messages.overwriteAndAddNewMessages(validationErrorMessages);
@@ -27,11 +27,11 @@ function Validatinator(validationInformation, validationErrorMessages) {
 Validatinator.prototype = {
     /**
      *  Validatinator.fails(String formName);
-     * 
+     *
      *  Starts the testing phase for each of the form field's validation methods,
-     *  if any of them fails then we return true here and the user can expect the 
+     *  if any of them fails then we return true here and the user can expect the
      *  errors object will have populated information.
-     * 
+     *
      *  @Added: 12/23/2013
      */
     fails: function(formName) {
@@ -42,11 +42,11 @@ Validatinator.prototype = {
 
     /**
      *  Validatinator.passes(String formName);
-     * 
+     *
      *  Starts the testing phase for each of the form field's validation methods,
-     *  if any of them fail then we return false here and the user can expect the 
+     *  if any of them fail then we return false here and the user can expect the
      *  errors object will have populated information.
-     * 
+     *
      *  @Added: 12/23/2013
      */
     passes: function(formName) {
@@ -75,15 +75,15 @@ Validatinator.prototype = {
             this.currentField = fieldName;
             currentFieldsValidations = this.validationInformation[formName][fieldName];
             currentFieldsValue = this.utils.getFieldsValue(this.currentForm, this.currentField);
-            
+
             // We need to set i here because it doesn't reset to zero by default and it is more idomatic to do it here.
             for (i = 0; i < currentFieldsValidations.length; i++) {
                 var method,
                     parameters = [];
 
-                currentValidationMethodAndParameters = this.getValidationMethodAndParameters(currentFieldsValidations[i]);                
+                currentValidationMethodAndParameters = this.getValidationMethodAndParameters(currentFieldsValidations[i]);
                 method = currentValidationMethodAndParameters[0];
-        
+
                 // Here we check to see if our parameters actually exist and if it does then store it.
                 if (currentValidationMethodAndParameters.length === 2)
                     parameters = currentValidationMethodAndParameters[1];
@@ -94,18 +94,18 @@ Validatinator.prototype = {
                 }
             }
         }
-        
+
         // If there are no errors populated in the errors property then we passed.
         return this.utils.isEmptyObject(this.errors);
     },
-    
+
     /**
      *  Validatinator.getValidationMethodAndParameters(String validationString);
-     * 
+     *
      *  Take the current validationString and retreive the validation method and
      *  it's prepared parameters.  Makes a call to prepareParameters to get the
      *  parameters in a good enough state for the validation method calls.
-     * 
+     *
      *  @Added: 1/8/2014
      */
     getValidationMethodAndParameters: function(validationString) {
@@ -113,18 +113,18 @@ Validatinator.prototype = {
             validationParameters,
             validationMethod,
             i = 1;
-        
+
         // If our validationString doesn't have any colons then we will assume
         // that the validation does not have any parameters and there is nothing furthur
-        // we need to do.        
+        // we need to do.
         if (! validationString.contains(":"))
             return [validationString];
-            
+
         validationParameters = validationString.split(":");
         // Remove the first element off the array as that is always going to be the validation
         // method, we are only worried about the parameters at this time.
         validationMethod = validationParameters.shift();
-        
+
         // Add the the validation method back onto the front of a new array after we prepare the
         // parameters.
         return [validationMethod, this.prepareParameters(validationParameters)];
@@ -148,7 +148,7 @@ Validatinator.prototype = {
             // validation methods.  i.e:  not_in:foo,bar,baz.
             if (validationParameters[i].contains(",")) {
                 validationParameters[i] = validationParameters[i].split(",");
-                
+
                 // Since there was third level "parameters" we will go ahead and loop through each of the elements and
                 // trim away any whitespace and convert falsey or truthy values to their boolean representations.
                 for (; j < validationParameters[i].length; j++) {
@@ -162,14 +162,14 @@ Validatinator.prototype = {
 
         return validationParameters;
     },
-    
+
     /**
      *  Validatinator.callValidationMethodWithParameters(String method, Array parameters Object fieldValue);
-     *  
+     *
      *  Attempts to call the validation method supplied with the provided parameters if
      *  any parameters exist, if they don't then just call the validation method with
      *  the current validating field's value.
-     * 
+     *
      *  @Added: 1/9/2014
      */
     callValidationMethodWithParameters: function(method, parameters, fieldValue) {
@@ -179,14 +179,14 @@ Validatinator.prototype = {
 
         if (! (method in this["validations"]))
             throw new Error("Validation does not exist: " + method);
-        
+
         if (! parameters)
             return this["validations"][method](fieldValue);
-        
+
         // We do this so we can use the .apply Function method below.  All parameters for each method call will be based
         // on the parameters array.
         parameters.unshift(fieldValue);
-        
+
         // this.validations makes sure the scope that is used during the validation call is within the validations scope and
         // first value of the parameters array is actually the field's value.  We have to do this as .apply will distribute
         // out the parameters array as different parameters for each index.  So ["value", ["5", "10"]] passed to between would be

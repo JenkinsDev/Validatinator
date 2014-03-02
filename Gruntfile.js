@@ -13,20 +13,14 @@ module.exports = function(grunt) {
                         ' * a Validatinator object, calling the passes or fails methods and if there are failed validations then grabbing \n' +
                         ' * those validations from the errors property on the main object. \n' +
                         ' * \n' +
-                        ' * Latest Update: 1.1.1-beta (<%= grunt.template.today("mm/dd/yyyy") %>) \n' +
+                        ' * Latest Update: 1.1.2-beta (<%= grunt.template.today("mm/dd/yyyy") %>) \n' +
                         ' */ \n' +
                         '(function(window, undefined) {',
                 footer: '})(window);'
             },
             all: {
                 files: {
-                    'js/<%= pkg.name %>.min.js': [
-                        'js/<%= pkg.name %>.core.js',
-                        'js/<%= pkg.name %>.polyfill.js',
-                        'js/<%= pkg.name %>.messages.js',
-                        'js/<%= pkg.name %>.validations.js',
-                        'js/<%= pkg.name %>.utils.js'
-                    ]
+                    'js/<%= pkg.name %>.min.js': ['dev/js/*.js']
                 }
             }
         },
@@ -43,26 +37,20 @@ module.exports = function(grunt) {
             validatinatorTests: {
                 src: 'js/<%= pkg.name %>.min.js',
                 options: {
-                    specs: 'js/tests/*.js'
+                    specs: 'dev/tests/*.js'
                 }
             }
         },
         watch: {
             scriptsUglify: {
-                files: [
-                    'js/<%= pkg.name %>.core.js',
-                    'js/<%= pkg.name %>.polyfill.js',
-                    'js/<%= pkg.name %>.validations.js',
-                    'js/<%= pkg.name %>.utils.js',
-                    'js/<%= pkg.name %>.messages.js'
-                ],
+                files: ['dev/js/*.js'],
                 tasks: ['uglify'],
                 options: {
                     spawn: false
                 }
             },
             jasmineTests: {
-                files: ['js/tests/*.js', 'js/<%= pkg.name %>.min.js'],
+                files: ['dev/tests/*.js', 'js/<%= pkg.name %>.min.js'],
                 tasks: ['jasmine:validatinatorTests']
             }
         }
