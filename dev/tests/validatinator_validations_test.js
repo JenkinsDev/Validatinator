@@ -12,19 +12,6 @@ describe("Validations", function() {
         validatinator = new Validatinator();
     });
 
-    it('accepted should return true when the field value is yes, on, true or 1; else false.', function() {
-        expect(validatinator.validations.accepted()).toBeFalsy();
-        expect(validatinator.validations.accepted(null)).toBeFalsy();
-        expect(validatinator.validations.accepted("")).toBeFalsy();
-        expect(validatinator.validations.accepted(false)).toBeFalsy();
-        expect(validatinator.validations.accepted(0)).toBeFalsy();
-        expect(validatinator.validations.accepted("yes")).toBeFalsy();
-        expect(validatinator.validations.accepted("on")).toBeFalsy();
-
-        expect(validatinator.validations.accepted(true)).toBeTruthy();
-        expect(validatinator.validations.accepted(1)).toBeTruthy();
-    });
-
     it('alpha should return true if the field value only contains letters; else false', function() {
         expect(validatinator.validations.alpha(123)).toBeFalsy();
         expect(validatinator.validations.alpha("123")).toBeFalsy();
@@ -247,19 +234,33 @@ describe("Validations", function() {
     describe('Adding required DOM elements for these validation methods to run correctly.', function() {
         beforeEach(function() {
             var myForm = document.createElement('form'),
-                firstName = document.createElement('input');
+                firstName = document.createElement('input'),
+                tos = document.createElement('input');
 
             myForm.name = "my-form";
             firstName.name = "first-name";
+            tos.name = "tos";
+            tos.type = "checkbox";
 
             document.body.appendChild(myForm);
 
             // Now that our element is in the dom let's select it again.
             myForm = document.getElementsByName("my-form")[0];
             myForm.appendChild(firstName);
+            myForm.appendChild(tos);
 
             firstName = document.getElementsByName("first-name")[0];
             firstName.value = "test";
+        });
+
+        it('accepted should return true when the field value is true or 1; else false.', function() {
+            validatinator.currentField = "tos";
+            expect(validatinator.validations.accepted('')).toBeFalsy();
+
+            // Check the TOS checkbox field and try again.
+            document.getElementsByName("tos")[0].checked = true;
+
+            expect(validatinator.validations.accepted('')).toBeTruthy();
         });
 
 	    it('requiredIf should return false if the field provided equals the value provided, else true.', function() {
