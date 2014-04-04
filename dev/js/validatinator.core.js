@@ -164,7 +164,7 @@ Validatinator.prototype = {
     },
 
     /**
-     *  Validatinator.callValidationMethodWithParameters(String method, Array parameters Object fieldValue);
+     *  Validatinator.callValidationMethodWithParameters(String method, Array parameters, Object fieldValue);
      *
      *  Attempts to call the validation method supplied with the provided parameters if
      *  any parameters exist, if they don't then just call the validation method with

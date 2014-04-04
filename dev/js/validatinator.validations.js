@@ -8,20 +8,16 @@ Validatinator.prototype.validations = {
      *  Validatinator.validations.accepted(String/Number fieldValue);
      *
      *  Check to make sure the field value is of an accepted type.
-     *  Accepted Types: "yes", "on", true and 1.
+     *  Accepted Types: true and 1.
      *
      *  @Added: 12/23/2013
+     *  @Modified: 4/4/2014
      */
     accepted: function(fieldValue) {
-        // We can't call .toLowerCase(); on a non-string object so let's see if we are clear
-        // here.
-        if (this.utils.isValueFalsyInNature(fieldValue))
-            return false;
-
-        // Case sensitivity shouldn't matter here as long as our value is a string.
-        fieldValue = (typeof fieldValue === "string") ? fieldValue.toLowerCase() : fieldValue;
-
-        return (fieldValue === "yes" || fieldValue === "on" || fieldValue);
+        // Instead of using the field's value we want to see if the field is checked or not, simple!
+        // If you notice in the core file we store the field's name attribute in the currentField property,
+        // hence why we need to go through this extra step to actually retrieve the current field's DOM Object.
+        return document.getElementsByName(this.parent.currentField)[0].checked;
     },
 
     /**

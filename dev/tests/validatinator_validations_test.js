@@ -18,9 +18,9 @@ describe("Validations", function() {
         expect(validatinator.validations.accepted("")).toBeFalsy();
         expect(validatinator.validations.accepted(false)).toBeFalsy();
         expect(validatinator.validations.accepted(0)).toBeFalsy();
+        expect(validatinator.validations.accepted("yes")).toBeFalsy();
+        expect(validatinator.validations.accepted("on")).toBeFalsy();
 
-        expect(validatinator.validations.accepted("yes")).toBeTruthy();
-        expect(validatinator.validations.accepted("on")).toBeTruthy();
         expect(validatinator.validations.accepted(true)).toBeTruthy();
         expect(validatinator.validations.accepted(1)).toBeTruthy();
     });
@@ -65,17 +65,17 @@ describe("Validations", function() {
             validatinator.validations.between(123, ["min", "max"]);
         }).toThrow("min and max must both be numbers in the `between` validation.");
     });
-    
+
     it('betweenLength should return true if the field\'s value length is between the min and max value supplied.', function() {
         expect(validatinator.validations.betweenLength("value", [20, 30])).toBeFalsy();
         expect(validatinator.validations.betweenLength("123", [1, 2])).toBeFalsy();
-        
+
         expect(validatinator.validations.betweenLength(123, [1, 5])).toBeTruthy();
-        
+
         //
         // Below is a list of exmamples that might yield unexpected results.
         //
-        
+
         // This is turned into "false".length
         expect(validatinator.validations.betweenLength(false, [2, 3])).toBeFalsy();
         // This is false because we type cast to a string. "123".length === 3
@@ -126,7 +126,7 @@ describe("Validations", function() {
         expect(function() {
             validatinator.validations.digitsLengthBetween(123, ["1f", 234]);
         }).toThrow("minLength and maxLength must both be numerical values in the `digitsLengthBetween` validation.");
-        
+
         expect(function() {
             validatinator.validations.digitsLengthBetween(123, ["1", 234]);
         }).not.toThrow("minLength and maxLength must both be numerical values in the `digitsLengthBetween` validation.");
@@ -159,16 +159,16 @@ describe("Validations", function() {
         expect(validatinator.validations.max(40.50, 41)).toBeTruthy();
         expect(validatinator.validations.max(100, 1000)).toBeTruthy();
     });
-    
+
     it('maxLength should return true if the field\'s value length is equal to or less than the maximum length supplied.', function() {
         expect(validatinator.validations.maxLength("some length", 20)).toBeTruthy();
-        
+
         expect(validatinator.validations.maxLength("this is a test string, here we go", 10)).toBeFalsy();
-        
+
         //
         // Below is a list of exmamples that might yield unexpected results.
         //
-        
+
         // This is turned into "false".length
         expect(validatinator.validations.maxLength(false, 2)).toBeFalsy();
         // This is false because we type cast to a string. "123".length === 3
@@ -190,16 +190,16 @@ describe("Validations", function() {
         expect(validatinator.validations.min(40.50, 40)).toBeTruthy();
         expect(validatinator.validations.min(100, 10)).toBeTruthy();
     });
-    
+
     it('minLength should return true if the field\'s value length is equal to or more than the minimum length supplied.', function() {
         expect(validatinator.validations.minLength("some length", 20)).toBeFalsy();
 
         expect(validatinator.validations.minLength("this is a test string, here we go", 10)).toBeTruthy();
-        
+
         //
         // Below is a list of examples that might yield unexpected results.
         //
-        
+
         // This is turned into "false".length
         expect(validatinator.validations.minLength(false, 2)).toBeTruthy();
         // This is false because we type cast to a string. "123".length === 3
@@ -223,7 +223,7 @@ describe("Validations", function() {
         expect(validatinator.validations.number(123)).toBeTruthy();
         expect(validatinator.validations.number(123.123)).toBeTruthy();
     });
-    
+
     it('required should return false on empty, undefined or null and true on anything else.', function() {
         expect(validatinator.validations.required("")).toBeFalsy();
         expect(validatinator.validations.required(null)).toBeFalsy();
@@ -243,7 +243,7 @@ describe("Validations", function() {
         expect(validatinator.validations.url("https://www.microsoft.com")).toBeTruthy();
         expect(validatinator.validations.url("https://microsoft.com")).toBeTruthy();
     });
-    
+
     describe('Adding required DOM elements for these validation methods to run correctly.', function() {
         beforeEach(function() {
             var myForm = document.createElement('form'),
@@ -257,45 +257,45 @@ describe("Validations", function() {
             // Now that our element is in the dom let's select it again.
             myForm = document.getElementsByName("my-form")[0];
             myForm.appendChild(firstName);
-            
+
             firstName = document.getElementsByName("first-name")[0];
             firstName.value = "test";
         });
-        
+
 	    it('requiredIf should return false if the field provided equals the value provided, else true.', function() {
 	    	validatinator.currentForm = "my-form";
-	    	
+
 	    	expect(validatinator.validations.requiredIf("field value", "first-name", "test")).toBeTruthy();
 	    	expect(validatinator.validations.requiredIf("", "first-name", "not the real value")).toBeTruthy();
-	    	
+
 	    	expect(validatinator.validations.requiredIf("", "first-name", "test")).toBeFalsy();
 	    });
-	    
+
 	    it('requiredIfNot should return false if the field provided does NOT equal the value provided AND the value is not present, else true.', function() {
 	    	validatinator.currentForm = "my-form";
-	    	
+
 	    	expect(validatinator.validations.requiredIfNot("field value", "first-name", "not the real value")).toBeTruthy();
 	    	expect(validatinator.validations.requiredIfNot("", "first-name", "test")).toBeTruthy();
-	    	
+
 	    	expect(validatinator.validations.requiredIfNot("", "first-name", "not the real value")).toBeFalsy();
 	    });
 
         it('same should return true if the two field\'s are the same, else return false', function() {
             validatinator.currentForm = "my-form";
-            
+
             expect(validatinator.validations.same("test", "first-name")).toBeTruthy();
             expect(validatinator.validations.same("TEST", "first-name", false)).toBeTruthy();
-    
+
             expect(validatinator.validations.same("Test", "first-name")).toBeFalsy();
             expect(validatinator.validations.same(0, "first-name")).toBeFalsy();
         });
-        
+
         it('different should return true if the field\'s value is different than the second field value supplied', function() {
             validatinator.currentForm = "my-form";
-            
+
             expect(validatinator.validations.different("test", "first-name")).toBeFalsy();
             expect(validatinator.validations.different("TEST", "first-name", false)).toBeFalsy();
-    
+
             expect(validatinator.validations.different("Test", "first-name")).toBeTruthy();
             expect(validatinator.validations.different(324, "first-name")).toBeTruthy();
         });
