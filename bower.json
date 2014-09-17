@@ -1,6 +1,6 @@
 {
     "name": "validatinator",
-    "version": "1.0.1",
+    "version": "1.1.0",
     "homepage": "https://github.com/JenkinsDev/Validatinator",
     "authors": [
         "David Jenkins <david.nicholas.jenkins@gmail.com>"
@@ -11,7 +11,9 @@
         "forms",
         "validations",
         "form validation",
-        "vanilla"
+        "vanilla",
+        "laravel form validation",
+        "validatinator"
     ],
     "license": "MIT",
     "ignore": [
@@ -19,6 +21,9 @@
         "js/tests",
         "examples",
         "index.html",
-        ".project"
+        ".project",
+        ".gitignore",
+        "Gruntfile.js",
+        "package.json"
     ]
 }
