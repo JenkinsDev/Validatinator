@@ -32,8 +32,10 @@ Validatinator.prototype.validations = {
 
         // We won't check to see if the value is a string because our regex will
         // handle that for us.
-        if (this.utils.isValueFalsyInNature(fieldValue))
+        if (this.utils.isValueFalsyInNature(fieldValue)) {
             return false;
+        }
+
         return alphaReg.test(fieldValue);
     },
 
@@ -47,8 +49,10 @@ Validatinator.prototype.validations = {
     alphaDash: function(fieldValue) {
         var alphaDashReg = /^[a-zA-Z-_]+$/;
 
-        if (this.utils.isValueFalsyInNature(fieldValue))
+        if (this.utils.isValueFalsyInNature(fieldValue)) {
             return false;
+        }
+
         return alphaDashReg.test(fieldValue);
     },
 
@@ -63,8 +67,10 @@ Validatinator.prototype.validations = {
     alphaNum: function(fieldValue) {
         var alphaNumReg = /^[a-zA-Z-_0-9]+$/;
 
-        if (this.utils.isValueFalsyInNature(fieldValue))
+        if (this.utils.isValueFalsyInNature(fieldValue)) {
             return false;
+        }
+
         return alphaNumReg.test(fieldValue);
     },
 
@@ -80,8 +86,9 @@ Validatinator.prototype.validations = {
         var min = Number(minMax[0]),
             max = Number(minMax[1]);
 
-        if (isNaN(min) || isNaN(max))
+        if (isNaN(min) || isNaN(max)) {
             throw new Error("min and max must both be numbers in the `between` validation.");
+        }
 
         return (min <= fieldValue && fieldValue <= max);
     },
@@ -97,11 +104,12 @@ Validatinator.prototype.validations = {
      */
     betweenLength: function(fieldValue, minMax) {
         var min = Number(minMax[0]),
-            max = Number(minMax[1]);
-        fieldValueLength = String(fieldValue).length;
+            max = Number(minMax[1]),
+            fieldValueLength = String(fieldValue).length;
 
-        if (isNaN(min) || isNaN(max))
+        if (isNaN(min) || isNaN(max)) {
             throw new Error("min and max must both be numbers in the `betweenLength` validation.");
+        }
 
         return (min <= fieldValueLength && fieldValueLength <= max);
     },
@@ -140,14 +148,16 @@ Validatinator.prototype.validations = {
      *  @Added: 12/26/2013
      */
     digitsLength: function(fieldValue, length) {
-        var fieldValueLength = String(fieldValue).length;
-        length = Number(length);
+        var fieldValueLength = String(fieldValue).length,
+            length = Number(length);
 
-        if (isNaN(length))
+        if (isNaN(length)) {
             throw new Error("length must be of numerical value in the `digitsLength` validation.");
+        }
 
-        if (! this.number(fieldValue))
+        if (! this.number(fieldValue)) {
             return false;
+        }
 
         return fieldValueLength === length;
     },
@@ -165,11 +175,13 @@ Validatinator.prototype.validations = {
             maxLength = Number(minMaxLength[1]),
             fieldValueLength = String(fieldValue).length;
 
-        if (isNaN(minLength) || isNaN(maxLength))
+        if (isNaN(minLength) || isNaN(maxLength)) {
             throw new Error("minLength and maxLength must both be numerical values in the `digitsLengthBetween` validation.");
+        }
 
-        if (! this.number(fieldValue))
+        if (! this.number(fieldValue)) {
             return false;
+        }
 
         return (minLength <= fieldValueLength && fieldValueLength <= maxLength);
     },
@@ -203,7 +215,7 @@ Validatinator.prototype.validations = {
 
         // Here we make sure all of our values are less than or equal to 255 as in the RFC for ipv4 it states that each decimal
         // separated value is 1 byte and the max integer value we can create with 1 byte is 255.  0.0.0.0 >=< 255.255.255.255
-        return (ipvFourReg != null && ipvFourReg[1] <= maxByteValue && ipvFourReg[2] <= maxByteValue && ipvFourReg[3] <= maxByteValue && ipvFourReg[4] <= maxByteValue);
+        return (ipvFourReg !== null && ipvFourReg[1] <= maxByteValue && ipvFourReg[2] <= maxByteValue && ipvFourReg[3] <= maxByteValue && ipvFourReg[4] <= maxByteValue);
     },
 
     /**
@@ -217,8 +229,9 @@ Validatinator.prototype.validations = {
     max: function(fieldValue, max) {
         max = Number(max);
 
-        if (isNaN(max))
+        if (isNaN(max)) {
             throw new Error("max must be of numerical value in the `max` validation.");
+        }
 
         // Since we are only checking the max value we will go ahead and call the between method
         // but we will pass -Infinity in as the min value as there is no min.
@@ -255,8 +268,9 @@ Validatinator.prototype.validations = {
     min: function(fieldValue, min) {
         min = Number(min);
 
-        if (isNaN(min))
+        if (isNaN(min)) {
             throw new Error("min must be of numerical value in the `min` validation.");
+        }
 
         // Since we are only checking the min value we will go ahead and call the between method
         // but we will pass Inifinity in as the max value as there is no max.
@@ -274,8 +288,9 @@ Validatinator.prototype.validations = {
     minLength: function(fieldValue, min) {
         min = Number(min);
 
-        if (isNaN(min))
+        if (isNaN(min)) {
             throw new Error("min must be a numerical value in the `minLength` validation.");
+        }
 
         // Since we are only checking the min value we will go ahead and call the betweenLength method
         // but we will pass Inifinity in as the max value as there is no max.
@@ -302,8 +317,9 @@ Validatinator.prototype.validations = {
      *  @Added: 12/27/2013
      */
     number: function(fieldValue) {
-        if (fieldValue === null || fieldValue === undefined)
+        if (fieldValue === null || fieldValue === undefined) {
             return false;
+        }
 
         fieldValue = Number(fieldValue);
         // If it != NaN then it is a number.
@@ -324,6 +340,29 @@ Validatinator.prototype.validations = {
     },
 
     /**
+     * Validatinator.validations._required_if(
+     *                               String/Number fieldValue,
+     *                               String testedFieldsName,
+     *                               String/Number valueToTestAgainst,
+     *                               Boolean not
+     *                           )
+     *
+     * More or less a hidden method that the requiredIf and requiredIfNot method's
+     * use to help keep code DRY.
+     *
+     * @Added: 9/17/2014
+     */
+    _required_if: function(fieldValue, testedFieldsName, valueToTestAgainst, not) {
+        var testedFieldsValue = this.utils.getFieldsValue(this.parent.currentForm, testedFieldsName);
+
+        if ((not && testedFieldsValue !== valueToTestAgainst) || (! not && testedFieldsValue === valueToTestAgainst)) {
+            return this.required(fieldValue);
+        }
+
+        return true;
+    },
+
+    /**
      *  Validatinator.validations.requiredIf(String/Number fieldValue, String testedFieldsName, String/Number valueToTestAgainst);
      *
      *  The field under validation must be present if the field
@@ -332,11 +371,7 @@ Validatinator.prototype.validations = {
      *  @Added: 1/26/2014
      */
     requiredIf: function(fieldValue, testedFieldsName, valueToTestAgainst) {
-    	var testedFieldsNameValue = this.utils.getFieldsValue(this.parent.currentForm, testedFieldsName);
-
-    	if (testedFieldsNameValue === valueToTestAgainst)
-    	    return this.required(fieldValue);
-    	return true;
+        return this._required_if(fieldValue, testedFieldsName, valueToTestAgainst, false);
     },
 
     /**
@@ -348,12 +383,8 @@ Validatinator.prototype.validations = {
      *
      *  @Added: 1/26/2014
      */
-    requiredIfNot: function(fieldValue, testedFieldsName, valuetoTestAgainst) {
-    	var testedFieldsNameValue = this.utils.getFieldsValue(this.parent.currentForm, testedFieldsName);
-
-    	if (testedFieldsNameValue !== valuetoTestAgainst)
-    	    return this.required(fieldValue);
-    	return true;
+    requiredIfNot: function(fieldValue, testedFieldsName, valueToTestAgainst) {
+        return this._required_if(fieldValue, testedFieldsName, valueToTestAgainst, true);
     },
 
     /**
@@ -366,16 +397,19 @@ Validatinator.prototype.validations = {
     same: function(fieldValue, sameFieldName, strict) {
         var sameFieldValue = this.utils.getFieldsValue(this.parent.currentForm, sameFieldName);
 
-        if (strict === undefined || strict === null)
+        if (strict === undefined || strict === null) {
             strict = true;
+        }
 
         // We cast our field values to strings so all values are of the same data type and we
         // can make use of the toLowerCase method.
         fieldValue = String(fieldValue);
         sameFieldValue = String(sameFieldValue);
 
-        if (strict)
+        if (strict) {
             return fieldValue === sameFieldValue;
+        }
+
         return fieldValue.toLowerCase() === sameFieldValue.toLowerCase();
     },
 
