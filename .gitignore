@@ -2,3 +2,4 @@ package.json
 node_modules/*
 index.html
 .project
+npm-debug.log
