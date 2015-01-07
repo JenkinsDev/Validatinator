@@ -35,7 +35,7 @@ module.exports = function(grunt) {
         },
         jasmine: {
             validatinatorTests: {
-                src: 'js/<%= pkg.name %>.min.js',
+                src: 'js/validatinator.min.js',
                 options: {
                     specs: 'dev/tests/*.js'
                 }
@@ -50,7 +50,7 @@ module.exports = function(grunt) {
                 }
             },
             jasmineTests: {
-                files: ['dev/tests/*.js', 'js/<%= pkg.name %>.min.js'],
+                files: ['dev/tests/*.js', 'js/validatinator.min.js'],
                 tasks: ['jasmine:validatinatorTests']
             }
         }
