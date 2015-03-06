@@ -1,6 +1,6 @@
 # Validatinator
 
-Current Release: 1.1.0
+Current Release: 1.2.0
 
 Validatinator is a simple, yet effective, vanilla JavaScript form validation
 "plugin." It is loosely based off of Laravel's validation system. Using
@@ -37,6 +37,8 @@ those validations from the errors property on the main object.
     * [Between](https://github.com/JenkinsDev/Validatinator/wiki/Validation-Methods#wiki-between)
     * [Between Length](https://github.com/JenkinsDev/Validatinator/wiki/Validation-Methods#wiki-between-length)
     * [Contains](https://github.com/JenkinsDev/Validatinator/wiki/Validation-Methods#wiki-contains)
+    * [Date Before](https://github.com/JenkinsDev/Validatinator/wiki/Validation-Methods#wiki-date-before)
+    * [Date After](https://github.com/JenkinsDev/Validatinator/wiki/Validation-Methods#wiki-date-after)
     * [Different](https://github.com/JenkinsDev/Validatinator/wiki/Validation-Methods#wiki-different)
     * [Digits Length](https://github.com/JenkinsDev/Validatinator/wiki/Validation-Methods#wiki-digits-length)
     * [Digits Length Between](https://github.com/JenkinsDev/Validatinator/wiki/Validation-Methods#wiki-digits-length-between)

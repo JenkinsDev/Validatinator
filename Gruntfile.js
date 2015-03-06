@@ -5,7 +5,7 @@ module.exports = function(grunt) {
         uglify: {
             options: {
                 banner: '/* \n' +
-                        ' * Copyright (c) 2013-2014 David Jenkins (<%= pkg.name %>) \n' +
+                        ' * Copyright (c) 2013-2015 David Jenkins (<%= pkg.name %>) \n' +
                         ' * See the file license.txt for copying permission. \n' +
                         ' * \n' +
                         ' * Simple, yet effective, vanilla JavaScript form validation "plugin." Validatinator is based off \n' +
@@ -13,7 +13,7 @@ module.exports = function(grunt) {
                         ' * a Validatinator object, calling the passes or fails methods and if there are failed validations then grabbing \n' +
                         ' * those validations from the errors property on the main object. \n' +
                         ' * \n' +
-                        ' * Latest Update: 1.1.0 (<%= grunt.template.today("mm/dd/yyyy") %>) \n' +
+                        ' * Latest Update: 1.2.0 (<%= grunt.template.today("mm/dd/yyyy") %>) \n' +
                         ' */ \n' +
                         '(function(window, undefined) {',
                 footer: '})(window);'

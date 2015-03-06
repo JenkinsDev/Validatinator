@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2013-2014 David Jenkins
+ * Copyright (c) 2013-2015 David Jenkins
  * See the file license.txt for copying permission.
  */
 
@@ -124,6 +124,31 @@ Validatinator.prototype.validations = {
      */
     contains: function(fieldValue, containsArray) {
         return containsArray.indexOf(fieldValue) !== -1;
+    },
+
+    /**
+     *  Validatinator.validations.dateBefore(String fieldValue, String suppliedDate);
+     *
+     *  Checks to see whether or not fieldValue is set to a date that came BEFORE
+     *  suppliedDate.
+     *
+     *  @Added: 3/6/2015
+     */
+    dateBefore: function(fieldValue, suppliedDate) {
+        return Date.parse(fieldValue) < Date.parse(suppliedDate);
+    },
+
+    /**
+     *  Validatinator.validations.dateAfter(String fieldValue, String supplieDate);
+     *
+     *  Checks to see whether or not fieldValue is set to a date that comes AFTER
+     *  suppliedDate.
+     *
+     *  @Added: 3/6/2015
+     */
+    dateAfter: function(fieldValue, suppliedDate) {
+        // If the value is not before our supplied date then it must be after!
+        return ! this.dateBefore(fieldValue, suppliedDate);
     },
 
     /**
