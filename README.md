@@ -37,6 +37,7 @@ those validations from the errors property on the main object.
     * [Between](https://github.com/JenkinsDev/Validatinator/wiki/Validation-Methods#wiki-between)
     * [Between Length](https://github.com/JenkinsDev/Validatinator/wiki/Validation-Methods#wiki-between-length)
     * [Contains](https://github.com/JenkinsDev/Validatinator/wiki/Validation-Methods#wiki-contains)
+    * [Date Before](https://github.com/JenkinsDev/Validatinator/wiki/Validation-Methods#wiki-date-before)
     * [Different](https://github.com/JenkinsDev/Validatinator/wiki/Validation-Methods#wiki-different)
     * [Digits Length](https://github.com/JenkinsDev/Validatinator/wiki/Validation-Methods#wiki-digits-length)
     * [Digits Length Between](https://github.com/JenkinsDev/Validatinator/wiki/Validation-Methods#wiki-digits-length-between)

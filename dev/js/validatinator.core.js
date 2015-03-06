@@ -4,6 +4,10 @@
  */
 
 function Validatinator(validationInformation, validationErrorMessages) {
+    if (! (this instanceof Validatinator)) {
+        throw new Error("Whoops!  Validatinator must be called with the new keyword!");
+    }
+
     // Users may want to add validation information later on so we will allow them to create an instance of Validatinator without passing
     // any validation information.
     this.validationInformation = (validationInformation !== undefined) ? this.utils.convertFieldValidationsToArray(validationInformation) : {};

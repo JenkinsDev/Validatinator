@@ -79,6 +79,18 @@ describe("Validations", function() {
         expect(validatinator.validations.contains("not", ["in", "it"])).toBeFalsy();
     });
 
+    it('dateBefore should return true if the field\'s value is before the date supplied.', function() {
+        expect(validatinator.validations.dateBefore("02/04/2015", "02/10/2015")).toBeTruthy();
+
+        expect(validatinator.validations.dateBefore("02/10/2015", "01/01/1532")).toBeFalsy();
+    });
+
+    it('dateAfter should return true if the field\'s value is after the date supplied.', function() {
+        expect(validatinator.validations.dateAfter("02/04/2015", "02/10/2015")).toBeFalsy();
+
+        expect(validatinator.validations.dateAfter("02/10/2015", "01/01/1532")).toBeTruthy();
+    });
+
     it('digitsLength should return true if the field\'s value is only numerical and have the same exact length as supplied.', function() {
         expect(validatinator.validations.digitsLength("asdf", 4)).toBeFalsy();
         expect(validatinator.validations.digitsLength(123, 5)).toBeFalsy();
