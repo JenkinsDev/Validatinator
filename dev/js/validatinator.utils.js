@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2013-2014 David Jenkins
+ * Copyright (c) 2013-2015 David Jenkins
  * See the file license.txt for copying permission.
  */
 
@@ -23,8 +23,8 @@ Validatinator.prototype.utils = {
             for (fieldName in validationInformation[formName]) {
                 // Get the current field's validation string.
                 fieldValidation = validationInformation[formName][fieldName];
-                
-                // Go ahead and create a nicely formated array of each field validation; if there is only a single field validation then 
+
+                // Go ahead and create a nicely formated array of each field validation; if there is only a single field validation then
                 // we will use an array literal to create our array ourselves.
                 validationInformation[formName][fieldName] = (fieldValidation.contains("|")) ? fieldValidation.split("|") : [fieldValidation];
             }
@@ -52,23 +52,23 @@ Validatinator.prototype.utils = {
 
         return stringRepresentation;
     },
-    
+
     /**
      *  Validatinator.utils.convertArrayValuesToEnglishString(Array arrayOfValues);
-     * 
+     *
      *  We loop through each of the array's values and concat it to an English string
      *  containing AND between the second to last and last element.
-     * 
+     *
      *  @Added: 1/17/2014
      */
     convertArrayValuesToEnglishString: function(arrayOfValues) {
         var i = 0,
             currentLength,
             finishedString = '';
-        
+
         for (; i < arrayOfValues.length; i++) {
             currentLength = i + 1;
-            
+
             if (currentLength === arrayOfValues.length)
                 finishedString += ' and ' + arrayOfValues[i];
             else if (i === 0)
@@ -76,7 +76,7 @@ Validatinator.prototype.utils = {
             else
                 finishedString += ', ' + arrayOfValues[i];
         }
-        
+
         return finishedString;
     },
 
@@ -101,19 +101,19 @@ Validatinator.prototype.utils = {
         // If strict mode is set to true then 0 will be the same as false.
         return (strict) ? !value : value === false;
     },
-    
+
     /**
      *  Validatinator.utils.isValueAnArray(Object value);
-     * 
+     *
      *  Checks to see if the value is an array, this will work for new Array(); and array
      *  literals.
-     * 
+     *
      *  @Added: 1/17/2014
      */
     isValueAnArray: function(value) {
         return Object.prototype.toString.call(value) === "[object Array]";
     },
-    
+
     /**
      *  Validatinator.utils.isEmptyObject(Object obj);
      *
@@ -127,13 +127,13 @@ Validatinator.prototype.utils = {
             return false;
         return true;
     },
-    
+
     /**
      *  Validatinator.utils.getFieldValue(String form, String field);
-     * 
+     *
      *  Gets a field's value based off of the field's name attribute, but first we test
      *  to make sure that field's form name attribute is that of our currently validating field.
-     * 
+     *
      *  @Added: 1/17/2014
      */
     getFieldsValue: function(form, field) {
@@ -156,7 +156,7 @@ Validatinator.prototype.utils = {
                 break;
             }
         }
- 
+
         // If no field value was stored then we will assume that the field couldn't be found.  An empty string is
         // not considered a "non-stored field value."
         if (! fieldValue && fieldValue !== "")
