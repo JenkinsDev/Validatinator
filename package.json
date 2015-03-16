@@ -1,5 +1,5 @@
 {
-  "name": "Validatinator",
+  "name": "validatinator",
   "version": "1.2.0",
   "devDependencies": {
     "grunt": "~0.4.2",
