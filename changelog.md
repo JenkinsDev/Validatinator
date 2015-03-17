@@ -1,5 +1,9 @@
 # Validatinator Changelog
 
+### Version 1.2.2
+
+* Mainly "chores", updated bower.json and package.json for better npm and bower usability.
+
 ### Version 1.2.0
 
 * Added a safety feature removing frustration in the Validatinator "constructor."  If you don't call Validatinator with the new keyword then we just throw an error.
