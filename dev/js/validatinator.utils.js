@@ -42,13 +42,16 @@ Validatinator.prototype.utils = {
      *  @Added: 1/5/2014
      */
     convertStringToBoolean: function(stringRepresentation) {
-        if (typeof stringRepresentation !== "string")
+        if (typeof stringRepresentation !== "string") {
             return stringRepresentation;
+        }
 
-        if (stringRepresentation.toLowerCase() === "false")
+        if (stringRepresentation.toLowerCase() === "false") {
             return false;
-        else if (stringRepresentation.toLowerCase() === "true")
+        }
+        else if (stringRepresentation.toLowerCase() === "true") {
             return true;
+        }
 
         return stringRepresentation;
     },
@@ -69,12 +72,15 @@ Validatinator.prototype.utils = {
         for (; i < arrayOfValues.length; i++) {
             currentLength = i + 1;
 
-            if (currentLength === arrayOfValues.length)
+            if (currentLength === arrayOfValues.length) {
                 finishedString += ' and ' + arrayOfValues[i];
-            else if (i === 0)
+            }
+            else if (i === 0) {
                 finishedString += arrayOfValues[i];
-            else
+            }
+            else {
                 finishedString += ', ' + arrayOfValues[i];
+            }
         }
 
         return finishedString;
@@ -91,12 +97,14 @@ Validatinator.prototype.utils = {
      */
     isValueFalsyInNature: function(value, strict) {
         // Check to see if a value was passed to strict, if not then strict mode will be set to True by default.
-        if (strict === undefined || strict === null)
+        if (strict === undefined || strict === null) {
             strict = true;
+        }
 
         // If value is undefined or null then it is automatically marked as falsy in nature and therefore we return true.
-        if (value === undefined || value === null || value === "")
+        if (value === undefined || value === null || value === "") {
             return true;
+        }
 
         // If strict mode is set to true then 0 will be the same as false.
         return (strict) ? !value : value === false;
@@ -123,8 +131,11 @@ Validatinator.prototype.utils = {
      */
     isEmptyObject: function(obj) {
         var name;
-        for (name in obj)
+
+        for (name in obj) {
             return false;
+        }
+        
         return true;
     },
 

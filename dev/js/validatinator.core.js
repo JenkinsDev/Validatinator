@@ -24,8 +24,9 @@ function Validatinator(validationInformation, validationErrorMessages) {
     this.messages.utils = this.utils;
 
     // Overwrite and create new validationErrorMessages if the user provided any.
-    if (validationErrorMessages !== undefined)
+    if (validationErrorMessages !== undefined) {
         this.messages.overwriteAndAddNewMessages(validationErrorMessages);
+    }
 }
 
 Validatinator.prototype = {
@@ -89,8 +90,9 @@ Validatinator.prototype = {
                 method = currentValidationMethodAndParameters[0];
 
                 // Here we check to see if our parameters actually exist and if it does then store it.
-                if (currentValidationMethodAndParameters.length === 2)
+                if (currentValidationMethodAndParameters.length === 2) {
                     parameters = currentValidationMethodAndParameters[1];
+                }
 
                 if (! this.callValidationMethodWithParameters(method, parameters, currentFieldsValue)) {
                     parameters.shift();
@@ -121,8 +123,9 @@ Validatinator.prototype = {
         // If our validationString doesn't have any colons then we will assume
         // that the validation does not have any parameters and there is nothing furthur
         // we need to do.
-        if (! validationString.contains(":"))
+        if (! validationString.contains(":")) {
             return [validationString];
+        }
 
         validationParameters = validationString.split(":");
         // Remove the first element off the array as that is always going to be the validation
@@ -181,11 +184,13 @@ Validatinator.prototype = {
         // do this so we can use the .apply Function method.
         var fieldValueWithParameters;
 
-        if (! (method in this["validations"]))
+        if (! (method in this["validations"])) {
             throw new Error("Validation does not exist: " + method);
+        }
 
-        if (! parameters)
+        if (! parameters) {
             return this["validations"][method](fieldValue);
+        }
 
         // We do this so we can use the .apply Function method below.  All parameters for each method call will be based
         // on the parameters array.
