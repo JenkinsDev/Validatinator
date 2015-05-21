@@ -1,5 +1,10 @@
 # Validatinator Changelog
 
+### Version 1.3.0
+
+* Added the ability to now set field specific validation messages instead of just global validation messages.
+
+
 ### Version 1.2.2
 
 * Mainly "chores", updated bower.json and package.json for better npm and bower usability.
