@@ -34,6 +34,11 @@ Validatinator.prototype.messages = {
         url: "This field only allows valid urls."
     },
 
+    // Holds form to field specific validation messages
+    formAndFieldValidationMessages: {
+
+    },
+
     /**
      *  Validatinator.messages.overwriteAndAddNewMessages(Object newValidationErrorMessages);
      *
