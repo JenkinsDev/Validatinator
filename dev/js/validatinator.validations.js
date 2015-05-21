@@ -274,8 +274,9 @@ Validatinator.prototype.validations = {
     maxLength: function(fieldValue, max) {
         max = Number(max);
 
-        if (isNaN(max))
+        if (isNaN(max)) {
             throw new Error("max must be a numerical value in the `max` validation.");
+        }
 
         // Since we are only checking the max value we will go ahead and call the betweenLength method
         // but we will pass -Infinity in as the min value as there is no min.
@@ -448,5 +449,5 @@ Validatinator.prototype.validations = {
     url: function(fieldValue) {
         var urlReg = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
         return urlReg.test(fieldValue);
-    },
+    }
 };
