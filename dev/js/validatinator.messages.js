@@ -34,11 +34,6 @@ Validatinator.prototype.messages = {
         url: "This field only allows valid urls."
     },
 
-    // Holds form to field specific validation messages
-    formAndFieldValidationMessages: {
-
-    },
-
     /**
      *  Validatinator.messages.overwriteAndAddNewMessages(Object newValidationErrorMessages);
      *
@@ -80,20 +75,45 @@ Validatinator.prototype.messages = {
      *  @Added: 1/10/2014
      */
     addValidationErrorMessage: function(methodName, parametersArray) {
-        var validationMessage,
-            numberOfValuesToReplace,
+        var currentForm = this.parent.currentForm,
+            currentField = this.parent.currentField,
+            validationMessage = this.getValidationErrorMessage(methodName),
             valueReplaceRegex = /{(\$.*?)}/g;
 
-        // Go ahead and add our currentForm and currentField to the errors object so we know it's there.
         this.addCurrentFormAndField();
-
-        validationMessage = this.validationMessages[methodName];
 
         if (parametersArray.length > 0)
             validationMessage = this.replaceCurlyBracesWithValues(validationMessage, parametersArray);
 
         // Form and field are both added so let's add our failed validation message.
-        this.parent.errors[this.parent.currentForm][this.parent.currentField][methodName] = validationMessage;
+        this.parent.errors[currentForm][currentField][methodName] = validationMessage;
+    },
+
+    /**
+     *  Validatinator.messages.getValidationErrorMessage(methodName);
+     *
+     *  Attempts to retrieve an error message for the supplied methodName.  This method will first check to see if there is a
+     *  form and field specific custom error message set and if it isn't then we check the top-level validation message.
+     *
+     *  @Added: 5/21/2015
+     */
+    getValidationErrorMessage: function(methodName) {
+        var currentForm = this.parent.currentForm,
+            currentField = this.parent.currentField,
+            validationMessage;
+
+        try {
+            validationMessage = this.validationMessages[currentForm][currentField][methodName];
+        }
+        catch(e) { }
+        // We will just deal with it below because not every "undefined" in the try will actually
+        // cause the catch to run.
+
+        if (! validationMessage) {
+            validationMessage = this.validationMessages[methodName];
+        }
+
+        return validationMessage;
     },
 
     /**

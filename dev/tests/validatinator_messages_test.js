@@ -89,5 +89,39 @@ describe("Validator Messages", function() {
         
         expect(newValidatinator.messages.validationMessages["newValidationMessage"]).toEqual("I am a new validation message.");
         expect(newValidatinator.messages.validationMessages["required"]).toEqual("I overwrote the original 'required' validation message.");
-    });  
+    });
+
+    it('creation of a Valdiatinator instance with the second parameter populated with form -> fields -> validations should allow for form and field specific validations.', function() {
+        var newValidatinator;
+
+        newValidatinator = new Validatinator({
+            "my-form": {
+                "first-name": "required",
+                "last-name": "between:5,10"
+            }
+        },
+        {
+            "my-form": {
+                "first-name": {
+                    "required": "Your first name is required!"
+                },
+                "last-name": {
+                    "between": "Your value must be between 5 and 10!"
+                }
+            }
+        });
+
+        expect(newValidatinator.messages.validationMessages["my-form"]["first-name"]["required"]).toEqual("Your first name is required!");
+        expect(newValidatinator.messages.validationMessages["my-form"]["last-name"]["between"]).toEqual("Your value must be between 5 and 10!");
+
+
+        newValidatinator.currentForm = "my-form";
+        newValidatinator.currentField = "first-name";
+
+        expect(newValidatinator.messages.getValidationErrorMessage("required")).toEqual("Your first name is required!");
+
+
+        newValidatinator.currentField = "last-name";
+        expect(newValidatinator.messages.getValidationErrorMessage("between")).toEqual("Your value must be between 5 and 10!");
+    });
 });
