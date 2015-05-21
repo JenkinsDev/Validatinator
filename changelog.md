@@ -3,6 +3,7 @@
 ### Version 1.3.0
 
 * Added the ability to now set field specific validation messages instead of just global validation messages.
+* Moved towards a more unified coding style guide.
 
 
 ### Version 1.2.2
