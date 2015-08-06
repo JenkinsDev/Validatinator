@@ -1,5 +1,9 @@
 # Validatinator Changelog
 
+### Versions 1.3.1
+
+* Fixed an issue with error messages, namely min and max.  Their error messages used the old format ${0} that was previously used in the error message creation process.  Fixed them to use the new format {$0}.
+
 ### Version 1.3.0
 
 * Added the ability to now set field specific validation messages instead of just global validation messages.
