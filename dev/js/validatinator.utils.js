@@ -13,14 +13,12 @@ Validatinator.prototype.utils = {
      *  @Added: 12/16/2013
      */
     convertFieldValidationsToArray: function(validationInformation) {
-        var i,
-            j,
-            fieldValidation;
+        var fieldValidation;
 
         // Loop through the top level forms.
-        for (formName in validationInformation) {
+        for (var formName in validationInformation) {
             // Loop through each, individual, field that has validation tests attached to it.
-            for (fieldName in validationInformation[formName]) {
+            for (var fieldName in validationInformation[formName]) {
                 // Get the current field's validation string.
                 fieldValidation = validationInformation[formName][fieldName];
 
@@ -135,7 +133,7 @@ Validatinator.prototype.utils = {
         for (name in obj) {
             return false;
         }
-        
+
         return true;
     },
 
@@ -163,7 +161,17 @@ Validatinator.prototype.utils = {
             // We are running a simple test to see if the current field in the returned array is part of
             // our validating field or not.  If it is then grab it's value and break out of this test loop.
             if (fieldElement.form.name === form) {
-                fieldValue = fieldElement.value;
+                if((fieldElement.type == 'radio' || fieldElement.type == 'checkbox') && !fieldValue) {
+                    if(fieldElement.checked) {
+                        fieldValue = fieldElement.value;
+                        break;
+                    } else {
+                        fieldValue = "";
+                        continue;
+                    }
+                } else {
+                    fieldValue = fieldElement.value;
+                }
                 break;
             }
         }

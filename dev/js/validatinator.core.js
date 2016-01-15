@@ -76,7 +76,7 @@ Validatinator.prototype = {
         // Since we are doing a fresh validation let's make sure our errors are all fresh as well!
         this.errors = {};
 
-        for (fieldName in this.validationInformation[formName]) {
+        for (var fieldName in this.validationInformation[formName]) {
             this.currentField = fieldName;
             currentFieldsValidations = this.validationInformation[formName][fieldName];
             currentFieldsValue = this.utils.getFieldsValue(this.currentForm, this.currentField);
@@ -115,10 +115,8 @@ Validatinator.prototype = {
      *  @Added: 1/8/2014
      */
     getValidationMethodAndParameters: function(validationString) {
-        var validationArray,
-            validationParameters,
-            validationMethod,
-            i = 1;
+        var validationParameters,
+            validationMethod;
 
         // If our validationString doesn't have any colons then we will assume
         // that the validation does not have any parameters and there is nothing furthur
@@ -182,8 +180,6 @@ Validatinator.prototype = {
     callValidationMethodWithParameters: function(method, parameters, fieldValue) {
         // We will be using this variable to prepend the fieldValue variable to the parameters variable.  We
         // do this so we can use the .apply Function method.
-        var fieldValueWithParameters;
-
         if (! (method in this["validations"])) {
             throw new Error("Validation does not exist: " + method);
         }
