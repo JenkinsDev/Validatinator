@@ -79,8 +79,7 @@ Validatinator.prototype.messages = {
     addValidationErrorMessage: function(methodName, parametersArray) {
         var currentForm = this.parent.currentForm,
             currentField = this.parent.currentField,
-            validationMessage = this.getValidationErrorMessage(methodName),
-            valueReplaceRegex = /{(\$.*?)}/g;
+            validationMessage = this.getValidationErrorMessage(methodName);
 
         this.addCurrentFormAndField();
 

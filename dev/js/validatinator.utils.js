@@ -13,14 +13,12 @@ Validatinator.prototype.utils = {
      *  @Added: 12/16/2013
      */
     convertFieldValidationsToArray: function(validationInformation) {
-        var i,
-            j,
-            fieldValidation;
+        var fieldValidation;
 
         // Loop through the top level forms.
-        for (formName in validationInformation) {
+        for (var formName in validationInformation) {
             // Loop through each, individual, field that has validation tests attached to it.
-            for (fieldName in validationInformation[formName]) {
+            for (var fieldName in validationInformation[formName]) {
                 // Get the current field's validation string.
                 fieldValidation = validationInformation[formName][fieldName];
 
