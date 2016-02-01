@@ -1,6 +1,13 @@
 # Validatinator Changelog
 
-### Versions 1.3.1
+### Version 1.3.2
+
+* Fixed an issue where the requirement validation was not working for radio and checkbox inputs.
+* Changed typo in the filename, license.txt
+* Unused variables removed.
+* Fixed global namespace pollution.
+
+### Version 1.3.1
 
 * Fixed an issue with error messages, namely min and max.  Their error messages used the old format ${0} that was previously used in the error message creation process.  Fixed them to use the new format {$0}.
 
