@@ -8,18 +8,18 @@ module.exports = {
   *  @Added: 12/16/2013
   */
   convertFieldValidationsToArray: function(validationInformation) {
-    var fieldValidation,
-        formName,
-        fieldName;
+    var validation,
+        form,
+        field;
 
-    for (formName in validationInformation) {
-      for (fieldName in validationInformation[formName]) {
-        fieldValidation = validationInformation[formName][fieldName];
+    for (form in validationInformation) {
+      for (field in validationInformation[form]) {
+        validation = validationInformation[form][field];
 
         // Go ahead and create a nicely formated array of each field validation;
         // if there is only a single field validation then
         // we will use an array literal to create our array ourselves.
-        validationInformation[formName][fieldName] = (fieldValidation.contains("|")) ? fieldValidation.split("|") : [fieldValidation];
+        validationInformation[form][field] = (validation.contains("|")) ? validation.split("|") : [validation];
       }
     }
 

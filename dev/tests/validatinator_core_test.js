@@ -10,16 +10,6 @@ describe("Validator Core", function() {
     });
   });
 
-  it('should not be singleton pattern enabled.', function() {
-    var validatinatorNew = new Validatinator({
-      "new-form": {
-        "last-name": "required|min:5|max:10"
-      }
-    });
-
-    expect(validatinator.validationInformation).not.toEqual(validatinatorNew.validationInformation);
-  });
-
   it('should have validationInformation property populated with real data.', function() {
     expect(validatinator.validationInformation).toEqual({
       "my-form": {
@@ -50,12 +40,12 @@ describe("Validator Core", function() {
     expect(validatinator.prepareParameters(["foo,  bar  , baz", "False"])).toEqual([["foo", "bar", "baz"], false]);
   });
 
-  it('callValidationMethodWithParameters should throw an error if the validation method doesn\'t exist, else a boolean value.', function() {
+  it('callValidationMethod should throw an error if the validation method doesn\'t exist, else a boolean value.', function() {
     var fakeValue = 'value';
 
-    expect(function() { validatinator.callValidationMethodWithParameters('required', undefined, fakeValue); }).not.toThrow("Validation does not exist: required");
-    expect(function() { validatinator.callValidationMethodWithParameters('min', ['5'], fakeValue); }).not.toThrow("Validation does not exist: min");
-    expect(function() { validatinator.callValidationMethodWithParameters('between', ['5', '20'], fakeValue); }).not.toThrow("Validation does not exist: between");
-    expect(function() { validatinator.callValidationMethodWithParameters('fakeValidation', ['FOO'], fakeValue); }).toThrow("Validation does not exist: fakeValidation");
+    expect(function() { validatinator.callValidationMethod('required', fakeValue); }).not.toThrow("Validation does not exist: required");
+    expect(function() { validatinator.callValidationMethod('min', fakeValue, ['5']); }).not.toThrow("Validation does not exist: min");
+    expect(function() { validatinator.callValidationMethod('between', fakeValue, ['5', '20']); }).not.toThrow("Validation does not exist: between");
+    expect(function() { validatinator.callValidationMethod('fakeValidation', fakeValue, ['FOO']); }).toThrow("Validation does not exist: fakeValidation");
   });
 });

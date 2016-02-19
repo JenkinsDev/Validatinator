@@ -200,18 +200,18 @@ module.exports = {
   *  @Added: 12/16/2013
   */
   convertFieldValidationsToArray: function(validationInformation) {
-    var fieldValidation,
-        formName,
-        fieldName;
+    var validation,
+        form,
+        field;
 
-    for (formName in validationInformation) {
-      for (fieldName in validationInformation[formName]) {
-        fieldValidation = validationInformation[formName][fieldName];
+    for (form in validationInformation) {
+      for (field in validationInformation[form]) {
+        validation = validationInformation[form][field];
 
         // Go ahead and create a nicely formated array of each field validation;
         // if there is only a single field validation then
         // we will use an array literal to create our array ourselves.
-        validationInformation[formName][fieldName] = (fieldValidation.contains("|")) ? fieldValidation.split("|") : [fieldValidation];
+        validationInformation[form][field] = (validation.contains("|")) ? validation.split("|") : [validation];
       }
     }
 
@@ -383,12 +383,22 @@ module.exports = {
 })(window, function() {
   var extend = require('extend');
 
-  function Validatinator(validationInformation, validationErrorMessages) {
+  /**
+   * Core Validatinator class
+   * @class Validatinator
+   * @param {Object} validations
+   * @param {Object} validations.formName
+   * @param {string} validations.formName.fieldname - String containing field validations.
+   * @param {Object} [errorMessages]
+   * @param {Object} [errorMessages.formName]
+   * @param {string} [errorMessages.formName.validationName] - New Validation error message.
+   */
+  function Validatinator(validations, errorMessages) {
     if (! (this instanceof Validatinator)) {
       throw new Error("Whoops!  Validatinator must be called with the new keyword!");
     }
 
-    this.validationInformation = (validationInformation !== undefined) ? this.utils.convertFieldValidationsToArray(validationInformation) : {};
+    this.validationInformation = (validations !== undefined) ? this.utils.convertFieldValidationsToArray(validations) : {};
     this.errors = {};
 
     this.currentForm = null;
@@ -399,8 +409,8 @@ module.exports = {
     this.validations.utils = this.utils;
     this.messages.utils = this.utils;
 
-    if (validationErrorMessages !== undefined) {
-      this.messages.overwriteAndAddNewMessages(validationErrorMessages);
+    if (errorMessages !== undefined) {
+      this.messages.overwriteAndAddNewMessages(errorMessages);
     }
   }
 
@@ -412,59 +422,57 @@ module.exports = {
 
   extend(Validatinator.prototype, {
     /**
-    *  Validatinator.fails(String formName);
-    *
-    *  Starts the testing phase for each of the form field's validation methods,
-    *  if any of them fails then we return true here and the user can expect the
-    *  errors object will have populated information.
-    *
-    *  @Added: 12/23/2013
-    */
+     * Tests to see if the supplied form is valid.
+     *
+     * @memberof Validatinator
+     * @instance
+     * @see startValidations
+     * @param {string} formName - String representation of the form's name attr.
+     * @returns {Boolean} True if the form FAILS validation, else False.
+     */
     fails: function(formName) {
-      // startValidations will always return true if we pass so let's go ahead and
-      // flip that response.
       return ! this.startValidations(formName);
     },
 
     /**
-    *  Validatinator.passes(String formName);
-    *
-    *  Starts the testing phase for each of the form field's validation methods,
-    *  if any of them fail then we return false here and the user can expect the
-    *  errors object will have populated information.
-    *
-    *  @Added: 12/23/2013
-    */
+     * Tests to see if the supplied form is valid.
+     *
+     * @memberof Validatinator
+     * @instance
+     * @see startValidations
+     * @param {string} formName - String representation of the form's name attr.
+     * @returns {Boolean} True if the form PASSES validation, else False.
+     */
     passes: function(formName) {
       return this.startValidations(formName);
     },
 
     /**
-    *  Validatinator.startValidations(String formName);
-    *
-    *  Start the process of getting the each field that we will be validating for
-    *  and retrieving the actual valdations we will be performing on that field.
-    *
-    *  @Added: 1/4/2014
-    */
+     * Tests to see if the supplied form is valid.
+     *
+     * @memberof Validatinator
+     * @instance
+     * @param {string} formName - String representation of the form's name attr.
+     * @returns {Boolean} True if the form PASSES validation, else False.
+     */
     startValidations: function(formName) {
       var currentFieldsValidations,
           currentFieldsValue,
           currentValidationMethodAndParameters,
+          fieldName,
           i;
 
       this.currentForm = formName;
-      // Since we are doing a fresh validation let's make sure our errors are all fresh as well!
       this.errors = {};
 
-      for (var fieldName in this.validationInformation[formName]) {
+      for (fieldName in this.validationInformation[formName]) {
         this.currentField = fieldName;
         currentFieldsValidations = this.validationInformation[formName][fieldName];
         currentFieldsValue = this.utils.getFieldsValue(this.currentForm, this.currentField);
 
         for (i = 0; i < currentFieldsValidations.length; i++) {
           var method,
-          parameters = [];
+              parameters = [];
 
           currentValidationMethodAndParameters = this.getValidationMethodAndParameters(currentFieldsValidations[i]);
           method = currentValidationMethodAndParameters[0];
@@ -474,7 +482,7 @@ module.exports = {
             parameters = currentValidationMethodAndParameters[1];
           }
 
-          if (! this.callValidationMethodWithParameters(method, parameters, currentFieldsValue)) {
+          if (! this.callValidationMethod(method, parameters, currentFieldsValue)) {
             parameters.shift();
             this.messages.addValidationErrorMessage(method, parameters);
           }
@@ -485,80 +493,75 @@ module.exports = {
     },
 
     /**
-    *  Validatinator.getValidationMethodAndParameters(String validationString);
-    *
-    *  Take the current validationString and retreive the validation method and
-    *  it's prepared parameters.  Makes a call to prepareParameters to get the
-    *  parameters in a good enough state for the validation method calls.
-    *
-    *  @Added: 1/8/2014
-    */
+     * Splits apart a validation string to retrieve it's validation method
+     * name along with any parameters it requires.
+     *
+     * @memberof Validatinator
+     * @instance
+     * @param {string} validationString - String containing a validation method's
+     *                                    signature, along with it's parameters
+     *                                    supplied following a colon `:`.
+     * @returns {string[]} Array containing the validation method in the
+     *                     first index and all other indice are the validation
+     *                     method's params.
+     */
     getValidationMethodAndParameters: function(validationString) {
-      var validationParameters,
-          validationMethod;
+      var params,
+          validation;
 
-      // If our validationString doesn't have any colons then we will assume
-      // that the validation does not have any parameters and there is nothing furthur
-      // we need to do.
+      // Assume there are not parameters if we have no colon.
       if (! validationString.contains(":")) {
         return [validationString];
       }
 
-      validationParameters = validationString.split(":");
-      // Remove the first element off the array as that is always going to be the validation
-      // method, we are only worried about the parameters at this time.
-      validationMethod = validationParameters.shift();
+      params = validationString.split(":");
+      validation = params.shift();
 
-      // Add the the validation method back onto the front of a new array after we prepare the
-      // parameters.
-      return [validationMethod, this.prepareParameters(validationParameters)];
+      return [validation, this.prepareParameters(params)];
     },
 
-
     /**
-    *  Validatinator.prepareParameters(Array validationParameters)
-    *
-    *  Preps the parameters so they can be used when making the validation calls.
-    *
-    *  @Added: 1/5/2014
-    */
-    prepareParameters: function(validationParameters) {
+     * Prepares the parameter(s) so they can be used when making the validation
+     * method call.
+     *
+     * @memberof Validatinator
+     * @instance
+     * @param {string} params - String containing parameters separated by colons.
+     *                          (e.g. "param1:param2:param3:param4")
+     * @returns {Any[]}
+     */
+    prepareParameters: function(params) {
       var i = 0,
           j = 0;
 
-      // We need to loop through each of the "extra parameters" and furthur split the `parameters` if need be.
-      for (; i < validationParameters.length; i++) {
-        // Check to see if we have third level "parameters" that will be transformed into an array for specific
-        // validation methods.  i.e:  not_in:foo,bar,baz.
-        if (validationParameters[i].contains(",")) {
-          validationParameters[i] = validationParameters[i].split(",");
+      for (; i < params.length; i++) {
+        if (params[i].contains(",")) {
+          params[i] = params[i].split(",");
 
-          // Since there was third level "parameters" we will go ahead and loop through each of the elements and
-          // trim away any whitespace and convert falsey or truthy values to their boolean representations.
-          for (; j < validationParameters[i].length; j++) {
-            validationParameters[i][j] = this.utils.convertStringToBoolean(validationParameters[i][j].trim());
+          for (; j < params[i].length; j++) {
+            params[i][j] = this.utils.convertStringToBoolean(params[i][j].trim());
           }
         } else {
-          // Trim any whitespace and convert falsy or truthy values to their boolean representations
-          validationParameters[i] = this.utils.convertStringToBoolean(validationParameters[i].trim());
+          params[i] = this.utils.convertStringToBoolean(params[i].trim());
         }
       }
 
-      return validationParameters;
+      return params;
     },
 
     /**
-    *  Validatinator.callValidationMethodWithParameters(String method, Array parameters, Object fieldValue);
-    *
-    *  Attempts to call the validation method supplied with the provided parameters if
-    *  any parameters exist, if they don't then just call the validation method with
-    *  the current validating field's value.
-    *
-    *  @Added: 1/9/2014
-    */
-    callValidationMethodWithParameters: function(method, parameters, fieldValue) {
-      // We will be using this variable to prepend the fieldValue variable to the parameters variable.  We
-      // do this so we can use the .apply Function method.
+     * Attempts to call the validation method supplied with the provided parameters
+     * and fieldValue.
+     *
+     * @memberof Validatiantor
+     * @instance
+     * @param {string} method - String representation of a validation method.
+     * @param {string} fieldValue - Form's field's value.
+     * @param {string[]} parameters - Other paramteres that the field validation
+     *                                require.
+     * @returns {Boolean} True if the validation passed, else False.
+     */
+    callValidationMethod: function(method, fieldValue, parameters) {
       if (! (method in this["validations"])) {
         throw new Error("Validation does not exist: " + method);
       }
@@ -567,14 +570,10 @@ module.exports = {
         return this["validations"][method](fieldValue);
       }
 
-      // We do this so we can use the .apply Function method below.  All parameters for each method call will be based
-      // on the parameters array.
+      // Add the field value to the parameters array so we can use
+      // .apply on the validation method's signature.
       parameters.unshift(fieldValue);
 
-      // this.validations makes sure the scope that is used during the validation call is within the validations scope and
-      // first value of the parameters array is actually the field's value.  We have to do this as .apply will distribute
-      // out the parameters array as different parameters for each index.  So ["value", ["5", "10"]] passed to between would be
-      // between(value, [5, 10]);
       return this["validations"][method].apply(this.validations, parameters);
     }
   });
