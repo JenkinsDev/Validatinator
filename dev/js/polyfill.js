@@ -1,9 +1,3 @@
-/**
-* Copyright (c) 2013-2015 David Jenkins
-* See the file license.txt for copying permission.
-*/
-
-
 module.exports = function() {
   if (!String.prototype.contains) {
     String.prototype.contains = function(str, startIndex) {
