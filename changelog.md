@@ -1,5 +1,10 @@
 # Validatinator Changelog
 
+### Version 1.4.0 (TBD)
+
+* Updated Travis to run tests against more up-to-date node versions.
+* Added CommonJS module support through browserify.
+
 ### Version 1.3.2
 
 * Fixed an issue where the requirement validation was not working for radio and checkbox inputs.
