@@ -4,9 +4,7 @@
   }
 
   window.Validatinator = def();
-
-  // Run polyfills
-  require('./polyfill')();
+  require('./polyfills')();
 })(window, function() {
   var extend = require('extend');
 

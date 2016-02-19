@@ -12,14 +12,12 @@ module.exports = {
         formName,
         fieldName;
 
-    // Loop through the top level forms.
     for (formName in validationInformation) {
-      // Loop through each, individual, field that has validation tests attached to it.
       for (fieldName in validationInformation[formName]) {
-        // Get the current field's validation string.
         fieldValidation = validationInformation[formName][fieldName];
 
-        // Go ahead and create a nicely formated array of each field validation; if there is only a single field validation then
+        // Go ahead and create a nicely formated array of each field validation;
+        // if there is only a single field validation then
         // we will use an array literal to create our array ourselves.
         validationInformation[formName][fieldName] = (fieldValidation.contains("|")) ? fieldValidation.split("|") : [fieldValidation];
       }
@@ -158,8 +156,8 @@ module.exports = {
       // We are running a simple test to see if the current field in the returned array is part of
       // our validating field or not.  If it is then grab it's value and break out of this test loop.
       if (fieldElement.form.name === form) {
-        if((fieldElement.type == 'radio' || fieldElement.type == 'checkbox') && !fieldValue) {
-          if(fieldElement.checked) {
+        if ((fieldElement.type == 'radio' || fieldElement.type == 'checkbox') && !fieldValue) {
+          if (fieldElement.checked) {
             fieldValue = fieldElement.value;
             break;
           } else {

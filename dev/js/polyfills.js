@@ -7,11 +7,12 @@ module.exports = function() {
 
   if (!Array.prototype.indexOf) {
     Array.prototype.indexOf = function(searchElement, fromIndex) {
-      if ( this === undefined || this === null ) {
+      if (this === undefined || this === null) {
         throw new TypeError( '"this" is null or not defined' );
       }
 
-      var length = this.length >>> 0; // Hack to convert object.length to a UInt32
+      // Hack to convert object.length to a UInt32
+      var length = this.length >>> 0;
 
       fromIndex = +fromIndex || 0;
 
@@ -26,7 +27,7 @@ module.exports = function() {
         }
       }
 
-      for (;fromIndex < length; fromIndex++) {
+      for (; fromIndex < length; fromIndex++) {
         if (this[fromIndex] === searchElement) {
           return fromIndex;
         }

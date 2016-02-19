@@ -1,11 +1,5 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-/**
-* Copyright (c) 2013-2015 David Jenkins
-* See the file license.txt for copying permission.
-*/
-
 module.exports = {
-  // Holds all default validation messages.
   validationMessages: {
     accepted: "This field must be accepted.",
     alpha: "This field only allows alpha characters.",
@@ -155,12 +149,6 @@ module.exports = {
 };
 
 },{}],2:[function(require,module,exports){
-/**
-* Copyright (c) 2013-2015 David Jenkins
-* See the file license.txt for copying permission.
-*/
-
-
 module.exports = function() {
   if (!String.prototype.contains) {
     String.prototype.contains = function(str, startIndex) {
@@ -170,11 +158,12 @@ module.exports = function() {
 
   if (!Array.prototype.indexOf) {
     Array.prototype.indexOf = function(searchElement, fromIndex) {
-      if ( this === undefined || this === null ) {
+      if (this === undefined || this === null) {
         throw new TypeError( '"this" is null or not defined' );
       }
 
-      var length = this.length >>> 0; // Hack to convert object.length to a UInt32
+      // Hack to convert object.length to a UInt32
+      var length = this.length >>> 0;
 
       fromIndex = +fromIndex || 0;
 
@@ -189,7 +178,7 @@ module.exports = function() {
         }
       }
 
-      for (;fromIndex < length; fromIndex++) {
+      for (; fromIndex < length; fromIndex++) {
         if (this[fromIndex] === searchElement) {
           return fromIndex;
         }
@@ -198,15 +187,9 @@ module.exports = function() {
       return -1;
     };
   }
-
 }
 
 },{}],3:[function(require,module,exports){
-/**
-* Copyright (c) 2013-2015 David Jenkins
-* See the file license.txt for copying permission.
-*/
-
 module.exports = {
   /**
   *  Validatinator.utils.convertFieldValidationsToArray(Object validationInformation);
@@ -221,14 +204,12 @@ module.exports = {
         formName,
         fieldName;
 
-    // Loop through the top level forms.
     for (formName in validationInformation) {
-      // Loop through each, individual, field that has validation tests attached to it.
       for (fieldName in validationInformation[formName]) {
-        // Get the current field's validation string.
         fieldValidation = validationInformation[formName][fieldName];
 
-        // Go ahead and create a nicely formated array of each field validation; if there is only a single field validation then
+        // Go ahead and create a nicely formated array of each field validation;
+        // if there is only a single field validation then
         // we will use an array literal to create our array ourselves.
         validationInformation[formName][fieldName] = (fieldValidation.contains("|")) ? fieldValidation.split("|") : [fieldValidation];
       }
@@ -367,8 +348,8 @@ module.exports = {
       // We are running a simple test to see if the current field in the returned array is part of
       // our validating field or not.  If it is then grab it's value and break out of this test loop.
       if (fieldElement.form.name === form) {
-        if((fieldElement.type == 'radio' || fieldElement.type == 'checkbox') && !fieldValue) {
-          if(fieldElement.checked) {
+        if ((fieldElement.type == 'radio' || fieldElement.type == 'checkbox') && !fieldValue) {
+          if (fieldElement.checked) {
             fieldValue = fieldElement.value;
             break;
           } else {
@@ -392,20 +373,13 @@ module.exports = {
 };
 
 },{}],4:[function(require,module,exports){
-/**
-* Copyright (c) 2013-2015 David Jenkins
-* See the file license.txt for copying permission.
-*/
-
 (function(window, def) {
   if (typeof module === "object" && module.exports) {
     module.exports = def();
   }
 
   window.Validatinator = def();
-
-  // Run polyfills
-  require('./polyfill')();
+  require('./polyfills')();
 })(window, function() {
   var extend = require('extend');
 
@@ -608,12 +582,7 @@ module.exports = {
   return Validatinator;
 });
 
-},{"./messages":1,"./polyfill":2,"./utils":3,"./validations":5,"extend":6}],5:[function(require,module,exports){
-/**
-* Copyright (c) 2013-2015 David Jenkins
-* See the file license.txt for copying permission.
-*/
-
+},{"./messages":1,"./polyfills":2,"./utils":3,"./validations":5,"extend":6}],5:[function(require,module,exports){
 module.exports = {
   /**
   *  Validatinator.validations.accepted(String/Number fieldValue);

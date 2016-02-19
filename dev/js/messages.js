@@ -1,5 +1,4 @@
 module.exports = {
-  // Holds all default validation messages.
   validationMessages: {
     accepted: "This field must be accepted.",
     alpha: "This field only allows alpha characters.",
