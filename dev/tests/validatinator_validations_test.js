@@ -312,5 +312,13 @@ describe("Validations", function() {
             expect(validatinator.validations.different("Test", "first-name")).toBeTruthy();
             expect(validatinator.validations.different(324, "first-name")).toBeTruthy();
         });
+
+        it('should always return true', function() {
+            validatinator.currentForm = "my-form";
+
+            expect(validatinator.validations.sometimes("", "first-name")).toBeTruthy();
+            expect(validatinator.validations.sometimes("value", "first-name")).toBeTruthy();
+            expect(validatinator.validations.sometimes("value", "first-name", "test")).toBeTruthy();
+        });
     });
 });
