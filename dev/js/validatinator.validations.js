@@ -440,6 +440,17 @@ Validatinator.prototype.validations = {
     },
 
     /**
+     *  Validatinator.validations.sometimes();
+     *
+     *  Passes through as an indication that the field value is checked only when it's not empty.
+     *
+     *  @Added: 3/16/2016
+     */
+    sometimes: function() {
+        return true;
+    },
+
+    /**
      *  Validatinator.validations.url(String fieldValue);
      *
      *  Checks to make sure the field's value is, in fact, a real url.

@@ -77,9 +77,17 @@ Validatinator.prototype = {
         this.errors = {};
 
         for (var fieldName in this.validationInformation[formName]) {
+            if (!this.validationInformation[formName].hasOwnProperty(fieldName)) {
+                continue;
+            }
+
             this.currentField = fieldName;
             currentFieldsValidations = this.validationInformation[formName][fieldName];
             currentFieldsValue = this.utils.getFieldsValue(this.currentForm, this.currentField);
+
+            if (currentFieldsValidations.indexOf('sometimes') >= 0 && currentFieldsValue == '') {
+                continue;
+            }
 
             // We need to set i here because it doesn't reset to zero by default and it is more idomatic to do it here.
             for (i = 0; i < currentFieldsValidations.length; i++) {
