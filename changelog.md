@@ -4,6 +4,7 @@
 
 * Updated Travis to run tests against more up-to-date node versions.
 * Added CommonJS module support through browserify.
+* Updated all code to now use jsdoc commenting style.
 
 ### Version 1.3.2
 
