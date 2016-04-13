@@ -1,5 +1,8 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
-module.exports = {
+/**
+ * @mixin
+ */
+var Messages = {
   validationMessages: {
     accepted: "This field must be accepted.",
     alpha: "This field only allows alpha characters.",
@@ -30,53 +33,37 @@ module.exports = {
   },
 
   /**
-  *  Validatinator.messages.overwriteAndAddNewMessages(Object newValidationErrorMessages);
-  *
-  *  Overrides or adds new validation error messages based on the user supplied data.
-  *
-  *  @Added: 1/18/2014
-  */
-  overwriteAndAddNewMessages: function(newValidationErrorMessages) {
+   * Overrides or adds new validation error messages.
+   *
+   * @since 0.1.0-beta
+   * @param {Object} newErrorMessages - Keys: validation method names
+   * @param {String} newErrorMessages.validationMethodName - Validation error message
+   */
+  overwriteAndAddNewMessages: function(newErrorMessages) {
     var errorMessage;
 
-    for (errorMessage in newValidationErrorMessages) {
-      this.validationMessages[errorMessage] = newValidationErrorMessages[errorMessage];
+    for (errorMessage in newErrorMessages) {
+      this.validationMessages[errorMessage] = newErrorMessages[errorMessage];
     }
   },
 
   /**
-  *  Validatinator.messages.addCurrentFormAndField();
-  *
-  *  Populates the currentForm and field being used if it needs to.
-  *
-  *  @Added: 1/15/2014
-  */
-  addCurrentFormAndField: function() {
-    // Check to see if the form is populated within the errors property.
-    if (! this.parent.errors.hasOwnProperty(this.parent.currentForm)) {
-      this.parent.errors[this.parent.currentForm] = {};
-    }
-
-    // Now that we know for sure that the form is populated into the error property we do the same for the field.
-    if (! this.parent.errors[this.parent.currentForm].hasOwnProperty(this.parent.currentField)) {
-      this.parent.errors[this.parent.currentForm][this.parent.currentField] = {};
-    }
-  },
-
-  /**
-  *  Validatinator.messages.addValidationErrorMessage(String methodName, Array parametersArray);
-  *
-  *  Adds the validation's error message based on the method that was called. Layout will match along the lines
-  *  of this: { "form": { "field": { "method": "method's error message." } } };
-  *
-  *  @Added: 1/10/2014
-  */
+   * Adds the validation's error message based on the method that was called.
+   *
+   * @since 0.1.0-beta
+   */
   addValidationErrorMessage: function(methodName, parametersArray) {
     var currentForm = this.parent.currentForm,
         currentField = this.parent.currentField,
         validationMessage = this.getValidationErrorMessage(methodName);
 
-    this.addCurrentFormAndField();
+    if (! this.parent.errors.hasOwnProperty(currentForm)) {
+      this.parent.errors[currentForm] = {};
+    }
+
+    if (! this.parent.errors[currentForm].hasOwnProperty(currentField)) {
+      this.parent.errors[currentForm][currentField] = {};
+    }
 
     if (parametersArray.length > 0) {
       validationMessage = this.replaceCurlyBracesWithValues(validationMessage, parametersArray);
@@ -87,13 +74,13 @@ module.exports = {
   },
 
   /**
-  *  Validatinator.messages.getValidationErrorMessage(methodName);
-  *
-  *  Attempts to retrieve an error message for the supplied methodName.  This method will first check to see if there is a
-  *  form and field specific custom error message set and if it isn't then we check the top-level validation message.
-  *
-  *  @Added: 5/21/2015
-  */
+   * Attempts to retrieve an error message from the supplied methodName.  This
+   * this method will first check to see if there is a form and field specific
+   * custom error message, if not then it'll get the top-level validation message.
+   *
+   * @since 0.1.0-beta
+   * @returns {String} Error Message
+   */
   getValidationErrorMessage: function(methodName) {
     var currentForm = this.parent.currentForm,
         currentField = this.parent.currentField,
@@ -103,8 +90,6 @@ module.exports = {
       validationMessage = this.validationMessages[currentForm][currentField][methodName];
     }
     catch(e) { }
-    // We will just deal with it below because not every "undefined" in the try will actually
-    // cause the catch to run.
 
     if (! validationMessage) {
       validationMessage = this.validationMessages[methodName];
@@ -114,39 +99,44 @@ module.exports = {
   },
 
   /**
-  *  Validatinator.messages.replaceCurlyBracesWithValues(String validationMessage, Array curlBraceParameters, Array parametersArray);
-  *
-  *  Replaces the curly brackets within the validationMessage with the corresponding values.
-  *
-  *  @Added: 1/15/2014
-  */
+   * Replaces the curly brackets within the validation error message with
+   * the corresponding values.
+   *
+   * @since 0.1.0-beta
+   * @returns {String}
+   */
   replaceCurlyBracesWithValues: function(validationMessage, parametersArray) {
-    var i = 0,
-        currentParameterValue,
-        currentValueToReplace;
+    var i,
+        paramVal,
+        valToReplace;
 
-    for (; i < parametersArray.length; i++) {
-      currentParameterValue = parametersArray[i];
-      currentValueToReplace = "{$" + i + "}";
+    for (i = 0; i < parametersArray.length; i++) {
+      paramVal = parametersArray[i];
+      valToReplace = "{$" + i + "}";
 
-      // If the index in the parameterArray doesn't exist or if the validation doesn't contain the {$i} value then continue to the next index.
-      if (! validationMessage.contains(currentValueToReplace) && (currentParameterValue === null && currentParameterValue === undefined)) {
+      // If the index in the parameterArray doesn't exist or if the validation
+      // doesn't contain the {$i} value then continue to the next index.
+      if (! validationMessage.contains(valToReplace) && (paramVal === null && paramVal === undefined)) {
         continue;
       }
 
-      // If the value is not an array then we will go ahead and just replace the string with the value.  Also note: regex
-      // is bad mojo!  Try to use anything that is not a regex before reverting to one.
+      // If the value is not an array then we will go ahead and just
+      // replace the string with the value.  Also note: regex is bad mojo!
+      // Try to use anything that is not a regex before reverting to one.
       if (! this.utils.isValueAnArray(parametersArray[i])) {
-        validationMessage = validationMessage.split(currentValueToReplace).join(currentParameterValue);
+        validationMessage = validationMessage.split(valToReplace).join(paramVal);
       }
       else {
-        validationMessage = validationMessage.split(currentValueToReplace).join(this.utils.convertArrayValuesToEnglishString(currentParameterValue));
+        validationMessage = validationMessage.split(valToReplace).join(
+          this.utils.convertArrayValuesToEnglishString(paramVal));
       }
     }
 
     return validationMessage;
   }
 };
+
+module.exports = Messages;
 
 },{}],2:[function(require,module,exports){
 module.exports = function() {
@@ -190,71 +180,86 @@ module.exports = function() {
 }
 
 },{}],3:[function(require,module,exports){
-module.exports = {
+/**
+ * @mixin
+ */
+var Utils = {
   /**
-  *  Validatinator.utils.convertFieldValidationsToArray(Object validationInformation);
-  *
-  *  Convert string field validations to array field validations.
-  *  "required|min:5|max:10" => ["required", "min:5", "max:10"];
-  *
-  *  @Added: 12/16/2013
-  */
-  convertFieldValidationsToArray: function(validationInformation) {
-    var validation,
-        form,
-        field;
+   * Loops through each form and field and converts the field's string of
+   * validations to an array of field validations.
+   *
+   *
+   * <pre>
+   *   e.g:
+   *   convertFieldValidationsToArray({
+   *     "aForm": {
+   *       "bField": "required|min:5|max:10"
+   *     }
+   *   }) =>
+   *   {
+   *     "aForm": {
+   *       "bField": ["required", "min:5", "max:10"]
+   *     }
+   *   }
+   * </pre>
+   *
+   * @param {Object} validationInfo
+   * @returns {Object} Updated validationInfo object
+   */
+  convertFieldValidationsToArray: function(validationInfo) {
+    for (var form in validationInfo) {
+      for (var field in validationInfo[form]) {
+        var validation = validationInfo[form][field];
 
-    for (form in validationInformation) {
-      for (field in validationInformation[form]) {
-        validation = validationInformation[form][field];
-
-        // Go ahead and create a nicely formated array of each field validation;
-        // if there is only a single field validation then
-        // we will use an array literal to create our array ourselves.
-        validationInformation[form][field] = (validation.contains("|")) ? validation.split("|") : [validation];
+        if (validation.contains("|")) {
+          validationInfo[form][field] = validation.split("|");
+        }
+        else {
+          validationInfo[form][field] = [validation];
+        }
       }
     }
 
-    return validationInformation;
+    return validationInfo;
   },
 
   /**
-  *  Validatinator.utils.convertStringToBoolean(String stringRepresentation);
-  *
-  *  Converts string representations of the boolean values to their actual boolean
-  *  values.  "true" => true, "false" => false.
-  *
-  *  @Added: 1/5/2014
-  */
-  convertStringToBoolean: function(stringRepresentation) {
-    if (typeof stringRepresentation !== "string") {
-      return stringRepresentation;
+   * Converts string representations of the boolean values to their actual boolean
+   * value.
+   *
+   * @param {string} strRepr - String representation of a boolean value,
+   *                           "false" or "true"
+   * @returns {Any} If the string "false" or "true" were supplied then it returns
+   *                a boolean.  Else it returns the supplied value
+   */
+  convertStringToBoolean: function(strRepr) {
+    if (typeof strRepr !== "string") {
+      return strRepr;
     }
 
-    if (stringRepresentation.toLowerCase() === "false") {
+    if (strRepr.toLowerCase() === "false") {
       return false;
     }
-    else if (stringRepresentation.toLowerCase() === "true") {
+    else if (strRepr.toLowerCase() === "true") {
       return true;
     }
 
-    return stringRepresentation;
+    return strRepr;
   },
 
   /**
-  *  Validatinator.utils.convertArrayValuesToEnglishString(Array arrayOfValues);
-  *
-  *  We loop through each of the array's values and concat it to an English string
-  *  containing AND between the second to last and last element.
-  *
-  *  @Added: 1/17/2014
-  */
+   * Loops through each of the supplied array's values and concatenates them into
+   * an English string.
+   *
+   * @param {Any[]} arrayOfValues
+   * @returns {string}
+   */
   convertArrayValuesToEnglishString: function(arrayOfValues) {
-    var i = 0,
+    var i,
         currentLength,
         finishedString = '';
 
-    for (; i < arrayOfValues.length; i++) {
+    for (i = 0; i < arrayOfValues.length; i++) {
       currentLength = i + 1;
 
       if (currentLength === arrayOfValues.length) {
@@ -272,21 +277,18 @@ module.exports = {
   },
 
   /**
-  *  Validatinator.utils.isValueFalsyInNature(Object value, Boolean strict);
-  *
-  *  Tests to see if the value provided is falsy in it's nature; i.e: undefined, null or false.
-  *  If strict mode is set to true or no boolean is passed in for strict then 0 equates to false,
-  *  else 0 equates to true.
-  *
-  *  @Added: 12/23/2013
-  */
+   * Tests to see if the value provided is falsy in it's nature; i.e: undefined,
+   * null or false. If strict mode is true then 0 equates to false.
+   *
+   * @param {Any} value - Value to check
+   * @param {Boolean} strict - If not supplied, defaults to true
+   * @returns {Boolean} True if the value if falsy in nature, otherwise false
+   */
   isValueFalsyInNature: function(value, strict) {
-    // Check to see if a value was passed to strict, if not then strict mode will be set to True by default.
     if (strict === undefined || strict === null) {
       strict = true;
     }
 
-    // If value is undefined or null then it is automatically marked as falsy in nature and therefore we return true.
     if (value === undefined || value === null || value === "") {
       return true;
     }
@@ -296,24 +298,21 @@ module.exports = {
   },
 
   /**
-  *  Validatinator.utils.isValueAnArray(Object value);
-  *
-  *  Checks to see if the value is an array, this will work for new Array(); and array
-  *  literals.
-  *
-  *  @Added: 1/17/2014
-  */
+   * Checks to see if the supplied value is an array.
+   *
+   * @param {Any} value - Value to check
+   * @returns {Boolean}
+   */
   isValueAnArray: function(value) {
     return Object.prototype.toString.call(value) === "[object Array]";
   },
 
   /**
-  *  Validatinator.utils.isEmptyObject(Object obj);
-  *
-  *  Tests to see if an object is empty or not. Credit to jQuery.
-  *
-  *  @Added: 12/23/2013
-  */
+   * Check to see if the supplied value is an empty object.
+   *
+   * @param {Object} obj - Value to check
+   * @returns {Boolean}
+   */
   isEmptyObject: function(obj) {
     var name;
 
@@ -325,52 +324,50 @@ module.exports = {
   },
 
   /**
-  *  Validatinator.utils.getFieldValue(String form, String field);
-  *
-  *  Gets a field's value based off of the field's name attribute, but first we test
-  *  to make sure that field's form name attribute is that of our currently validating field.
-  *
-  *  @Added: 1/17/2014
-  */
+   * Retrieves a field's value based off of the field's name attribute.  Field must
+   * be a child of the form supplied by the form name attribute.
+   *
+   * @param {string} form - Form's name attribute.
+   * @param {string} field - Field's name attribute.
+   */
   getFieldsValue: function(form, field) {
     var fieldsArray,
         fieldValue,
-        fieldElement,
-        i = 0;
+        fieldEle,
+        i;
 
-    // Instead of trusting that the first element returned is the actual field, we will go ahead
-    // and test if the field is truly within the form that we are validating against.
     fieldsArray = document.getElementsByName(field);
 
-    for (; i<fieldsArray.length; i++) {
-      fieldElement = fieldsArray[i];
+    for (i=0; i<fieldsArray.length; i++) {
+      fieldEle = fieldsArray[i];
 
-      // We are running a simple test to see if the current field in the returned array is part of
-      // our validating field or not.  If it is then grab it's value and break out of this test loop.
-      if (fieldElement.form.name === form) {
-        if ((fieldElement.type == 'radio' || fieldElement.type == 'checkbox') && !fieldValue) {
-          if (fieldElement.checked) {
-            fieldValue = fieldElement.value;
+      if (fieldEle.form.name === form) {
+        if ((fieldEle.type == 'radio' || fieldEle.type == 'checkbox') && !fieldValue) {
+          if (fieldEle.checked) {
+            fieldValue = fieldEle.value;
             break;
           } else {
             fieldValue = "";
             continue;
           }
         } else {
-          fieldValue = fieldElement.value;
+          fieldValue = fieldEle.value;
         }
+
         break;
       }
     }
 
     // If no field value was stored then we will assume that the field couldn't be found.  An empty string is
     // not considered a "non-stored field value."
-    if (! fieldValue && fieldValue !== "")
-    throw new Error("Couldn't find the field element " + field + " for the form " + form + ".");
+    if (!fieldValue && fieldValue !== "")
+      throw new Error("Couldn't find the field element " + field + " for the form " + form + ".");
 
     return fieldValue;
   }
 };
+
+module.exports = Utils;
 
 },{}],4:[function(require,module,exports){
 (function(window, def) {
@@ -385,13 +382,15 @@ module.exports = {
 
   /**
    * Core Validatinator class
+   *
    * @class Validatinator
-   * @param {Object} validations
-   * @param {Object} validations.formName
-   * @param {string} validations.formName.fieldname - String containing field validations.
+   * @since 0.1.0-beta
+   * @param {Object} validations - Keys: form's name attribute
+   * @param {Object} validations.formName - Keys: form's field name attribute
+   * @param {string} validations.formName.fieldname - String containing field validations
    * @param {Object} [errorMessages]
    * @param {Object} [errorMessages.formName]
-   * @param {string} [errorMessages.formName.validationName] - New Validation error message.
+   * @param {string} [errorMessages.formName.validationName] - New Validation error message
    */
   function Validatinator(validations, errorMessages) {
     if (! (this instanceof Validatinator)) {
@@ -415,45 +414,75 @@ module.exports = {
   }
 
   extend(Validatinator.prototype, {
+    /**
+     * Object containing all core validation methods.
+     *
+     * @instance
+     * @memberof Validatinator
+     * @mixes Validations
+     * @since 0.1.0-beta
+     */
     validations: require('./validations'),
+
+    /**
+     * Object containing functionality for dealing with validation
+     * messages.
+     *
+     * @instance
+     * @memberof Validatinator
+     * @mixes Messages
+     * @since 0.1.0-beta
+     */
     messages: require('./messages'),
+
+    /**
+     * Object containing utilities used  throughout Validatinator.
+     *
+     * @instance
+     * @memberof Validatinator
+     * @mixes Utils
+     * @since 0.1.0-beta
+     */
     utils: require('./utils')
   });
 
   extend(Validatinator.prototype, {
     /**
-     * Tests to see if the supplied form is valid.
+     * Tests to see if the supplied form's values are not valid.
      *
-     * @memberof Validatinator
      * @instance
+     * @memberof Validatinator
+     * @since 0.1.0-beta
      * @see startValidations
      * @param {string} formName - String representation of the form's name attr.
-     * @returns {Boolean} True if the form FAILS validation, else False.
+     * @returns {Boolean} True if the form fails validation, else False.
      */
     fails: function(formName) {
       return ! this.startValidations(formName);
     },
 
     /**
-     * Tests to see if the supplied form is valid.
+     * Tests to see if the supplied form's values are valid.
      *
-     * @memberof Validatinator
      * @instance
+     * @memberof Validatinator
+     * @since 0.1.0-beta
      * @see startValidations
      * @param {string} formName - String representation of the form's name attr.
-     * @returns {Boolean} True if the form PASSES validation, else False.
+     * @returns {Boolean} True if the form passes validation, else False.
      */
     passes: function(formName) {
       return this.startValidations(formName);
     },
 
     /**
-     * Tests to see if the supplied form is valid.
+     * Tests to see if the supplied form's values are valid.
      *
-     * @memberof Validatinator
      * @instance
+     * @memberof Validatinator
+     * @since 0.1.0-beta
      * @param {string} formName - String representation of the form's name attr.
-     * @returns {Boolean} True if the form PASSES validation, else False.
+     * @returns {Boolean} True if the form passes validation, else False.
      */
     startValidations: function(formName) {
       var currentFieldsValidations,
@@ -496,8 +525,9 @@ module.exports = {
      * Splits apart a validation string to retrieve it's validation method
      * name along with any parameters it requires.
      *
-     * @memberof Validatinator
      * @instance
+     * @memberof Validatinator
+     * @since 0.1.0-beta
      * @param {string} validationString - String containing a validation method's
      *                                    signature, along with it's parameters
      *                                    supplied following a colon `:`.
@@ -509,7 +539,7 @@ module.exports = {
       var params,
           validation;
 
-      // Assume there are not parameters if we have no colon.
+      // Assume there are no parameters if we have no colon.
       if (! validationString.contains(":")) {
         return [validationString];
       }
@@ -524,8 +554,9 @@ module.exports = {
      * Prepares the parameter(s) so they can be used when making the validation
      * method call.
      *
-     * @memberof Validatinator
      * @instance
+     * @memberof Validatinator
+     * @since 0.1.0-beta
      * @param {string} params - String containing parameters separated by colons.
      *                          (e.g. "param1:param2:param3:param4")
      * @returns {Any[]}
@@ -553,8 +584,9 @@ module.exports = {
      * Attempts to call the validation method supplied with the provided parameters
      * and fieldValue.
      *
-     * @memberof Validatiantor
      * @instance
+     * @memberof Validatiantor
+     * @since 0.1.0-beta
      * @param {string} method - String representation of a validation method.
      * @param {string} fieldValue - Form's field's value.
      * @param {string[]} parameters - Other paramteres that the field validation
@@ -582,35 +614,31 @@ module.exports = {
 });
 
 },{"./messages":1,"./polyfills":2,"./utils":3,"./validations":5,"extend":6}],5:[function(require,module,exports){
-module.exports = {
+/**
+ * All validations return true if the check passed, else false.
+ *
+ * @mixin
+ */
+var Validations = {
   /**
-  *  Validatinator.validations.accepted(String/Number fieldValue);
-  *
-  *  Check to make sure the field value is of an accepted type.
-  *  Accepted Types: true and 1.
-  *
-  *  @Added: 12/23/2013
-  *  @Modified: 4/4/2014
-  */
+   * Checks to make sure the current field's attribute is set to true.
+   *
+   * @since 0.1.0-beta
+   * @returns {Boolean}
+   */
   accepted: function(fieldValue) {
-    // Instead of using the field's value we want to see if the field is checked or not, simple!
-    // If you notice in the core file we store the field's name attribute in the currentField property,
-    // hence why we need to go through this extra step to actually retrieve the current field's DOM Object.
     return document.getElementsByName(this.parent.currentField)[0].checked;
   },
 
   /**
-  *  Validatinator.validations.alpha(String/Number fieldValue);
-  *
-  *  Check to make sure the field's value is only of alpha characters.
-  *
-  *  @Added: 12/24/2013
-  */
+   * Checks to make sure the field's value only contains alpha characters.
+   *
+   * @since 0.1.0-beta
+   * @returns {Boolean}
+   */
   alpha: function(fieldValue) {
     var alphaReg = /^[a-zA-Z]+$/;
 
-    // We won't check to see if the value is a string because our regex will
-    // handle that for us.
     if (this.utils.isValueFalsyInNature(fieldValue)) {
       return false;
     }
@@ -619,12 +647,12 @@ module.exports = {
   },
 
   /**
-  *  Validatinator.validations.alphaDash(String/Number fieldValue);
-  *
-  *  Check to make sure the field's value is only of alpha, underscore and hyphen characters.
-  *
-  *  @Added: 12/24/2013
-  */
+   * Checks to make sure the field's value only contains alpha, underscore
+   * and hyphen characters.
+   *
+   * @since 0.1.0-beta
+   * @returns {Boolean}
+   */
   alphaDash: function(fieldValue) {
     var alphaDashReg = /^[a-zA-Z-_]+$/;
 
@@ -636,13 +664,12 @@ module.exports = {
   },
 
   /**
-  *  Validatinator.validations.alphaNum(String/Number fieldValue);
-  *
-  *  Checks to make sure our field's value only contains alpha, underscore, hyphen and numerical
-  *  characters.
-  *
-  *  @Added: 12/25/2013 *CHRISTMAS DAY!*
-  */
+   * Checks to make sure our field's value only contains alpha, underscore,
+   * hyphen and numerical characters.
+   *
+   * @since 0.1.0-beta
+   * @returns {Boolean}
+   */
   alphaNum: function(fieldValue) {
     var alphaNumReg = /^[a-zA-Z-_0-9]+$/;
 
@@ -654,13 +681,12 @@ module.exports = {
   },
 
   /**
-  *  Validatinator.validations.between(String/Number fieldValue, Array minMax));
-  *
-  *  Checks to make sure the field value supplied is between the minimum value and maximum
-  *  value.
-  *
-  *  @Added: 12/25/2013 *CHRISTMAS DAY!*
-  */
+   * Checks to make sure the field's value is between the min
+   * and max values.
+   *
+   * @since 0.1.0-beta
+   * @returns {Boolean}
+   */
   between: function(fieldValue, minMax) {
     var min = Number(minMax[0]),
         max = Number(minMax[1]);
@@ -673,14 +699,12 @@ module.exports = {
   },
 
   /**
-  *  Validatinator.validations.betweenLength(String/Number fieldValue, Array minMax);
-  *
-  *  Checks to make sure the field value supplied has a length that is between the min and max
-  *  values supplied.  The fieldValue will be type casted to a String as a safe measure, but this
-  *  can yield unexpected results so be wary of passing in objects, arrays and boolean values.
-  *
-  *  @Added: 1/20/2014
-  */
+   * Checks to make sure the field's value has a length that is between the
+   * the min and max values.  The value to be checked will be casted to a String.
+   *
+   * @since 0.1.0-beta
+   * @returns {Boolean}
+   */
   betweenLength: function(fieldValue, minMax) {
     var min = Number(minMax[0]),
         max = Number(minMax[1]),
@@ -694,72 +718,65 @@ module.exports = {
   },
 
   /**
-  *  Validatinator.validations.contains(String/Number fieldValue, Array containsArray);
-  *
-  *  Checks to make sure the field's value is contained within the
-  *  contains array.
-  *
-  *  @Added: 1/4/2014
-  */
+   * Checks to make sure the field's value is contained within the
+   * supplied array.
+   *
+   * @since 0.1.0-beta
+   * @returns {Boolean}
+   */
   contains: function(fieldValue, containsArray) {
     return containsArray.indexOf(fieldValue) !== -1;
   },
 
   /**
-  *  Validatinator.validations.dateBefore(String fieldValue, String suppliedDate);
-  *
-  *  Checks to see whether or not fieldValue is set to a date that came BEFORE
-  *  suppliedDate.
-  *
-  *  @Added: 3/6/2015
-  */
+   * Checks to make sure the field's value is a date and that it
+   * comes before the supplied date.
+   *
+   * @since 0.1.0-beta
+   * @returns {Boolean}
+   */
   dateBefore: function(fieldValue, suppliedDate) {
     return Date.parse(fieldValue) < Date.parse(suppliedDate);
   },
 
   /**
-  *  Validatinator.validations.dateAfter(String fieldValue, String supplieDate);
-  *
-  *  Checks to see whether or not fieldValue is set to a date that comes AFTER
-  *  suppliedDate.
-  *
-  *  @Added: 3/6/2015
-  */
+   * Check to make sure the field's value is a date and that it
+   * comes after the date supplied.
+   *
+   * @since 0.1.0-beta
+   * @returns {Boolean}
+   */
   dateAfter: function(fieldValue, suppliedDate) {
-    // If the value is not before our supplied date then it must be after!
-    return ! this.dateBefore(fieldValue, suppliedDate);
+    return Date.parse(fieldValue) > Date.parse(suppliedDate);
   },
 
   /**
-  *  Validatinator.validations.different(String/Number fieldValue, String/Number differentFieldValue, Boolean strict);
-  *
-  *  Checks to make sure the two field value's provided are, in fact, different in value.
-  *
-  *  @Added: 12/26/2013
-  */
+   * Checks to make sure the field's value is different from the
+   * supplied value.
+   *
+   * @since 0.1.0-beta
+   * @returns {Boolean}
+   */
   different: function(fieldValue, differentFieldName, strict) {
-    // Since we are checking to see if the field's values are different then we will
-    // test it against our confirmed validation and just flip the returned value.
-    return ! this.same(fieldValue, differentFieldName, strict);
+    return !this.same(fieldValue, differentFieldName, strict);
   },
 
   /**
-  *  Validatinator.validations.digitsLength(String/Number fieldValue, Number length);
-  *
-  *  Checks to make sure the field value is only numerical and that the length of the value
-  *  is exactly the length supplied.
-  *
-  *  @Added: 12/26/2013
-  */
+   * Checks to make sure the field's value is only numerical and that
+   * the length of the value is exactly the length supplied.
+   *
+   * @since 0.1.0-beta
+   * @returns {Boolean}
+   */
   digitsLength: function(fieldValue, length) {
     var fieldValueLength = String(fieldValue).length,
         length = Number(length);
 
     if (isNaN(length)) {
-      throw new Error("length must be of numerical value in the `digitsLength` validation.");
+      throw new Error("Length must be of numerical type in the `digitsLength` validation.");
     }
 
-    if (! this.number(fieldValue)) {
+    if (!this.number(fieldValue)) {
       return false;
     }
 
@@ -767,20 +784,19 @@ module.exports = {
   },
 
   /**
-  *  Validatinator.validations.digitsBetween(String/Number fieldValue, Number minLength, Number maxLength);
-  *
-  *  Checks to make sure the field value supplied is only numerical and that the length of the value
-  *  is between or equal to the min and max length supplied.
-  *
-  *  @Added: 12/26/2013
-  */
+   * Checks to make sure the field's value is only numerical and that
+   * the length of the value is between the min and max lengths supplied.
+   *
+   * @since 0.1.0-beta
+   * @returns {Boolean}
+   */
   digitsLengthBetween: function(fieldValue, minMaxLength) {
     var minLength = Number(minMaxLength[0]),
         maxLength = Number(minMaxLength[1]),
         fieldValueLength = String(fieldValue).length;
 
     if (isNaN(minLength) || isNaN(maxLength)) {
-      throw new Error("minLength and maxLength must both be numerical values in the `digitsLengthBetween` validation.");
+      throw new Error("The min length and max length must both be numerical types in the `digitsLengthBetween` validation.");
     }
 
     if (! this.number(fieldValue)) {
@@ -791,45 +807,54 @@ module.exports = {
   },
 
   /**
-  *  Validatinator.validations.email(String/Number fieldValue);
-  *
-  *  Checks to make sure the field value supplied is a valid email address, in format.
-  *
-  *  @Added: 12/27/2013
-  */
+   * Checks to make sure the field's value is a valid email address format.
+   *
+   * @since 0.1.0-beta
+   * @returns {Boolean}
+   */
   email: function(fieldValue) {
     var emailReg = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,10})+$/;
     return emailReg.test(fieldValue);
   },
 
   /**
-  *  Validatiantor.validations.ipvFour(String/Number fieldValue);
-  *
-  *  Checks to make sure the field value supplied is a valid ipv4 address based off
-  *  of the RFC specs provided.
-  *
-  *  @Added: 12/30/2013
-  */
+   * Checks to make sure the field's value supplied is a valid ipv4 address,
+   * based on the RFC specs.
+   *
+   * @since 0.1.0-beta
+   * @returns {Boolean}
+   */
   ipvFour: function(fieldValue) {
-    var ipvFourReg,
-        maxByteValue = 255;
+    var ipSegments,
+        ipSegment,
+        ind;
 
-    // Get an array with all four of our integer values.
-    ipvFourReg = fieldValue.match(/^(\d+)\.(\d+)\.(\d+)\.(\d+)$/);
+    ipSegments = fieldValue.match(/^(\d+)\.(\d+)\.(\d+)\.(\d+)$/);
 
-    // Here we make sure all of our values are less than or equal to 255 as in the RFC for ipv4 it states that each decimal
-    // separated value is 1 byte and the max integer value we can create with 1 byte is 255.  0.0.0.0 >=< 255.255.255.255
-    return (ipvFourReg !== null && ipvFourReg[1] <= maxByteValue && ipvFourReg[2] <= maxByteValue && ipvFourReg[3] <= maxByteValue && ipvFourReg[4] <= maxByteValue);
+    if (ipSegments === null) {
+      return false;
+    }
+
+    ipSegments = ipSegments.slice(1);
+
+    for (ind in ipSegments) {
+      ipSegment = Number(ipSegments[ind]);
+
+      if (!(ipSegment >= 0 && ipSegment <= 255)) {
+        return false;
+      }
+    }
+
+    return true;
   },
 
   /**
-  *  Validatinator.validations.max(String/Number fieldValue, Number max);
-  *
-  *  Checks to make sure the field value supplied is less than or equal to the max
-  *  value supplied.
-  *
-  *  @Added: 12/30/2013
-  */
+   * Checks to make sure the field's value is less than or equal to the
+   * max value supplied.
+   *
+   * @since 0.1.0-beta
+   * @returns {Boolean}
+   */
   max: function(fieldValue, max) {
     max = Number(max);
 
@@ -837,19 +862,16 @@ module.exports = {
       throw new Error("max must be of numerical value in the `max` validation.");
     }
 
-    // Since we are only checking the max value we will go ahead and call the between method
-    // but we will pass -Infinity in as the min value as there is no min.
     return this.between(fieldValue, [-Infinity, max]);
   },
 
   /**
-  *  Validatinator.validations.maxLength(String/Number fieldValue, Number maxLength);
-  *
-  *  Checks to make sure the field value supplied has a length that is less than or equal to the
-  *  max value supplied.
-  *
-  *  @Added: 1/20/2014
-  */
+   * Checks to make sure the field's value has a length that is less than
+   * or equal to the max length.
+   *
+   * @since 0.1.0-beta
+   * @returns {Boolean}
+   */
   maxLength: function(fieldValue, max) {
     max = Number(max);
 
@@ -857,19 +879,16 @@ module.exports = {
       throw new Error("max must be a numerical value in the `max` validation.");
     }
 
-    // Since we are only checking the max value we will go ahead and call the betweenLength method
-    // but we will pass -Infinity in as the min value as there is no min.
     return this.betweenLength(fieldValue, [-Infinity, max]);
   },
 
   /**
-  *  Validatinator.validations.min(String/Number fieldValue, Number min);
-  *
-  *  Checks to make sure the field value supplied is greater than or equal to the min
-  *  value supplied.
-  *
-  *  @Added: 12/30/2013
-  */
+   * Checks to make sure the field's value is less than or equal to the
+   * min value supplied.
+   *
+   * @since 0.1.0-beta
+   * @returns {Boolean}
+   */
   min: function(fieldValue, min) {
     min = Number(min);
 
@@ -877,19 +896,16 @@ module.exports = {
       throw new Error("min must be of numerical value in the `min` validation.");
     }
 
-    // Since we are only checking the min value we will go ahead and call the between method
-    // but we will pass Inifinity in as the max value as there is no max.
     return this.between(fieldValue, [min, Infinity]);
   },
 
   /**
-  *  Validatinator.validations.minLength(String/Number fieldValue, Number min);
-  *
-  *  Checks to make sure the field value supplied has a length that is greater than or equal to the
-  *  min value supplied.
-  *
-  *  @Added: 1/20/2014
-  */
+   * Checks to make sure the field's value has a length that is less than
+   * or equal to the min length.
+   *
+   * @since 0.1.0-beta
+   * @returns {Boolean}
+   */
   minLength: function(fieldValue, min) {
     min = Number(min);
 
@@ -897,70 +913,60 @@ module.exports = {
       throw new Error("min must be a numerical value in the `minLength` validation.");
     }
 
-    // Since we are only checking the min value we will go ahead and call the betweenLength method
-    // but we will pass Inifinity in as the max value as there is no max.
     return this.betweenLength(fieldValue, [min, Infinity]);
   },
 
   /**
-  *  Validatinator.validations.notIn(String/Number fieldValue, Array containsArray);
-  *
-  *  Checks to make sure the field's value is not contained within the
-  *  contains array.
-  *
-  *  @Added: 1/4/2014
-  */
+   * Checks to make sure the field's value is not contained within the
+   * the supplied array of values.
+   *
+   * @since 0.1.0-beta
+   * @returns {Boolean}
+   */
   notIn: function(fieldValue, containsArray) {
     return ! this.contains(fieldValue, containsArray);
   },
 
   /**
-  *  Validatinator.validations.number(String/Number fieldValue);
-  *
-  *  Check to make sure the field value supplied is a valid number; int, float, double, etc.
-  *
-  *  @Added: 12/27/2013
-  */
+   * Checks to make sure the field's value is a valid Number.
+   *
+   * @since 0.1.0-beta
+   * @returns {Boolean}
+   */
   number: function(fieldValue) {
     if (fieldValue === null || fieldValue === undefined) {
       return false;
     }
 
-    fieldValue = Number(fieldValue);
-    // If it != NaN then it is a number.
-    return (! isNaN(fieldValue));
+    return !isNaN(Number(fieldValue));
   },
 
   /**
-  *  Validatinator.validations.required(String/Number fieldValue);
-  *
-  *  Simply checks to see if our value exists or not.
-  *
-  *  @Added: 12/23/2013
-  */
+   * Checks to make sure the field's value exists.
+   *
+   * @since 0.1.0-beta
+   * @returns {Boolean}
+   */
   required: function(fieldValue) {
-    // Flip the boolean return value because if the value is falsy in nature then it returns
-    // true; we want to return true if the value exists, not if it is falsy.
+    // If the value isn't falsy in nature then required should
+    // be true.
     return ! this.utils.isValueFalsyInNature(fieldValue, false);
   },
 
   /**
-  * Validatinator.validations._required_if(
-  *                               String/Number fieldValue,
-  *                               String testedFieldsName,
-  *                               String/Number valueToTestAgainst,
-  *                               Boolean not
-  *                           )
-  *
-  * More or less a hidden method that the requiredIf and requiredIfNot method's
-  * use to help keep code DRY.
-  *
-  * @Added: 9/17/2014
-  */
+   * Protected method that is used to help keep the requiredIf and requiredIfNot
+   * code DRY.
+   *
+   * @protected
+   * @since 0.1.0-beta
+   * @returns {Boolean}
+   */
   _required_if: function(fieldValue, testedFieldsName, valueToTestAgainst, not) {
-    var testedFieldsValue = this.utils.getFieldsValue(this.parent.currentForm, testedFieldsName);
+    var testedFieldsValue = this.utils.getFieldsValue(this.parent.currentForm,
+                                                      testedFieldsName);
 
-    if ((not && testedFieldsValue !== valueToTestAgainst) || (! not && testedFieldsValue === valueToTestAgainst)) {
+    if ((not && testedFieldsValue !== valueToTestAgainst) ||
+        (!not && testedFieldsValue === valueToTestAgainst)) {
       return this.required(fieldValue);
     }
 
@@ -968,37 +974,39 @@ module.exports = {
   },
 
   /**
-  *  Validatinator.validations.requiredIf(String/Number fieldValue, String testedFieldsName, String/Number valueToTestAgainst);
-  *
-  *  The field under validation must be present if the field
-  *  that is being tested, not the validation one, is equal to value.
-  *
-  *  @Added: 1/26/2014
-  */
+   * Checks to make sure the field's value is not falsy if the
+   * field passed as the first parameter of the validation string
+   * has a value that is equal to the value supplied in the
+   * second parameter of the validation string.
+   *
+   * @since 0.1.0-beta
+   * @returns {Boolean}
+   */
   requiredIf: function(fieldValue, testedFieldsName, valueToTestAgainst) {
     return this._required_if(fieldValue, testedFieldsName, valueToTestAgainst, false);
   },
 
   /**
-  *  Validatinator.validations.requiredIfNot(String/Number fieldValue, String testedFieldsName, String/Number valueToTestAgainst);
-  *
-  *  This validation is exactly the same as the requiredIf validation except
-  *  that the field we are validating against is only required IF the field
-  *  being tested, not the validation one, is NOT equal to the value.
-  *
-  *  @Added: 1/26/2014
-  */
+   * Checks to make sure the field's value is not falsy if the
+   * field passed as the first parameter of the validation string
+   * does not have a value that is equal to the value supplied in the
+   * second parameter of the validation string. This is the opposite of
+   * {@link requiredIf}.
+   *
+   * @since 0.1.0-beta
+   * @returns {Boolean}
+   */
   requiredIfNot: function(fieldValue, testedFieldsName, valueToTestAgainst) {
     return this._required_if(fieldValue, testedFieldsName, valueToTestAgainst, true);
   },
 
   /**
-  *  Validatinator.validations.same(String/Number fieldValue, String/Number sameFieldValue, Boolean strict);
-  *
-  *  Checks to make sure the two field values provided are, in fact, the same in value.
-  *
-  *  @Added: 1/4/2014
-  */
+   * Checks to make sure the field's value is equal to the field value
+   * provided.
+   *
+   * @since 0.1.0-beta
+   * @returns {Boolean}
+   */
   same: function(fieldValue, sameFieldName, strict) {
     var sameFieldValue = this.utils.getFieldsValue(this.parent.currentForm, sameFieldName);
 
@@ -1019,17 +1027,18 @@ module.exports = {
   },
 
   /**
-  *  Validatinator.validations.url(String fieldValue);
-  *
-  *  Checks to make sure the field's value is, in fact, a real url.
-  *
-  *  @Added: 1/4/2014
-  */
+   * Checks to make sure the field's value is in correct URL format.
+   *
+   * @since 0.1.0-beta
+   * @returns {Boolean}
+   */
   url: function(fieldValue) {
     var urlReg = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
     return urlReg.test(fieldValue);
   }
 };
+
+module.exports = Validations;
 
 },{}],6:[function(require,module,exports){
 'use strict';

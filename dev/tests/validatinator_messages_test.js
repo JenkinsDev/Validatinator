@@ -11,18 +11,6 @@ describe("Validator Messages", function() {
     });
   });
 
-  it('addCurrentFormAndField should add the current form and field to the errors object on the Validatinator core.', function() {
-    validatinator.currentForm = "my-form";
-    validatinator.currentField = "first-name";
-    validatinator.messages.addCurrentFormAndField();
-
-    expect(validatinator.errors).toEqual({
-      "my-form": {
-        "first-name": {}
-      }
-    });
-  });
-
   it('addValidationErrorMessage should populate the errors object with the corresponding validation message.', function() {
     validatinator.currentForm = "my-form";
     validatinator.currentField = "first-name";

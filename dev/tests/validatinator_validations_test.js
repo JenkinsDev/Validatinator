@@ -87,11 +87,11 @@ describe("Validations", function() {
 
     expect(function() {
       validatinator.validations.digitsLength(123);
-    }).toThrow("length must be of numerical value in the `digitsLength` validation.");
+    }).toThrow("Length must be of numerical type in the `digitsLength` validation.");
 
     expect(function() {
       validatinator.validations.digitsLength(123, "asdf");
-    }).toThrow("length must be of numerical value in the `digitsLength` validation.");
+    }).toThrow("Length must be of numerical type in the `digitsLength` validation.");
   });
 
   it('digitsLengthBetween should return true if the field\'s value is only numerical and is in-between the length of the two values supplied.', function() {
@@ -101,19 +101,19 @@ describe("Validations", function() {
 
     expect(function() {
       validatinator.validations.digitsLengthBetween(113, ["min", "234"]);
-    }).toThrow("minLength and maxLength must both be numerical values in the `digitsLengthBetween` validation.");
+    }).toThrow("The min length and max length must both be numerical types in the `digitsLengthBetween` validation.");
 
     expect(function() {
       validatinator.validations.digitsLengthBetween(123, [1, "max"]);
-    }).toThrow("minLength and maxLength must both be numerical values in the `digitsLengthBetween` validation.");
+    }).toThrow("The min length and max length must both be numerical types in the `digitsLengthBetween` validation.");
 
     expect(function() {
       validatinator.validations.digitsLengthBetween(123, ["1f", 234]);
-    }).toThrow("minLength and maxLength must both be numerical values in the `digitsLengthBetween` validation.");
+    }).toThrow("The min length and max length must both be numerical types in the `digitsLengthBetween` validation.");
 
     expect(function() {
       validatinator.validations.digitsLengthBetween(123, ["1", 234]);
-    }).not.toThrow("minLength and maxLength must both be numerical values in the `digitsLengthBetween` validation.");
+    }).not.toThrow("The min length and max length must both be numerical types in the `digitsLengthBetween` validation.");
   });
 
   it('email should return true if the field\'s value is a valid email address.', function() {
@@ -124,10 +124,13 @@ describe("Validations", function() {
   });
 
   it('ipvFour should return true if the field\'s value is a valid ipv4 address.', function() {
+    expect(validatinator.validations.ipvFour("Random")).toBeFalsy();
     expect(validatinator.validations.ipvFour("127.0.0.1.0")).toBeFalsy();
     expect(validatinator.validations.ipvFour("123123.123123123.12312312423.4324234.233423")).toBeFalsy();
+    expect(validatinator.validations.ipvFour("-40.142.-203.244")).toBeFalsy();
     expect(validatinator.validations.ipvFour("0.0.0.0")).toBeTruthy();
     expect(validatinator.validations.ipvFour("255.255.255.255")).toBeTruthy();
+    expect(validatinator.validations.ipvFour("176.20.57.1")).toBeTruthy();
   });
 
   it('max should return true if the field\'s value is below or equal to the maximum value supplied.', function() {
