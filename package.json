@@ -32,7 +32,7 @@
   },
   "scripts": {
     "test": "grunt jasmine",
-    "docs": "jsdoc -R README.md -r dev/js/ -d api_docs",
+    "docs": "jsdoc -R README.md -r dev/js/ -d api_docs && cp api_docs/Validatinator.html api_docs/index.html",
     "update-docs": "git subtree push --prefix api_docs/ origin gh-pages"
   },
   "dependencies": {
