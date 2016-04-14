@@ -141,51 +141,52 @@
      * @returns {Boolean} True if the form passes validation, else False.
      */
     startValidations: function(formName) {
-      var currentFieldsValidations,
-          currentFieldsValue,
-          currentValidationMethodAndParameters,
+      var currFieldValidations,
+          currFieldsValue,
+          currValidationMethod,
           fieldName,
+          method,
+          params,
           i;
 
       this.currentForm = formName;
-      this.errors = {};
+      this.errors[formName] = {};
 
       for (fieldName in this.validationInformation[formName]) {
         this.currentField = fieldName;
-        currentFieldsValidations = this.validationInformation[formName][fieldName];
-        currentFieldsValue = this.utils.getFieldsValue(this.currentForm, this.currentField);
+        currFieldValidations = this.validationInformation[formName][fieldName];
+        currFieldsValue = this.utils.getFieldsValue(this.currentForm, this.currentField);
 
-        for (i = 0; i &lt; currentFieldsValidations.length; i++) {
-          var method,
-              parameters = [];
+        for (i = 0; i &lt; currFieldValidations.length; i++) {
+          params = [];
 
-          currentValidationMethodAndParameters = this.getValidationMethodAndParameters(currentFieldsValidations[i]);
-          method = currentValidationMethodAndParameters[0];
+          currValidationMethod = this.getValidationMethodAndParameters(currFieldValidations[i]);
+          method = currValidationMethod[0];
 
-          // Check to see if our parameters actually exist, if they do, store them.
-          if (currentValidationMethodAndParameters.length === 2) {
-            parameters = currentValidationMethodAndParameters[1];
+          // Check to see if our params actually exist, if they do, store them.
+          if (currValidationMethod.length === 2) {
+            params = currValidationMethod[1];
           }
 
-          if (! this.callValidationMethod(method, parameters, currentFieldsValue)) {
-            parameters.shift();
-            this.messages.addValidationErrorMessage(method, parameters);
+          if (!this.callValidationMethod(method, params, currFieldsValue)) {
+            params.shift();
+            this.messages.addValidationErrorMessage(method, params);
           }
         }
       }
 
-      return this.utils.isEmptyObject(this.errors);
+      return this.utils.isEmptyObject(this.errors[formName]);
     },
 
     /**
      * Splits apart a validation string to retrieve it's validation method
-     * name along with any parameters it requires.
+     * name along with any params it requires.
      *
      * @instance
      * @memberof Validatinator
      * @since 0.1.0-beta
      * @param {string} validationString - String containing a validation method's
-     *                                    signature, along with it's parameters
+     *                                    signature, along with it's params
      *                                    supplied following a colon `:`.
      * @returns {string[]} Array containing the validation method in the
      *                     first index and all other indice are the validation
@@ -195,7 +196,7 @@
       var params,
           validation;
 
-      // Assume there are no parameters if we have no colon.
+      // Assume there are no params if we have no colon.
       if (! validationString.contains(":")) {
         return [validationString];
       }
@@ -213,7 +214,7 @@
      * @instance
      * @memberof Validatinator
      * @since 0.1.0-beta
-     * @param {string} params - String containing parameters separated by colons.
+     * @param {string} params - String containing params separated by colons.
      *                          (e.g. "param1:param2:param3:param4")
      * @returns {Any[]}
      */
@@ -237,7 +238,7 @@
     },
 
     /**
-     * Attempts to call the validation method supplied with the provided parameters
+     * Attempts to call the validation method supplied with the provided params
      * and fieldValue.
      *
      * @instance
@@ -245,24 +246,24 @@
      * @since 0.1.0-beta
      * @param {string} method - String representation of a validation method.
      * @param {string} fieldValue - Form's field's value.
-     * @param {string[]} parameters - Other paramteres that the field validation
+     * @param {string[]} params - Other paramteres that the field validation
      *                                require.
      * @returns {Boolean} True if the validation passed, else False.
      */
-    callValidationMethod: function(method, fieldValue, parameters) {
-      if (! (method in this["validations"])) {
+    callValidationMethod: function(method, params, fieldValue) {
+      if (!(method in this["validations"])) {
         throw new Error("Validation does not exist: " + method);
       }
 
-      if (! parameters) {
+      if (!params) {
         return this["validations"][method](fieldValue);
       }
 
-      // Add the field value to the parameters array so we can use
+      // Add the field value to the params array so we can use
       // .apply on the validation method's signature.
-      parameters.unshift(fieldValue);
+      params.unshift(fieldValue);
 
-      return this["validations"][method].apply(this.validations, parameters);
+      return this["validations"][method].apply(this.validations, params);
     }
   });
 
@@ -284,7 +285,7 @@
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Wed Apr 13 2016 17:33:51 GMT-0400 (EDT)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0</a> on Thu Apr 14 2016 10:59:56 GMT-0400 (EDT)
 </footer>
 
 <script> prettyPrint(); </script>
