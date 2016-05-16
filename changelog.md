@@ -1,5 +1,9 @@
 # Validatinator Changelog
 
+### Version 1.3.3
+
+* Hotfix: Updated email regex to be less strict and follow RFC822.
+
 ### Version 1.3.2
 
 * Fixed an issue where the requirement validation was not working for radio and checkbox inputs.

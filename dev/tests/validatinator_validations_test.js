@@ -137,6 +137,10 @@ describe("Validations", function() {
 
         expect(validatinator.validations.email("me@something.com")).toBeTruthy();
         expect(validatinator.validations.email("me123@youtube.com")).toBeTruthy();
+        expect(validatinator.validations.email("foo+bar@example.com")).toBeTruthy();
+        expect(validatinator.validations.email("other.email-with-dash@example.com")).toBeTruthy();
+        expect(validatinator.validations.email('"much.more unusual"@example.com')).toBeTruthy();
+        expect(validatinator.validations.email('" "@example.com')).toBeTruthy();
     });
 
     it('ipvFour should return true if the field\'s value is a valid ipv4 address.', function() {
