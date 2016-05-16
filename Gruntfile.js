@@ -5,7 +5,7 @@ module.exports = function(grunt) {
         uglify: {
             options: {
                 banner: '/* \n' +
-                        ' * Copyright (c) 2013-2015 David Jenkins (<%= pkg.name %>) \n' +
+                        ' * Copyright (c) 2013-2016 David Jenkins (<%= pkg.name %>) \n' +
                         ' * See the file license.txt for copying permission. \n' +
                         ' * \n' +
                         ' * Simple, yet effective, vanilla JavaScript form validation "plugin." Validatinator is based off \n' +
