@@ -1,3 +1,5 @@
+'use strict';
+
 describe("Validations", function() {
   var validatinator,
       myForm,
@@ -41,7 +43,7 @@ describe("Validations", function() {
 
     expect(function() {
       validatinator.validations.between(123, ["min", "max"]);
-    }).toThrow("min and max must both be numbers in the `between` validation.");
+    }).toThrowError("min and max must both be numbers in the `between` validation.");
   });
 
   it('betweenLength should return true if the field\'s value length is between the min and max value supplied.', function() {
@@ -87,11 +89,11 @@ describe("Validations", function() {
 
     expect(function() {
       validatinator.validations.digitsLength(123);
-    }).toThrow("Length must be of numerical type in the `digitsLength` validation.");
+    }).toThrowError("Length must be of numerical type in the `digitsLength` validation.");
 
     expect(function() {
       validatinator.validations.digitsLength(123, "asdf");
-    }).toThrow("Length must be of numerical type in the `digitsLength` validation.");
+    }).toThrowError("Length must be of numerical type in the `digitsLength` validation.");
   });
 
   it('digitsLengthBetween should return true if the field\'s value is only numerical and is in-between the length of the two values supplied.', function() {
@@ -101,19 +103,19 @@ describe("Validations", function() {
 
     expect(function() {
       validatinator.validations.digitsLengthBetween(113, ["min", "234"]);
-    }).toThrow("The min length and max length must both be numerical types in the `digitsLengthBetween` validation.");
+    }).toThrowError("The min length and max length must both be numerical types in the `digitsLengthBetween` validation.");
 
     expect(function() {
       validatinator.validations.digitsLengthBetween(123, [1, "max"]);
-    }).toThrow("The min length and max length must both be numerical types in the `digitsLengthBetween` validation.");
+    }).toThrowError("The min length and max length must both be numerical types in the `digitsLengthBetween` validation.");
 
     expect(function() {
       validatinator.validations.digitsLengthBetween(123, ["1f", 234]);
-    }).toThrow("The min length and max length must both be numerical types in the `digitsLengthBetween` validation.");
+    }).toThrowError("The min length and max length must both be numerical types in the `digitsLengthBetween` validation.");
 
     expect(function() {
       validatinator.validations.digitsLengthBetween(123, ["1", 234]);
-    }).not.toThrow("The min length and max length must both be numerical types in the `digitsLengthBetween` validation.");
+    }).not.toThrowError();
   });
 
   it('email should return true if the field\'s value is a valid email address.', function() {

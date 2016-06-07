@@ -222,20 +222,20 @@
      *                                require.
      * @returns {Boolean} True if the validation passed, else False.
      */
-    callValidationMethod: function(method, params, fieldValue) {
-      if (!(method in this["validations"])) {
+    callValidationMethod: function(method, fieldValue, params) {
+      if (!(method in this.validations)) {
         throw new Error("Validation does not exist: " + method);
       }
 
       if (!params) {
-        return this["validations"][method](fieldValue);
+        return this.validations[method](fieldValue);
       }
 
       // Add the field value to the params array so we can use
       // .apply on the validation method's signature.
       params.unshift(fieldValue);
 
-      return this["validations"][method].apply(this.validations, params);
+      return this.validations[method].apply(this.validations, params);
     }
   });
 

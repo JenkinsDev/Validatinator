@@ -1,4 +1,14 @@
+/**
+ * Copyright (c) 2013-2016 David Jenkins <david.nicholas.jenkins@gmail.com> (validatinator)
+ * See license.txt for license information.
+ *
+ * Simple, yet effective, vanilla JavaScript form validation plugin. Validatinator is based off of one of PHP's most famous framework, Laravel.  Using Validatinator is as easy as instantiating a Validatinator object, calling the passes or fails methods and if there are failed validations then grabbing those validations from the errors property on the main object.
+ *
+ * Latest Update: 1.3.2 (6/7/2016)
+ */
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+"use strict";
+
 /**
  * @mixin
  */
@@ -39,7 +49,7 @@ var Messages = {
    * @param {Object} newErrorMessages - Keys: validation method names
    * @param {String} newErrorMessages.validationMethodName - Validation error message
    */
-  overwriteAndAddNewMessages: function(newErrorMessages) {
+  overwriteAndAddNewMessages: function overwriteAndAddNewMessages(newErrorMessages) {
     var errorMessage;
 
     for (errorMessage in newErrorMessages) {
@@ -52,16 +62,16 @@ var Messages = {
    *
    * @since 0.1.0-beta
    */
-  addValidationErrorMessage: function(methodName, parametersArray) {
+  addValidationErrorMessage: function addValidationErrorMessage(methodName, parametersArray) {
     var currentForm = this.parent.currentForm,
         currentField = this.parent.currentField,
         validationMessage = this.getValidationErrorMessage(methodName);
 
-    if (! this.parent.errors.hasOwnProperty(currentForm)) {
+    if (!this.parent.errors.hasOwnProperty(currentForm)) {
       this.parent.errors[currentForm] = {};
     }
 
-    if (! this.parent.errors[currentForm].hasOwnProperty(currentField)) {
+    if (!this.parent.errors[currentForm].hasOwnProperty(currentField)) {
       this.parent.errors[currentForm][currentField] = {};
     }
 
@@ -81,17 +91,16 @@ var Messages = {
    * @since 0.1.0-beta
    * @returns {String} Error Message
    */
-  getValidationErrorMessage: function(methodName) {
+  getValidationErrorMessage: function getValidationErrorMessage(methodName) {
     var currentForm = this.parent.currentForm,
         currentField = this.parent.currentField,
         validationMessage;
 
     try {
       validationMessage = this.validationMessages[currentForm][currentField][methodName];
-    }
-    catch(e) { }
+    } catch (e) {}
 
-    if (! validationMessage) {
+    if (!validationMessage) {
       validationMessage = this.validationMessages[methodName];
     }
 
@@ -105,10 +114,8 @@ var Messages = {
    * @since 0.1.0-beta
    * @returns {String}
    */
-  replaceCurlyBracesWithValues: function(validationMessage, parametersArray) {
-    var i,
-        paramVal,
-        valToReplace;
+  replaceCurlyBracesWithValues: function replaceCurlyBracesWithValues(validationMessage, parametersArray) {
+    var i, paramVal, valToReplace;
 
     for (i = 0; i < parametersArray.length; i++) {
       paramVal = parametersArray[i];
@@ -116,19 +123,17 @@ var Messages = {
 
       // If the index in the parameterArray doesn't exist or if the validation
       // doesn't contain the {$i} value then continue to the next index.
-      if (! validationMessage.contains(valToReplace) && (paramVal === null && paramVal === undefined)) {
+      if (!validationMessage.contains(valToReplace) && paramVal === null && paramVal === undefined) {
         continue;
       }
 
       // If the value is not an array then we will go ahead and just
       // replace the string with the value.  Also note: regex is bad mojo!
       // Try to use anything that is not a regex before reverting to one.
-      if (! this.utils.isValueAnArray(parametersArray[i])) {
+      if (!this.utils.isValueAnArray(parametersArray[i])) {
         validationMessage = validationMessage.split(valToReplace).join(paramVal);
-      }
-      else {
-        validationMessage = validationMessage.split(valToReplace).join(
-          this.utils.convertArrayValuesToEnglishString(paramVal));
+      } else {
+        validationMessage = validationMessage.split(valToReplace).join(this.utils.convertArrayValuesToEnglishString(paramVal));
       }
     }
 
@@ -139,17 +144,19 @@ var Messages = {
 module.exports = Messages;
 
 },{}],2:[function(require,module,exports){
-module.exports = function() {
+'use strict';
+
+module.exports = function () {
   if (!String.prototype.contains) {
-    String.prototype.contains = function(str, startIndex) {
+    String.prototype.contains = function (str, startIndex) {
       return -1 !== String.prototype.indexOf.call(this, str, startIndex);
     };
   }
 
   if (!Array.prototype.indexOf) {
-    Array.prototype.indexOf = function(searchElement, fromIndex) {
+    Array.prototype.indexOf = function (searchElement, fromIndex) {
       if (this === undefined || this === null) {
-        throw new TypeError( '"this" is null or not defined' );
+        throw new TypeError('"this" is null or not defined');
       }
 
       // Hack to convert object.length to a UInt32
@@ -177,9 +184,11 @@ module.exports = function() {
       return -1;
     };
   }
-}
+};
 
 },{}],3:[function(require,module,exports){
+"use strict";
+
 /**
  * @mixin
  */
@@ -206,15 +215,14 @@ var Utils = {
    * @param {Object} validationInfo
    * @returns {Object} Updated validationInfo object
    */
-  convertFieldValidationsToArray: function(validationInfo) {
+  convertFieldValidationsToArray: function convertFieldValidationsToArray(validationInfo) {
     for (var form in validationInfo) {
       for (var field in validationInfo[form]) {
         var validation = validationInfo[form][field];
 
         if (validation.contains("|")) {
           validationInfo[form][field] = validation.split("|");
-        }
-        else {
+        } else {
           validationInfo[form][field] = [validation];
         }
       }
@@ -232,15 +240,14 @@ var Utils = {
    * @returns {Any} If the string "false" or "true" were supplied then it returns
    *                a boolean.  Else it returns the supplied value
    */
-  convertStringToBoolean: function(strRepr) {
+  convertStringToBoolean: function convertStringToBoolean(strRepr) {
     if (typeof strRepr !== "string") {
       return strRepr;
     }
 
     if (strRepr.toLowerCase() === "false") {
       return false;
-    }
-    else if (strRepr.toLowerCase() === "true") {
+    } else if (strRepr.toLowerCase() === "true") {
       return true;
     }
 
@@ -254,7 +261,7 @@ var Utils = {
    * @param {Any[]} arrayOfValues
    * @returns {string}
    */
-  convertArrayValuesToEnglishString: function(arrayOfValues) {
+  convertArrayValuesToEnglishString: function convertArrayValuesToEnglishString(arrayOfValues) {
     var i,
         currentLength,
         finishedString = '';
@@ -264,11 +271,9 @@ var Utils = {
 
       if (currentLength === arrayOfValues.length) {
         finishedString += ' and ' + arrayOfValues[i];
-      }
-      else if (i === 0) {
+      } else if (i === 0) {
         finishedString += arrayOfValues[i];
-      }
-      else {
+      } else {
         finishedString += ', ' + arrayOfValues[i];
       }
     }
@@ -284,7 +289,7 @@ var Utils = {
    * @param {Boolean} strict - If not supplied, defaults to true
    * @returns {Boolean} True if the value if falsy in nature, otherwise false
    */
-  isValueFalsyInNature: function(value, strict) {
+  isValueFalsyInNature: function isValueFalsyInNature(value, strict) {
     if (strict === undefined || strict === null) {
       strict = true;
     }
@@ -294,7 +299,7 @@ var Utils = {
     }
 
     // If strict mode is set to true then 0 will be the same as false.
-    return (strict) ? !value : value === false;
+    return strict ? !value : value === false;
   },
 
   /**
@@ -303,7 +308,7 @@ var Utils = {
    * @param {Any} value - Value to check
    * @returns {Boolean}
    */
-  isValueAnArray: function(value) {
+  isValueAnArray: function isValueAnArray(value) {
     return Object.prototype.toString.call(value) === "[object Array]";
   },
 
@@ -313,7 +318,7 @@ var Utils = {
    * @param {Object} obj - Value to check
    * @returns {Boolean}
    */
-  isEmptyObject: function(obj) {
+  isEmptyObject: function isEmptyObject(obj) {
     var name;
 
     for (name in obj) {
@@ -330,15 +335,12 @@ var Utils = {
    * @param {string} form - Form's name attribute.
    * @param {string} field - Field's name attribute.
    */
-  getFieldsValue: function(form, field) {
-    var fieldsArray,
-        fieldValue,
-        fieldEle,
-        i;
+  getFieldsValue: function getFieldsValue(form, field) {
+    var fieldsArray, fieldValue, fieldEle, i;
 
     fieldsArray = document.getElementsByName(field);
 
-    for (i=0; i<fieldsArray.length; i++) {
+    for (i = 0; i < fieldsArray.length; i++) {
       fieldEle = fieldsArray[i];
 
       if (fieldEle.form.name === form) {
@@ -360,8 +362,7 @@ var Utils = {
 
     // If no field value was stored then we will assume that the field couldn't be found.  An empty string is
     // not considered a "non-stored field value."
-    if (!fieldValue && fieldValue !== "")
-      throw new Error("Couldn't find the field element " + field + " for the form " + form + ".");
+    if (!fieldValue && fieldValue !== "") throw new Error("Couldn't find the field element " + field + " for the form " + form + ".");
 
     return fieldValue;
   }
@@ -370,14 +371,18 @@ var Utils = {
 module.exports = Utils;
 
 },{}],4:[function(require,module,exports){
-(function(window, def) {
-  if (typeof module === "object" && module.exports) {
+'use strict';
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
+(function (window, def) {
+  if ((typeof module === 'undefined' ? 'undefined' : _typeof(module)) === "object" && module.exports) {
     module.exports = def();
   }
 
   window.Validatinator = def();
   require('./polyfills')();
-})(window, function() {
+})(window, function () {
   var extend = require('extend');
 
   /**
@@ -393,11 +398,11 @@ module.exports = Utils;
    * @param {string} [errorMessages.formName.validationName] - New Validation error message
    */
   function Validatinator(validations, errorMessages) {
-    if (! (this instanceof Validatinator)) {
+    if (!(this instanceof Validatinator)) {
       throw new Error("Whoops!  Validatinator must be called with the new keyword!");
     }
 
-    this.validationInformation = (validations !== undefined) ? this.utils.convertFieldValidationsToArray(validations) : {};
+    this.validationInformation = validations !== undefined ? this.utils.convertFieldValidationsToArray(validations) : {};
     this.errors = {};
 
     this.currentForm = null;
@@ -457,8 +462,8 @@ module.exports = Utils;
      * @param {string} formName - String representation of the form's name attr.
      * @returns {Boolean} True if the form fails validation, else False.
      */
-    fails: function(formName) {
-      return ! this.startValidations(formName);
+    fails: function fails(formName) {
+      return !this.startValidations(formName);
     },
 
     /**
@@ -471,7 +476,7 @@ module.exports = Utils;
      * @param {string} formName - String representation of the form's name attr.
      * @returns {Boolean} True if the form passes validation, else False.
      */
-    passes: function(formName) {
+    passes: function passes(formName) {
       return this.startValidations(formName);
     },
 
@@ -484,14 +489,8 @@ module.exports = Utils;
      * @param {string} formName - String representation of the form's name attr.
      * @returns {Boolean} True if the form passes validation, else False.
      */
-    startValidations: function(formName) {
-      var currFieldValidations,
-          currFieldsValue,
-          currValidationMethod,
-          fieldName,
-          method,
-          params,
-          i;
+    startValidations: function startValidations(formName) {
+      var currFieldValidations, currFieldsValue, currValidationMethod, fieldName, method, params, i;
 
       this.currentForm = formName;
       this.errors[formName] = {};
@@ -536,12 +535,11 @@ module.exports = Utils;
      *                     first index and all other indice are the validation
      *                     method's params.
      */
-    getValidationMethodAndParameters: function(validationString) {
-      var params,
-          validation;
+    getValidationMethodAndParameters: function getValidationMethodAndParameters(validationString) {
+      var params, validation;
 
       // Assume there are no params if we have no colon.
-      if (! validationString.contains(":")) {
+      if (!validationString.contains(":")) {
         return [validationString];
       }
 
@@ -562,7 +560,7 @@ module.exports = Utils;
      *                          (e.g. "param1:param2:param3:param4")
      * @returns {Any[]}
      */
-    prepareParameters: function(params) {
+    prepareParameters: function prepareParameters(params) {
       var i = 0,
           j = 0;
 
@@ -594,20 +592,20 @@ module.exports = Utils;
      *                                require.
      * @returns {Boolean} True if the validation passed, else False.
      */
-    callValidationMethod: function(method, params, fieldValue) {
-      if (!(method in this["validations"])) {
+    callValidationMethod: function callValidationMethod(method, fieldValue, params) {
+      if (!(method in this.validations)) {
         throw new Error("Validation does not exist: " + method);
       }
 
       if (!params) {
-        return this["validations"][method](fieldValue);
+        return this.validations[method](fieldValue);
       }
 
       // Add the field value to the params array so we can use
       // .apply on the validation method's signature.
       params.unshift(fieldValue);
 
-      return this["validations"][method].apply(this.validations, params);
+      return this.validations[method].apply(this.validations, params);
     }
   });
 
@@ -615,6 +613,8 @@ module.exports = Utils;
 });
 
 },{"./messages":1,"./polyfills":2,"./utils":3,"./validations":5,"extend":6}],5:[function(require,module,exports){
+"use strict";
+
 /**
  * All validations return true if the check passed, else false.
  *
@@ -627,7 +627,7 @@ var Validations = {
    * @since 0.1.0-beta
    * @returns {Boolean}
    */
-  accepted: function(fieldValue) {
+  accepted: function accepted(fieldValue) {
     return document.getElementsByName(this.parent.currentField)[0].checked;
   },
 
@@ -637,7 +637,7 @@ var Validations = {
    * @since 0.1.0-beta
    * @returns {Boolean}
    */
-  alpha: function(fieldValue) {
+  alpha: function alpha(fieldValue) {
     var alphaReg = /^[a-zA-Z]+$/;
 
     if (this.utils.isValueFalsyInNature(fieldValue)) {
@@ -654,7 +654,7 @@ var Validations = {
    * @since 0.1.0-beta
    * @returns {Boolean}
    */
-  alphaDash: function(fieldValue) {
+  alphaDash: function alphaDash(fieldValue) {
     var alphaDashReg = /^[a-zA-Z-_]+$/;
 
     if (this.utils.isValueFalsyInNature(fieldValue)) {
@@ -671,7 +671,7 @@ var Validations = {
    * @since 0.1.0-beta
    * @returns {Boolean}
    */
-  alphaNum: function(fieldValue) {
+  alphaNum: function alphaNum(fieldValue) {
     var alphaNumReg = /^[a-zA-Z-_0-9]+$/;
 
     if (this.utils.isValueFalsyInNature(fieldValue)) {
@@ -688,7 +688,7 @@ var Validations = {
    * @since 0.1.0-beta
    * @returns {Boolean}
    */
-  between: function(fieldValue, minMax) {
+  between: function between(fieldValue, minMax) {
     var min = Number(minMax[0]),
         max = Number(minMax[1]);
 
@@ -696,7 +696,7 @@ var Validations = {
       throw new Error("min and max must both be numbers in the `between` validation.");
     }
 
-    return (min <= fieldValue && fieldValue <= max);
+    return min <= fieldValue && fieldValue <= max;
   },
 
   /**
@@ -706,7 +706,7 @@ var Validations = {
    * @since 0.1.0-beta
    * @returns {Boolean}
    */
-  betweenLength: function(fieldValue, minMax) {
+  betweenLength: function betweenLength(fieldValue, minMax) {
     var min = Number(minMax[0]),
         max = Number(minMax[1]),
         fieldValueLength = String(fieldValue).length;
@@ -715,7 +715,7 @@ var Validations = {
       throw new Error("min and max must both be numbers in the `betweenLength` validation.");
     }
 
-    return (min <= fieldValueLength && fieldValueLength <= max);
+    return min <= fieldValueLength && fieldValueLength <= max;
   },
 
   /**
@@ -725,7 +725,7 @@ var Validations = {
    * @since 0.1.0-beta
    * @returns {Boolean}
    */
-  contains: function(fieldValue, containsArray) {
+  contains: function contains(fieldValue, containsArray) {
     return containsArray.indexOf(fieldValue) !== -1;
   },
 
@@ -736,7 +736,7 @@ var Validations = {
    * @since 0.1.0-beta
    * @returns {Boolean}
    */
-  dateBefore: function(fieldValue, suppliedDate) {
+  dateBefore: function dateBefore(fieldValue, suppliedDate) {
     return Date.parse(fieldValue) < Date.parse(suppliedDate);
   },
 
@@ -747,7 +747,7 @@ var Validations = {
    * @since 0.1.0-beta
    * @returns {Boolean}
    */
-  dateAfter: function(fieldValue, suppliedDate) {
+  dateAfter: function dateAfter(fieldValue, suppliedDate) {
     return Date.parse(fieldValue) > Date.parse(suppliedDate);
   },
 
@@ -758,7 +758,7 @@ var Validations = {
    * @since 0.1.0-beta
    * @returns {Boolean}
    */
-  different: function(fieldValue, differentFieldName, strict) {
+  different: function different(fieldValue, differentFieldName, strict) {
     return !this.same(fieldValue, differentFieldName, strict);
   },
 
@@ -769,7 +769,7 @@ var Validations = {
    * @since 0.1.0-beta
    * @returns {Boolean}
    */
-  digitsLength: function(fieldValue, length) {
+  digitsLength: function digitsLength(fieldValue, length) {
     var fieldValueLength = String(fieldValue).length,
         length = Number(length);
 
@@ -791,7 +791,7 @@ var Validations = {
    * @since 0.1.0-beta
    * @returns {Boolean}
    */
-  digitsLengthBetween: function(fieldValue, minMaxLength) {
+  digitsLengthBetween: function digitsLengthBetween(fieldValue, minMaxLength) {
     var minLength = Number(minMaxLength[0]),
         maxLength = Number(minMaxLength[1]),
         fieldValueLength = String(fieldValue).length;
@@ -800,11 +800,11 @@ var Validations = {
       throw new Error("The min length and max length must both be numerical types in the `digitsLengthBetween` validation.");
     }
 
-    if (! this.number(fieldValue)) {
+    if (!this.number(fieldValue)) {
       return false;
     }
 
-    return (minLength <= fieldValueLength && fieldValueLength <= maxLength);
+    return minLength <= fieldValueLength && fieldValueLength <= maxLength;
   },
 
   /**
@@ -813,7 +813,7 @@ var Validations = {
    * @since 0.1.0-beta
    * @returns {Boolean}
    */
-  email: function(fieldValue) {
+  email: function email(fieldValue) {
     var emailReg = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,10})+$/;
     return emailReg.test(fieldValue);
   },
@@ -825,10 +825,8 @@ var Validations = {
    * @since 0.1.0-beta
    * @returns {Boolean}
    */
-  ipvFour: function(fieldValue) {
-    var ipSegments,
-        ipSegment,
-        ind;
+  ipvFour: function ipvFour(fieldValue) {
+    var ipSegments, ipSegment, ind;
 
     ipSegments = fieldValue.match(/^(\d+)\.(\d+)\.(\d+)\.(\d+)$/);
 
@@ -856,14 +854,14 @@ var Validations = {
    * @since 0.1.0-beta
    * @returns {Boolean}
    */
-  max: function(fieldValue, max) {
-    max = Number(max);
+  max: function max(fieldValue, _max) {
+    _max = Number(_max);
 
-    if (isNaN(max)) {
+    if (isNaN(_max)) {
       throw new Error("max must be of numerical value in the `max` validation.");
     }
 
-    return this.between(fieldValue, [-Infinity, max]);
+    return this.between(fieldValue, [-Infinity, _max]);
   },
 
   /**
@@ -873,7 +871,7 @@ var Validations = {
    * @since 0.1.0-beta
    * @returns {Boolean}
    */
-  maxLength: function(fieldValue, max) {
+  maxLength: function maxLength(fieldValue, max) {
     max = Number(max);
 
     if (isNaN(max)) {
@@ -890,14 +888,14 @@ var Validations = {
    * @since 0.1.0-beta
    * @returns {Boolean}
    */
-  min: function(fieldValue, min) {
-    min = Number(min);
+  min: function min(fieldValue, _min) {
+    _min = Number(_min);
 
-    if (isNaN(min)) {
+    if (isNaN(_min)) {
       throw new Error("min must be of numerical value in the `min` validation.");
     }
 
-    return this.between(fieldValue, [min, Infinity]);
+    return this.between(fieldValue, [_min, Infinity]);
   },
 
   /**
@@ -907,7 +905,7 @@ var Validations = {
    * @since 0.1.0-beta
    * @returns {Boolean}
    */
-  minLength: function(fieldValue, min) {
+  minLength: function minLength(fieldValue, min) {
     min = Number(min);
 
     if (isNaN(min)) {
@@ -924,8 +922,8 @@ var Validations = {
    * @since 0.1.0-beta
    * @returns {Boolean}
    */
-  notIn: function(fieldValue, containsArray) {
-    return ! this.contains(fieldValue, containsArray);
+  notIn: function notIn(fieldValue, containsArray) {
+    return !this.contains(fieldValue, containsArray);
   },
 
   /**
@@ -934,7 +932,7 @@ var Validations = {
    * @since 0.1.0-beta
    * @returns {Boolean}
    */
-  number: function(fieldValue) {
+  number: function number(fieldValue) {
     if (fieldValue === null || fieldValue === undefined) {
       return false;
     }
@@ -948,10 +946,10 @@ var Validations = {
    * @since 0.1.0-beta
    * @returns {Boolean}
    */
-  required: function(fieldValue) {
+  required: function required(fieldValue) {
     // If the value isn't falsy in nature then required should
     // be true.
-    return ! this.utils.isValueFalsyInNature(fieldValue, false);
+    return !this.utils.isValueFalsyInNature(fieldValue, false);
   },
 
   /**
@@ -962,12 +960,10 @@ var Validations = {
    * @since 0.1.0-beta
    * @returns {Boolean}
    */
-  _required_if: function(fieldValue, testedFieldsName, valueToTestAgainst, not) {
-    var testedFieldsValue = this.utils.getFieldsValue(this.parent.currentForm,
-                                                      testedFieldsName);
+  _required_if: function _required_if(fieldValue, testedFieldsName, valueToTestAgainst, not) {
+    var testedFieldsValue = this.utils.getFieldsValue(this.parent.currentForm, testedFieldsName);
 
-    if ((not && testedFieldsValue !== valueToTestAgainst) ||
-        (!not && testedFieldsValue === valueToTestAgainst)) {
+    if (not && testedFieldsValue !== valueToTestAgainst || !not && testedFieldsValue === valueToTestAgainst) {
       return this.required(fieldValue);
     }
 
@@ -983,7 +979,7 @@ var Validations = {
    * @since 0.1.0-beta
    * @returns {Boolean}
    */
-  requiredIf: function(fieldValue, testedFieldsName, valueToTestAgainst) {
+  requiredIf: function requiredIf(fieldValue, testedFieldsName, valueToTestAgainst) {
     return this._required_if(fieldValue, testedFieldsName, valueToTestAgainst, false);
   },
 
@@ -997,7 +993,7 @@ var Validations = {
    * @since 0.1.0-beta
    * @returns {Boolean}
    */
-  requiredIfNot: function(fieldValue, testedFieldsName, valueToTestAgainst) {
+  requiredIfNot: function requiredIfNot(fieldValue, testedFieldsName, valueToTestAgainst) {
     return this._required_if(fieldValue, testedFieldsName, valueToTestAgainst, true);
   },
 
@@ -1008,7 +1004,7 @@ var Validations = {
    * @since 0.1.0-beta
    * @returns {Boolean}
    */
-  same: function(fieldValue, sameFieldName, strict) {
+  same: function same(fieldValue, sameFieldName, strict) {
     var sameFieldValue = this.utils.getFieldsValue(this.parent.currentForm, sameFieldName);
 
     if (strict === undefined || strict === null) {
@@ -1033,7 +1029,7 @@ var Validations = {
    * @since 0.1.0-beta
    * @returns {Boolean}
    */
-  url: function(fieldValue) {
+  url: function url(fieldValue) {
     var urlReg = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/;
     return urlReg.test(fieldValue);
   }
