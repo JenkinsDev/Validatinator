@@ -1,3 +1,5 @@
+'use strict';
+
 describe("Validatinator Utils", function() {
   var utils,
       validatinator;
@@ -5,8 +7,8 @@ describe("Validatinator Utils", function() {
   // Let's make sure we have a fresh Validatinator instance before each `spec.`
   beforeEach(function() {
     validatinator = new Validatinator({
-      "my-form": {
-        "first-name": "required|min:5|max:10"
+      "myForm": {
+        "fname": "required|min:5|max:10"
       }
     });
 
@@ -67,9 +69,9 @@ describe("Validatinator Utils", function() {
           gender = document.createElement('input'),
           languages = document.createElement('input');
 
-      myForm.name = "my-form";
-      firstName.name = "first-name";
-      lastName.name = "last-name";
+      myForm.name = "myForm";
+      firstName.name = "fname";
+      lastName.name = "lname";
       gender.name = "gender";
       gender.type = "radio";
       gender.value = "male";
@@ -80,7 +82,7 @@ describe("Validatinator Utils", function() {
       lastName.value = "test";
 
       document.body.appendChild(myForm);
-      myForm = document.getElementsByName("my-form")[0];
+      myForm = document.getElementsByName("myForm")[0];
 
       myForm.appendChild(firstName);
       myForm.appendChild(lastName);
@@ -89,19 +91,22 @@ describe("Validatinator Utils", function() {
     });
 
     it('getFieldsValue should throw an error if there is no field to grab a value from, else return the field\'s value.', function() {
-      expect(utils.getFieldsValue("my-form", "first-name")).toEqual("");
-      expect(utils.getFieldsValue("my-form", "last-name")).toEqual("test");
-      expect(function() { utils.getFieldsValue("my-form", "some-fake-field"); }).toThrow("Couldn't find the field element some-fake-field for the form my-form.");
+      expect(utils.getFieldsValue("myForm", "fname")).toEqual("");
+      expect(utils.getFieldsValue("myForm", "lname")).toEqual("test");
+      expect(function() {
+        utils.getFieldsValue("myForm", "some-fake-field");
+      }).toThrowError("Couldn't find the field element some-fake-field for the form myForm.");
     });
 
     it('getFieldsValue should only return the value from radio or checkbox if its actually selected/checked', function(){
-      expect(utils.getFieldsValue("my-form", "gender")).toEqual("");
-      expect(utils.getFieldsValue("my-form", "languages")).toEqual("");
+      expect(utils.getFieldsValue("myForm", "gender")).toEqual("");
+      expect(utils.getFieldsValue("myForm", "languages")).toEqual("");
 
       document.getElementsByName("gender")[0].checked = true;
       document.getElementsByName("languages")[0].checked = true;
-      expect(utils.getFieldsValue("my-form", "gender")).toEqual("male");
-      expect(utils.getFieldsValue("my-form", "languages")).toEqual("english");
+
+      expect(utils.getFieldsValue("myForm", "gender")).toEqual("male");
+      expect(utils.getFieldsValue("myForm", "languages")).toEqual("english");
     });
   });
 });
