@@ -13,7 +13,7 @@ const pkg = require('./package.json');
 
 const today = new Date();
 
-let bannerComment = `/**
+var bannerComment = `/**
  * Copyright (c) 2013-2016 ${pkg.author} (${pkg.name})
  * See license.txt for license information.
  *
@@ -49,6 +49,12 @@ gulp.task('test', () => {
     .pipe(watch(filesToWatch, {usePolling: true}))
     .pipe(jasmine.specRunner())
     .pipe(jasmine.server({port: 3000}));
+});
+
+gulp.task('travis-testing', () => {
+  gulp.src(['js/validatinator.js', 'dev/tests/*.js'])
+    .pipe(jasmine.specRunner({console: true}))
+    .pipe(jasmine.headless());
 });
 
 gulp.task('watch', ['browserify', 'test'], () => {

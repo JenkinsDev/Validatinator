@@ -33,10 +33,12 @@
     "gulp-streamify": "^1.0.2",
     "gulp-uglify": "^1.5.3",
     "gulp-watch": "^4.3.6",
+    "phantomjs": "^2.1.7",
     "vinyl-source-stream": "^1.1.0"
   },
   "scripts": {
     "test": "gulp test",
+    "travis": "gulp travis-testing",
     "watch": "gulp watch",
     "browserify": "gulp browserify",
     "build": "gulp build",
