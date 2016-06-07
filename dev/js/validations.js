@@ -197,7 +197,7 @@ var Validations = {
    * @returns {Boolean}
    */
   email: function(fieldValue) {
-    var emailReg = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,10})+$/;
+    var emailReg = /[^\s@]+@[^\s@]+\.[^\s@]+/;
     return emailReg.test(fieldValue);
   },
 
