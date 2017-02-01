@@ -1,6 +1,6 @@
 # Validatinator
 
-Current Release: 1.3.3
+Current Release: 1.3.4
 
 Validatinator is a simple, yet effective, vanilla JavaScript form validation
 "plugin." It is loosely based off of Laravel's validation system. Using

@@ -1,5 +1,10 @@
 # Validatinator Changelog
 
+### Version 1.3.4
+
+* Hotfix: Validatinator.utils.getFieldsValue() should now correctly only return a field's value if it is truly a field within the form requested.
+* Hotfix [tests]: Added a bit of cleanup after DOM manipulation is done in tests.
+
 ### Version 1.3.3
 
 * Hotfix: Updated email regex to be less strict and follow RFC822.
