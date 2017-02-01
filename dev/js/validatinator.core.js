@@ -73,7 +73,6 @@ Validatinator.prototype = {
             i;
 
         this.currentForm = formName;
-        // Since we are doing a fresh validation let's make sure our errors are all fresh as well!
         this.errors = {};
 
         for (var fieldName in this.validationInformation[formName]) {
@@ -81,7 +80,6 @@ Validatinator.prototype = {
             currentFieldsValidations = this.validationInformation[formName][fieldName];
             currentFieldsValue = this.utils.getFieldsValue(this.currentForm, this.currentField);
 
-            // We need to set i here because it doesn't reset to zero by default and it is more idomatic to do it here.
             for (i = 0; i < currentFieldsValidations.length; i++) {
                 var method,
                     parameters = [];
