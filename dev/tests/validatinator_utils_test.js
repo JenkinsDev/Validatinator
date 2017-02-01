@@ -101,7 +101,7 @@ describe("Validatinator Utils", function() {
 
         // Do proper cleanup after each of these tests.
         afterEach(function() {
-            document.body.removeChild(document.querySelector('[name=my-form]'));
+            document.body.removeChild(document.querySelector('[name="my-form"]'));
         });
 
         it('should throw an error if the field doesn\'t exist.', function() {
