@@ -160,8 +160,8 @@ Validatinator.prototype.utils = {
 
             // We are running a simple test to see if the current field in the returned array is part of
             // our validating field or not.  If it is then grab it's value and break out of this test loop.
-            if (fieldElement.form.name === form) {
-                if((fieldElement.type == 'radio' || fieldElement.type == 'checkbox') && !fieldValue) {
+            if (fieldElement.form && fieldElement.form.name === form) {
+              if (['radio', 'checkbox'].indexOf(fieldElement.type) !== -1 && !fieldValue) {
                     if(fieldElement.checked) {
                         fieldValue = fieldElement.value;
                         break;
