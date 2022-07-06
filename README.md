@@ -1,17 +1,12 @@
-# Validatinator
+# Validatinator (Reborn)
 
-Current Release: 1.3.4
+Current Release: 2.0.0 [Reborn]
 
 Validatinator is a simple, yet effective, vanilla JavaScript form validation
 "plugin." It is loosely based off of Laravel's validation system. Using
 Validatinator is as easy as instantiating a Validatinator object, calling
 the passes or fails methods and if there are failed validations then grabbing
 those validations from the errors property on the main object.
-
-### Badges
-
-[![Code Climate](https://codeclimate.com/github/JenkinsDev/Validatinator/badges/gpa.svg)](https://codeclimate.com/github/JenkinsDev/Validatinator)
-[![Travis CI](https://travis-ci.org/JenkinsDev/Validatinator.svg)](https://travis-ci.org/JenkinsDev/Validatinator)
 
 #### Table of Contents
 

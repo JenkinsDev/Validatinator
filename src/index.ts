@@ -1,0 +1,1 @@
+import Validatinator from './validatinator';
