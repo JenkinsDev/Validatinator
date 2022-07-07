@@ -6,8 +6,8 @@
   "main": "./js/validatinator.min.js",
   "license": "MIT",
   "repository": {
-     "type": "git",
-     "url": "https://github.com/JenkinsDev/Validatinator"
+    "type": "git",
+    "url": "https://github.com/JenkinsDev/Validatinator"
   },
   "bugs": {
     "url": "https://github.com/JenkinsDev/Validatinator/issues"
@@ -21,15 +21,18 @@
     "validatinator"
   ],
   "devDependencies": {
-    "grunt": "~0.4.2",
-    "grunt-cli": "^0.1.13",
-    "grunt-contrib-compass": "~0.7.0",
-    "grunt-contrib-connect": "~0.5.0",
-    "grunt-contrib-jasmine": "~0.5.1",
-    "grunt-contrib-uglify": "~0.2.2",
-    "grunt-contrib-watch": "~0.5.3"
+    "@types/jest": "^28.1.4",
+    "esbuild": "^0.14.48",
+    "jest": "^28.1.2",
+    "ts-jest": "^28.0.5",
+    "typescript": "^4.7.4"
   },
   "scripts": {
-    "test": "grunt jasmine"
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "test": "jest"
+  },
+  "dependencies": {
+    "jest-environment-jsdom": "^28.1.2"
   }
 }

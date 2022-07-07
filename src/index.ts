@@ -1,1 +1,1 @@
-import Validatinator from './validatinator';
+import { Validatinator } from './validatinator';

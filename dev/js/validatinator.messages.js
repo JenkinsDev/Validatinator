@@ -1,15 +1,11 @@
-/**
- * Copyright (c) 2013-2015 David Jenkins
- * See the file license.txt for copying permission.
- */
-
 Validatinator.prototype.messages = {
-    // Holds all default validation messages.
+
     validationMessages: {
         accepted: "This field must be accepted.",
         alpha: "This field only allows alpha characters.",
         alphaDash: "This field only allows alpha, dash and underscore characters.",
         alphaNum: "This field only allows alpha, dash, underscore and numerical characters.",
+        alphaDashNum: "This field only allows alpha, dash, underscore, numerical and space characters.",
         between: "This field must be between {$0}",
         betweenLength: "This field must be between {$0} characters long.",
         confirmed: "This field must be the same as {$0}.",
