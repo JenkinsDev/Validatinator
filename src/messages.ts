@@ -1,4 +1,6 @@
-const DEFAULT_MESSAGES = {
+import { ValidationMessages } from './interfaces';
+
+export const DEFAULT_MESSAGES: ValidationMessages = {
   accepted: "This field must be accepted.",
   alpha: "This field only allows alpha characters.",
   alphaDash: "This field only allows alpha, dash and underscore characters.",
@@ -27,5 +29,3 @@ const DEFAULT_MESSAGES = {
   same: "This field must be the same value as {$0}.",
   url: "This field only allows valid urls."
 }
-
-export default DEFAULT_MESSAGES;

@@ -1,4 +1,4 @@
-export default class HTMLFormValidations {
+export declare class HTMLFormValidations {
     static accepted(form: HTMLFormElement, field: HTMLInputElement): boolean;
     static alpha(form: HTMLFormElement, field: HTMLInputElement): boolean;
     static alphaDash(form: HTMLFormElement, field: HTMLInputElement): boolean;
@@ -6,7 +6,7 @@ export default class HTMLFormValidations {
     static alphaDashNum(form: HTMLFormElement, field: HTMLInputElement): boolean;
     static between(form: HTMLFormElement, field: HTMLInputElement, min: string | number, max: string | number): boolean;
     static betweenLength(form: HTMLFormElement, field: HTMLInputElement, min: string | number, max: string | number): boolean;
-    static contains(form: HTMLFormElement, field: HTMLInputElement, arr: string[]): boolean;
+    static contains(form: HTMLFormElement, field: HTMLInputElement, ...arr: string[]): boolean;
     static dateBefore(form: HTMLFormElement, field: HTMLInputElement, date: string): boolean;
     static dateAfter(form: HTMLFormElement, field: HTMLInputElement, date: string): boolean;
     static different(form: HTMLFormElement, field: HTMLInputElement, otherField: HTMLInputElement, strict?: boolean): boolean;
@@ -18,7 +18,7 @@ export default class HTMLFormValidations {
     static maxLength(form: HTMLFormElement, field: HTMLInputElement, maxLength: string | number): boolean;
     static min(form: HTMLFormElement, field: HTMLInputElement, min: string | number): boolean;
     static minLength(form: HTMLFormElement, field: HTMLInputElement, minLength: string | number): boolean;
-    static notIn(form: HTMLFormElement, field: HTMLInputElement, arr: string[]): boolean;
+    static notIn(form: HTMLFormElement, field: HTMLInputElement, ...arr: string[]): boolean;
     static number(form: HTMLFormElement, field: HTMLInputElement): boolean;
     static required(form: HTMLFormElement, field: HTMLInputElement): boolean;
     static requiredIf(form: HTMLFormElement, field: HTMLInputElement, otherField: HTMLInputElement, value: any): boolean;

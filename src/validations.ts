@@ -6,7 +6,7 @@ const EMAIL_REGEX = new RegExp(/[^\s@]+@[^\s@]+\.[^\s@]+/);
 const IPV4_REGEX = new RegExp(/^(\d+)\.(\d+)\.(\d+)\.(\d+)$/);
 const URL_REGEX = new RegExp(/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/);
 
-export default class HTMLFormValidations {
+export class HTMLFormValidations {
 
   /**
    * Checks to see if the field has been accepted.
@@ -65,7 +65,7 @@ export default class HTMLFormValidations {
     return (min <= valueLength && valueLength <= max);
   }
 
-  static contains(form: HTMLFormElement, field: HTMLInputElement, arr: string[]) {
+  static contains(form: HTMLFormElement, field: HTMLInputElement, ...arr: string[]) {
     return arr.indexOf(field.value) !== -1;
   }
 
@@ -177,8 +177,8 @@ export default class HTMLFormValidations {
     return this.betweenLength(form, field, minLength, Infinity);
   }
 
-  static notIn(form: HTMLFormElement, field: HTMLInputElement, arr: string[]) {
-    return !this.contains(form, field, arr);
+  static notIn(form: HTMLFormElement, field: HTMLInputElement, ...arr: string[]) {
+    return !this.contains(form, field, ...arr);
   }
 
   static number(form: HTMLFormElement, field: HTMLInputElement) {

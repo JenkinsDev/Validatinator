@@ -1,33 +1,17 @@
-// { 
-//   "form-css-selector": {
-//     "field-css-selector": "required|min:5|max:10"
-//   },
-//   "form-css-selector-2": {
-//      ...
-//   }
-// }
 export interface ValidationConfig {
-  [key: string]: {
-    [key: string]: string
-  }
+  [key: string]: FormValidationConfig
 }
 
-// {
-//   "form-css-selector": {
-//     "field-css-selector": {
-//       "required": "This field is required.",
-//       "min": "This field must be at least 5 characters long. Received ${field.value.length}"
-//     }
-//   }
-// }
-export interface FormValidationMessages {
-  [key: string]: {
-    [key: string]: object
-  }
+export interface FormValidationConfig {
+  [key: string]: string
 }
 
-export interface FieldValidationMessages {
-  FormValidationMessages: {
-    [key: string]: string
+export interface ValidationMessages {
+  [key: string]: string
+}
+
+export interface ValidationResults {
+  [key: string]: {
+    [key: string]: boolean
   }
 }

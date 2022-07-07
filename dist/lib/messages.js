@@ -1,4 +1,4 @@
-var DEFAULT_MESSAGES = {
+export var DEFAULT_MESSAGES = {
     accepted: "This field must be accepted.",
     alpha: "This field only allows alpha characters.",
     alphaDash: "This field only allows alpha, dash and underscore characters.",
@@ -27,5 +27,4 @@ var DEFAULT_MESSAGES = {
     same: "This field must be the same value as {$0}.",
     url: "This field only allows valid urls."
 };
-export default DEFAULT_MESSAGES;
 //# sourceMappingURL=messages.js.map

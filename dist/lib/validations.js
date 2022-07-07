@@ -1,3 +1,12 @@
+var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
+};
 var ALPHA_REGEX = new RegExp(/^[a-zA-Z]+$/);
 var ALPHA_DASH_REGEX = new RegExp(/^[a-zA-Z-_]+$/);
 var ALPHA_NUMERIC_REGEX = new RegExp(/^[a-zA-Z0-9]+$/);
@@ -42,7 +51,11 @@ var HTMLFormValidations = (function () {
         }
         return (min <= valueLength && valueLength <= max);
     };
-    HTMLFormValidations.contains = function (form, field, arr) {
+    HTMLFormValidations.contains = function (form, field) {
+        var arr = [];
+        for (var _i = 2; _i < arguments.length; _i++) {
+            arr[_i - 2] = arguments[_i];
+        }
         return arr.indexOf(field.value) !== -1;
     };
     HTMLFormValidations.dateBefore = function (form, field, date) {
@@ -121,8 +134,12 @@ var HTMLFormValidations = (function () {
         }
         return this.betweenLength(form, field, minLength, Infinity);
     };
-    HTMLFormValidations.notIn = function (form, field, arr) {
-        return !this.contains(form, field, arr);
+    HTMLFormValidations.notIn = function (form, field) {
+        var arr = [];
+        for (var _i = 2; _i < arguments.length; _i++) {
+            arr[_i - 2] = arguments[_i];
+        }
+        return !this.contains.apply(this, __spreadArray([form, field], arr, false));
     };
     HTMLFormValidations.number = function (form, field) {
         return !isNaN(parseFloat(field.value));
@@ -150,5 +167,5 @@ var HTMLFormValidations = (function () {
     };
     return HTMLFormValidations;
 }());
-export default HTMLFormValidations;
+export { HTMLFormValidations };
 //# sourceMappingURL=validations.js.map
