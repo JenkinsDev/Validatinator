@@ -1,7 +1,3 @@
-/**
- * @jest-environment jsdom
- */
-
 import HTMLFormValidations from "./validations";
 
 describe("HTMLFormValidations.accepted", () => {

@@ -1,18 +1,25 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
+    "moduleResolution": "node",
+    "target": "es5",
+    "module": "es2015",
+    "allowSyntheticDefaultImports": true,
     "noImplicitAny": true,
     "removeComments": true,
     "preserveConstEnums": true,
     "sourceMap": true,
-    "target": "es5",
-    "outDir": "./dist",
+    "strict": true,
+    "declaration": true,
+    "declarationDir": "./dist/types",
+    "outDir": "./dist/lib",
     "rootDir": "./src",
     "lib": [
       "es2015",
       "dom"
     ],
-    "declaration": true
+    "typeRoots": [
+      "./node_modules/@types"
+    ]
   },
   "include": [
     "src/**/*"

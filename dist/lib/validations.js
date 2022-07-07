@@ -1,5 +1,3 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
 var ALPHA_REGEX = new RegExp(/^[a-zA-Z]+$/);
 var ALPHA_DASH_REGEX = new RegExp(/^[a-zA-Z-_]+$/);
 var ALPHA_NUMERIC_REGEX = new RegExp(/^[a-zA-Z0-9]+$/);
@@ -152,5 +150,5 @@ var HTMLFormValidations = (function () {
     };
     return HTMLFormValidations;
 }());
-exports.default = HTMLFormValidations;
+export default HTMLFormValidations;
 //# sourceMappingURL=validations.js.map

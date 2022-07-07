@@ -1,4 +1,14 @@
-"use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -44,12 +54,10 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     }
     return to.concat(ar || Array.prototype.slice.call(from));
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-var validations_1 = require("./validations");
+import HTMLFormValidations from './validations';
 var Validatinator = (function () {
-    function Validatinator(validations, messages) {
-        if (messages === void 0) { messages = {}; }
-        this.config = validations;
+    function Validatinator(validations) {
+        this.config = __assign({}, validations);
     }
     Validatinator.prototype.succeeds = function (formSelector) {
         return __awaiter(this, void 0, void 0, function () {
@@ -73,37 +81,43 @@ var Validatinator = (function () {
     };
     Validatinator.prototype.validate = function (formSelector) {
         return __awaiter(this, void 0, void 0, function () {
-            var formValidationConfig, form, valid;
+            var formValidationConfig, form;
             var _this = this;
             return __generator(this, function (_a) {
-                formValidationConfig = this.validationConfig[formSelector] || {};
+                formValidationConfig = this.config[formSelector];
+                if (!formValidationConfig)
+                    throw new Error("No validation config found for form: ".concat(formSelector));
                 form = document.querySelector(formSelector);
-                if (!form) {
+                if (!form)
                     throw new Error("No form found with selector: ".concat(formSelector));
-                }
-                valid = false;
-                formValidationConfig.forEach(function (fieldSelector, validationRules) {
+                Object.keys(formValidationConfig).forEach(function (fieldSelector) {
                     var field = form.querySelector(fieldSelector);
-                    var _a = _this.prepareValidationRules(validationRules), method = _a[0], params = _a.slice(1);
-                    if (!field) {
+                    if (!field)
                         throw new Error("No field found with selector: ".concat(fieldSelector));
-                    }
-                    if (!validations_1.default[method]) {
-                        throw new Error("No validation method found with name: ".concat(method));
-                    }
-                    valid = validations_1.default[method].apply(validations_1.default, __spreadArray([form, field], params, false)) && valid;
+                    var unparsedValidationRules = formValidationConfig[fieldSelector];
+                    var parsedRules = _this.prepareValidationRules(unparsedValidationRules);
+                    parsedRules.forEach(function (_a) {
+                        var method = _a[0], params = _a.slice(1);
+                        var methodCallable = HTMLFormValidations[method];
+                        if (!methodCallable)
+                            throw new Error("No validation method found with name: ".concat(method));
+                        methodCallable.apply(void 0, __spreadArray([form, field], params, false));
+                    });
                 });
-                return [2];
+                return [2, true];
             });
+        });
+    };
+    Validatinator.prototype.prepareValidationRules = function (validationRulesStr) {
+        var validationRules = validationRulesStr.split('|');
+        return validationRules.map(function (methodAndParams) {
+            var _a;
+            var _b = methodAndParams.split(':'), method = _b[0], params = _b[1];
+            var paramsArray = (_a = params === null || params === void 0 ? void 0 : params.split(',')) !== null && _a !== void 0 ? _a : [];
+            return __spreadArray([method], paramsArray, true);
         });
     };
     return Validatinator;
 }());
-{
-    return validationRules.split('|').map(function (validationMethodAndParams) {
-        var _a = validationMethodAndParams.split(':'), method = _a[0], params = _a[1];
-        var paramsArray = params.split(',');
-        return __spreadArray([method], paramsArray, true);
-    });
-}
+export { Validatinator };
 //# sourceMappingURL=validatinator.js.map
