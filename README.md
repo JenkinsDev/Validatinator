@@ -1,6 +1,11 @@
 # Validatinator
 
-Current Release: 1.3.4
+```
+Validatinator is coming back, baby! After 5 years, version 2.0.0 will be released including first-class support for TypeScript, async/await, and more awesome features that will bring Validatinator back to current standards.
+```
+[release/2.0.0](https://github.com/JenkinsDev/Validatinator/tree/release/2.0.0)
+
+Current Release: 1.3.4 [>5 years old]
 
 Validatinator is a simple, yet effective, vanilla JavaScript form validation
 "plugin." It is loosely based off of Laravel's validation system. Using
