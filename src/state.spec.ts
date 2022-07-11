@@ -1,5 +1,38 @@
 import { ValidationStateBuilder, ValidationState } from "./state";
-import { DEFAULT_MESSAGES } from "./messages";
+import { DEFAULT_MESSAGES } from "./constants";
+
+describe("ValidationStateBuilder#addResult", () => {
+  it("should add the result to the `results` field", () => {
+    const stateBuilder = (new ValidationStateBuilder())
+      .addResult("foo", "bar", true)
+      .addResult("foo", "baz", false);
+
+    const currentResults = stateBuilder.results;
+    expect(currentResults['foo']['bar']).toEqual(true);
+    expect(currentResults['foo']['baz']).toEqual(false);
+  });
+});
+
+describe("ValidationStateBuilder#build", () => {
+  let validationState: ValidationState;
+
+  beforeEach(() => {
+    validationState = (new ValidationStateBuilder())
+      .addResult("foo", "bar", true)
+      .addResult("foo", "baz", false)
+      .build();
+  });
+
+  it("should return a `ValidationState` object", () => {
+    expect(validationState instanceof ValidationState).toEqual(true);
+  });
+
+  it("should supply the correct `results` & messages", () => {
+    expect(validationState.results['foo']['bar']).toEqual(true);
+    expect(validationState.results['foo']['baz']).toEqual(false);
+    expect(validationState.messages).toEqual(DEFAULT_MESSAGES);
+  });
+});
 
 describe("ValidationState#valid", () => {
   describe("when all fields are valid", () => {

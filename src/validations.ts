@@ -6,6 +6,9 @@ const EMAIL_REGEX = new RegExp(/[^\s@]+@[^\s@]+\.[^\s@]+/);
 const IPV4_REGEX = new RegExp(/^(\d+)\.(\d+)\.(\d+)\.(\d+)$/);
 const URL_REGEX = new RegExp(/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/);
 
+const MIN_BYTE_VALUE = 0;
+const MAX_BYTE_VALUE = 255;
+
 export class HTMLFormValidations {
 
   /**
@@ -37,15 +40,15 @@ export class HTMLFormValidations {
     min: string | number,
     max: string | number
   ) {
-    const value = parseInt(field.value, 10);
-    min = parseInt(min as string, 10);
-    max = parseInt(max as string, 10);
+    if (isNaN(min as number)) min = parseInt(min as string, 10);
+    if (isNaN(max as number)) max = parseInt(max as string, 10);
 
-    if (isNaN(min) || isNaN(max)) {
+    if (isNaN(min as number) || isNaN(max as number)) {
       throw new Error("min and max must both be numbers in the `between` validation.");
     }
 
-    return (min <= value && value <= max);
+    const value = parseInt(field.value, 10);
+    return (!isNaN(value) && min <= value && value <= max);
   }
 
   static betweenLength(
@@ -54,14 +57,14 @@ export class HTMLFormValidations {
     min: string | number,
     max: string | number
   ) {
-    const valueLength = field.value?.length ?? 0;
-    min = parseInt(min as string, 10);
-    max = parseInt(max as string, 10);
+    if (isNaN(min as number)) min = parseInt(min as string, 10);
+    if (isNaN(max as number)) max = parseInt(max as string, 10);
 
-    if (isNaN(min) || isNaN(max)) {
+    if (isNaN(min as number) || isNaN(max as number)) {
       throw new Error("min and max must both be numbers in the `betweenLength` validation.");
     }
 
+    const valueLength = field.value?.length ?? 0;
     return (min <= valueLength && valueLength <= max);
   }
 
@@ -74,26 +77,33 @@ export class HTMLFormValidations {
   }
 
   static dateAfter(form: HTMLFormElement, field: HTMLInputElement, date: string) {
-    return !this.dateBefore(form, field, date);
+    return Date.parse(field.value) > Date.parse(date);
   }
 
   static different(
     form: HTMLFormElement,
     field: HTMLInputElement,
     otherField: HTMLInputElement,
-    strict: boolean = true
+    strict: string = "true"
   ) {
-    return !this.same(form, field, otherField, strict);
+    return !HTMLFormValidations.same(form, field, otherField, strict);
   }
 
-  static digitsLength(form: HTMLFormElement, field: HTMLInputElement, length: string | number) {
-    length = parseInt(length as string, 10);
-    const valueLength = field.value?.length ?? 0;
+  static digitsLength(
+    form: HTMLFormElement,
+    field: HTMLInputElement,
+    length: string | number
+  ) {
+    if (isNaN(parseInt(field.value))) {
+      return false;
+    }
 
+    length = parseInt(length as string, 10);
     if (isNaN(length as number)) {
       throw new Error("length must be of numerical value in the `digitsLength` validation.");
     }
 
+    const valueLength = field.value?.length ?? 0;
     return valueLength == length;
   }
 
@@ -103,15 +113,11 @@ export class HTMLFormValidations {
     minLength: string | number,
     maxLength: string | number
   ) {
-    const valueLength = field.value?.length ?? 0;
-    minLength = parseInt(minLength as string, 10);
-    maxLength = parseInt(maxLength as string, 10);
-
-    if (isNaN(minLength as number) || isNaN(maxLength as number)) {
-      throw new Error("minLength and maxLength must both be numerical values in the `digitsLengthBetween` validation.");
+    if (isNaN(parseInt(field.value))) {
+      return false;
     }
 
-    return (minLength <= valueLength && valueLength <= maxLength);
+    return HTMLFormValidations.betweenLength(form, field, minLength, maxLength);
   }
 
   static email(form: HTMLFormElement, field: HTMLInputElement) {
@@ -119,66 +125,42 @@ export class HTMLFormValidations {
   }
 
   static ipvFour(form: HTMLFormElement, field: HTMLInputElement) {
-    const maxByteValue = 255;
-
     // Get an array with all four of our integer values.
-    const ipvFourSegs = field.value?.match(IPV4_REGEX);
+    const ipvFourSegs = field.value?.match(IPV4_REGEX) ?? [];
+
+    const isSegmentValid = (seg: string) => {
+      if (seg === null || seg === undefined) return false;
+
+      const segInt = parseInt(seg, 10);
+      return segInt >= MIN_BYTE_VALUE && segInt <= MAX_BYTE_VALUE;
+    }
 
     return (
-      ipvFourSegs !== null &&
-        parseInt(ipvFourSegs[1] as string, 10) <= maxByteValue &&
-        parseInt(ipvFourSegs[2] as string, 10) <= maxByteValue &&
-        parseInt(ipvFourSegs[3] as string, 10) <= maxByteValue &&
-        parseInt(ipvFourSegs[4] as string, 10) <= maxByteValue
+      isSegmentValid(ipvFourSegs[1]) &&
+      isSegmentValid(ipvFourSegs[2]) &&
+      isSegmentValid(ipvFourSegs[3]) &&
+      isSegmentValid(ipvFourSegs[4])
     );
   }
 
   static max(form: HTMLFormElement, field: HTMLInputElement, max: string | number) {
-    const value = parseInt(field.value, 10);
-    max = parseInt(max as string, 10);
-
-    if (isNaN(max)) {
-      throw new Error("An integer must be provided with the `max` validation.");
-    }
-
-    return this.between(form, field, -Infinity, max);
+    return HTMLFormValidations.between(form, field, -Infinity, max);
   }
 
   static maxLength(form: HTMLFormElement, field: HTMLInputElement, maxLength: string | number) {
-    const value = field.value?.length ?? 0;
-    maxLength = parseInt(maxLength as string, 10);
-
-    if (isNaN(maxLength)) {
-      throw new Error("An integer must be provided with the `maxLength` validation.");
-    }
-
-    return this.betweenLength(form, field, -Infinity, maxLength);
+    return HTMLFormValidations.betweenLength(form, field, -Infinity, maxLength);
   }
 
   static min(form: HTMLFormElement, field: HTMLInputElement, min: string | number) {
-    const value = parseInt(field.value, 10);
-    min = parseInt(min as string, 10);
-
-    if (isNaN(min)) {
-      throw new Error("An integer must be provided with the `min` validation.");
-    }
-
-    return this.between(form, field, min, Infinity);
+    return HTMLFormValidations.between(form, field, min, Infinity);
   }
 
   static minLength(form: HTMLFormElement, field: HTMLInputElement, minLength: string | number) {
-    const value = field.value?.length ?? 0;
-    minLength = parseInt(minLength as string, 10);
-
-    if (isNaN(minLength)) {
-      throw new Error("An integer must be provided with the `minLength` validation.");
-    }
-
-    return this.betweenLength(form, field, minLength, Infinity);
+    return HTMLFormValidations.betweenLength(form, field, minLength, Infinity);
   }
 
   static notIn(form: HTMLFormElement, field: HTMLInputElement, ...arr: string[]) {
-    return !this.contains(form, field, ...arr);
+    return !HTMLFormValidations.contains(form, field, ...arr);
   }
 
   static number(form: HTMLFormElement, field: HTMLInputElement) {
@@ -186,11 +168,7 @@ export class HTMLFormValidations {
   }
 
   static required(form: HTMLFormElement, field: HTMLInputElement) {
-    return (
-      field.value !== null &&
-      field.value !== undefined &&
-      field.value !== ""
-    );
+    return (field.value?.length ?? 0) > 0;
   }
 
   static requiredIf(
@@ -199,7 +177,7 @@ export class HTMLFormValidations {
     otherField: HTMLInputElement,
     value: any
   ) {
-    return otherField.value != value || this.required(form, field);
+    return otherField.value != value || HTMLFormValidations.required(form, field);
   }
 
   static requiredIfNot(
@@ -208,18 +186,18 @@ export class HTMLFormValidations {
     otherField: HTMLInputElement,
     value: any
   ) {
-    return otherField.value == value || this.required(form, field);
+    return otherField.value == value || HTMLFormValidations.required(form, field);
   }
 
   static same(
     form: HTMLFormElement,
     field: HTMLInputElement,
     otherField: HTMLInputElement,
-    strict: boolean = true
+    strict: string = "true"
   ) {
-    return (strict) ?
-      field.value === otherField.value :
-      field.value?.toLowerCase() === otherField.value?.toLowerCase();
+    return (strict.toLowerCase() == "true") ?
+      field.value == otherField.value :
+      field.value?.toLowerCase() == otherField.value?.toLowerCase();
   }
 
   static url(form: HTMLFormElement, field: HTMLInputElement) {

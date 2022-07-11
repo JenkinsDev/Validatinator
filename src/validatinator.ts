@@ -1,24 +1,13 @@
-import { ValidationConfig } from './interfaces';
-import { DEFAULT_MESSAGES } from  './messages';
+import { ValidationConfig, ValidationMessages } from './interfaces';
 import { ValidationStateBuilder, ValidationState } from './state';
 import { HTMLFormValidations } from './validations';
 
-
 export class Validatinator {
 
-  public config: ValidationConfig;
-
-  constructor(config: ValidationConfig) {
-    this.config = { ...config };
-  }
-
-  async valid(formSelector: string) {
-    return (await this.validate(formSelector)).valid;
-  }
-
-  async invalid(formSelector: string) {
-    return (await this.validate(formSelector)).invalid;
-  }
+  constructor(
+    public readonly config: ValidationConfig,
+    public readonly messageOverrides: ValidationMessages = {}
+  ) {}
 
   async validate(formSelector: string): Promise<ValidationState> {
     const formValidationConfig = this.config[formSelector];
@@ -27,7 +16,7 @@ export class Validatinator {
     const form = document.querySelector(formSelector);
     if (!form) throw new Error(`No form found with selector: ${formSelector}`);
 
-    const stateBuilder = new ValidationStateBuilder(DEFAULT_MESSAGES);
+    const stateBuilder = new ValidationStateBuilder(this.messageOverrides);
 
     Object.keys(formValidationConfig).forEach((fieldSelector: string) => {
       const field = form.querySelector(fieldSelector);
@@ -63,10 +52,12 @@ export class Validatinator {
   private prepareValidationRules(validationRulesStr: string): string[][] {
     const validationRules = validationRulesStr.split('|');
 
-    return validationRules.map((methodAndParams: string) => {
-      const [method, params] = methodAndParams.split(':');
-      const paramsArray = params?.split(',') ?? [];
-      return [method, ...paramsArray];
-    });
+    return validationRules
+      .filter((methodAndParams: string) => !!methodAndParams)
+      .map((methodAndParams: string) => {
+        const [method, params] = methodAndParams.split(':');
+        const paramsArray = params?.split(',') ?? [];
+        return [method, ...paramsArray];
+      });
   }
 }

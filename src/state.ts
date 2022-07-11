@@ -1,4 +1,5 @@
 import { ValidationMessages, ValidationResults } from './interfaces';
+import { DEFAULT_MESSAGES } from './constants';
 
 
 /**
@@ -8,9 +9,15 @@ import { ValidationMessages, ValidationResults } from './interfaces';
  */
 export class ValidationStateBuilder {
 
-  private readonly results: ValidationResults = {};
+  public readonly results: ValidationResults = {};
 
-  constructor(private readonly messages: ValidationMessages) {}
+  constructor(public readonly messages: ValidationMessages = {}) {
+    if (Object.keys(messages).length === 0) {
+      this.messages = DEFAULT_MESSAGES;
+    } else {
+      this.messages = Object.assign({}, DEFAULT_MESSAGES, messages);
+    }
+  }
 
   /**
    * Adds a validation result to the validation results object.
@@ -19,9 +26,10 @@ export class ValidationStateBuilder {
    * @param method The name of the validation method that was called.
    * @param result The result of the validation method.
    */
-  addResult(fieldSelector: string, validationMethod: string, result: boolean) {
+  addResult(fieldSelector: string, validationMethod: string, result: boolean): ValidationStateBuilder {
     this.results[fieldSelector] = this.results[fieldSelector] ?? {};
     this.results[fieldSelector][validationMethod] = result;
+    return this;
   }
 
   /**
@@ -42,8 +50,8 @@ export class ValidationStateBuilder {
 export class ValidationState {
 
   constructor(
-    private readonly results: ValidationResults,
-    private readonly messages: ValidationMessages
+    public readonly results: ValidationResults,
+    public readonly messages: ValidationMessages
   ) {}
 
   /**
