@@ -1,6 +1,6 @@
 # Validatinator Changelog
 
-### Version 2.0.0 (Reborn)
+### Version 2.0.1 (Reborn)
 
 * Complete overhaul (read: "rewrite") of the initial API, to be more idiomatic and friendly.
 

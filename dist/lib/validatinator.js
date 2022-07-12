@@ -86,5 +86,5 @@ var Validatinator = (function () {
     };
     return Validatinator;
 }());
-export { Validatinator };
+export default Validatinator;
 //# sourceMappingURL=validatinator.js.map

@@ -1,11 +1,19 @@
 # Validatinator (Reborn)
 
-Current Release: 2.0.0 [Reborn]
+Current Release: 2.0.1 [Reborn]
 
-Validatinator is a simple, yet effective, vanilla JavaScript form validation
-"plugin." It is loosely based off of Laravel's validation system. Using
-Validatinator is as easy as instantiating a Validatinator object, calling
-the passes or fails methods and if there are failed validations then grabbing those validations from the errors property on the main object.
+Validatinator is a simple, yet effective, HTML form validation library built for JavaScript/TypeScript.
+
+The project was originally loosely based off of Laravel's validation system, and has evolved since.
+
+
+### Future Plans
+
+* Validatinator validations will be abstracted to different platforms/runtimes:
+    * By default the Validatinator library will support the browser runtime (current)
+    * Support for NodeJS validation via Object/Hash & Array validations
+    * Adapter/support for the JSON Schema Form format
+
 
 #### Table of Contents
 
