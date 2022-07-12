@@ -1,5 +1,9 @@
 # Validatinator Changelog
 
+### Version 2.0.0 (Reborn)
+
+* Complete overhaul (read: "rewrite") of the initial API, to be more idiomatic and friendly.
+
 ### Version 1.3.4
 
 * Hotfix: Validatinator.utils.getFieldsValue() should now correctly only return a field's value if it is truly a field within the form requested.

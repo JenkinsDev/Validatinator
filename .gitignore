@@ -1,4 +1,7 @@
 node_modules/*
 index.html
 .project
+
 npm-debug.log
+yarn-error.log
+
