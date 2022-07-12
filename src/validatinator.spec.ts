@@ -22,25 +22,3 @@ describe("Validatinator.validate", () => {
     });
   });
 });
-
-describe("Validatinator.prepareValidationRules", () => {
-  describe("when the validation rules string is empty", () => {
-    test("returns an empty array", () => {
-      const rules = (new Validatinator({}))['prepareValidationRules']("");
-      expect(rules).toEqual([]);
-    });
-  });
-
-  describe("when the validation rules string is not empty", () => {
-    test("returns an array of validation rules", () => {
-      const rules = (new Validatinator({}))['prepareValidationRules']("accepted|min:5|max:10|between:5,10|requiredIfNot:.other-field,true");
-      expect(rules).toEqual([
-        ["accepted"],
-        ["min", "5"],
-        ["max", "10"],
-        ["between", "5", "10"],
-        ["requiredIfNot", ".other-field", "true"]
-      ]);
-    });
-  });
-});

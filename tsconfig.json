@@ -3,6 +3,8 @@
     "moduleResolution": "node",
     "target": "es5",
     "module": "es2015",
+    "esModuleInterop": true,
+    "allowJs": true,
     "allowSyntheticDefaultImports": true,
     "noImplicitAny": true,
     "removeComments": true,

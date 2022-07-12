@@ -1,30 +1,30 @@
-import { ValidationConfig, ValidationMessages } from './interfaces';
-import { ValidationStateBuilder, ValidationState } from './state';
-import { HTMLFormValidations } from './validations';
+import { FormValidationConfigs, FieldValidationConfigs, ValidationMessages } from "./interfaces.js";
+import { ValidationStateBuilder, ValidationState } from "./state.js";
+import { HTMLFormValidations } from "./validations.js";
+import { prepareValidationRules } from "./utility.js";
 
 export class Validatinator {
 
   constructor(
-    public readonly config: ValidationConfig,
+    public readonly config: FormValidationConfigs,
     public readonly messageOverrides: ValidationMessages = {}
   ) {}
 
   async validate(formSelector: string): Promise<ValidationState> {
-    const formValidationConfig = this.config[formSelector];
-    if (!formValidationConfig) throw new Error(`No validation config found for form: ${formSelector}`);
+    const formFieldConfigs = this.getFormConfig(formSelector);
+    if (!formFieldConfigs) throw new Error(`No validation config found for form: ${formSelector}`);
 
     const form = document.querySelector(formSelector);
     if (!form) throw new Error(`No form found with selector: ${formSelector}`);
 
-    const stateBuilder = new ValidationStateBuilder(this.messageOverrides);
+    const stateBuilder = new ValidationStateBuilder(formFieldConfigs, this.messageOverrides);
 
-    Object.keys(formValidationConfig).forEach((fieldSelector: string) => {
+    Object.keys(formFieldConfigs).forEach((fieldSelector: string) => {
       const field = form.querySelector(fieldSelector);
       if (!field) throw new Error(`No field found with selector: ${fieldSelector}`);
 
-      const unparsedValidationRules = formValidationConfig[fieldSelector];
-      const parsedRules = this.prepareValidationRules(unparsedValidationRules);
-      parsedRules.forEach(([method, ...params]) => {
+      const unpreparedValidationRules = formFieldConfigs[fieldSelector];
+      prepareValidationRules(unpreparedValidationRules).forEach(([method, ...params]) => {
         const methodCallable = (HTMLFormValidations as any)[method];
         if (!methodCallable) throw new Error(`No validation method found with name: ${method}`);
 
@@ -36,28 +36,7 @@ export class Validatinator {
     return stateBuilder.build();
   }
 
-  /**
-   * Parses a validationRules string, and returns a prepared validation rules
-   * array.
-   *
-   * "accepted|min:5|max:10" =>
-   * [
-   *   ["accepted"],
-   *   ["min", "5"],
-   *   ["max", "10"]
-   * ]
-   *
-   * @param validationRules string
-   */
-  private prepareValidationRules(validationRulesStr: string): string[][] {
-    const validationRules = validationRulesStr.split('|');
-
-    return validationRules
-      .filter((methodAndParams: string) => !!methodAndParams)
-      .map((methodAndParams: string) => {
-        const [method, params] = methodAndParams.split(':');
-        const paramsArray = params?.split(',') ?? [];
-        return [method, ...paramsArray];
-      });
+  getFormConfig(formSelector: string): FieldValidationConfigs {
+    return this.config[formSelector];
   }
 }

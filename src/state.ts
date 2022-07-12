@@ -1,6 +1,6 @@
-import { ValidationMessages, ValidationResults } from './interfaces';
-import { DEFAULT_MESSAGES } from './constants';
-
+import { FieldValidationConfigs, ValidationMessages, ValidationResults } from "./interfaces.js";
+import { DEFAULT_MESSAGES } from "./constants.js";
+import { prepareValidationRules, prepareErrorMessage } from "./utility.js";
 
 /**
  * @class
@@ -11,7 +11,10 @@ export class ValidationStateBuilder {
 
   public readonly results: ValidationResults = {};
 
-  constructor(public readonly messages: ValidationMessages = {}) {
+  constructor(
+    public readonly formFieldConfigs: FieldValidationConfigs,
+    public readonly messages: ValidationMessages = {}
+  ) {
     if (Object.keys(messages).length === 0) {
       this.messages = DEFAULT_MESSAGES;
     } else {
@@ -22,9 +25,9 @@ export class ValidationStateBuilder {
   /**
    * Adds a validation result to the validation results object.
    *
-   * @param fieldSelector The selector of the field that was validated.
-   * @param method The name of the validation method that was called.
-   * @param result The result of the validation method.
+   * @param fieldSelector - The selector of the field that was validated.
+   * @param method - The name of the validation method that was called.
+   * @param result - The result of the validation method.
    */
   addResult(fieldSelector: string, validationMethod: string, result: boolean): ValidationStateBuilder {
     this.results[fieldSelector] = this.results[fieldSelector] ?? {};
@@ -38,7 +41,7 @@ export class ValidationStateBuilder {
    * @returns ValidationState
    */
   build(): ValidationState {
-    return new ValidationState(this.results, this.messages);
+    return new ValidationState(this.formFieldConfigs, this.results, this.messages);
   }
 }
 
@@ -50,6 +53,7 @@ export class ValidationStateBuilder {
 export class ValidationState {
 
   constructor(
+    public readonly formFieldConfigs: FieldValidationConfigs,
     public readonly results: ValidationResults,
     public readonly messages: ValidationMessages
   ) {}
@@ -57,7 +61,7 @@ export class ValidationState {
   /**
    * Returns whether the `ValidationState` is valid.
    *
-   * @returns boolean
+   * @returns boolean indicating whether the `ValidationState` is valid.
    */
   get valid(): boolean {
     let valid = true;
@@ -72,7 +76,7 @@ export class ValidationState {
   /**
    * Returns whether the `ValidationState` is invalid.
    *
-   * @returns boolean
+   * @returns boolean indicating whether the `ValidationState` is invalid.
    */
   get invalid(): boolean {
     return !this.valid;
@@ -81,7 +85,7 @@ export class ValidationState {
   /**
    * Returns an array of error messages for the entire ValidationState.
    *
-   * @returns string[]
+   * @returns An array of error messages.
    */
   getAllErrors(): string[] {
     const fields = Object.keys(this.results);
@@ -97,15 +101,20 @@ export class ValidationState {
   /**
    * Returns an array of error messages for a given field.
    *
-   * @param fieldSelector string
-   * @returns string[]
+   * @param fieldSelector - The selector of the field to get the errors for.
+   * @returns An array of error messages.
    */
   getFieldErrors(fieldSelector: string): string[] {
     const errors: string[] = [];
 
+    const fieldValidationRules = prepareValidationRules(this.formFieldConfigs[fieldSelector]);
+
     Object.keys(this.results[fieldSelector]).forEach((validationMethod: string) => {
       if (!this.results[fieldSelector][validationMethod]) {
-        errors.push(this.messages[validationMethod]);
+        const [_, ...validationParams] = fieldValidationRules.filter(([method]) => method === validationMethod)[0] ?? [];
+
+        const errorMessage = this.messages[validationMethod];
+        errors.push(prepareErrorMessage(errorMessage, ...validationParams));
       }
     });
 

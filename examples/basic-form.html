@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+  <body>
+    <form class="form-one">
+      <input type="text">
+
+      <button type="submit">Submit</button>
+    </form>
+
+    <script type="module">
+      import Validatinator from "../dist/lib/index.js";
+
+      document.addEventListener('DOMContentLoaded', function() {
+        const formSelector = ".form-one";
+        const inputSelector = "input:first-child";
+
+        const validatinator = new Validatinator({
+          [formSelector]: {
+            [inputSelector]: "required|alpha"
+          }
+        });
+
+        const formButton = document.querySelector(`${formSelector} button`);
+        formButton.addEventListener("click", async function(e) {
+          e.preventDefault();
+
+          const validationState = await validatinator.validate(formSelector);
+          console.log(`Is Valid? ${validationState.valid}`);
+          console.log(`Errors: \n${validationState.getAllErrors().join('\n')}`);
+        });
+      });
+    </script>
+  </body>
+</html>

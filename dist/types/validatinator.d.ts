@@ -1,10 +1,9 @@
-import { ValidationConfig } from './interfaces';
-import { ValidationState } from './state';
+import { FormValidationConfigs, FieldValidationConfigs, ValidationMessages } from "./interfaces.js";
+import { ValidationState } from "./state.js";
 export declare class Validatinator {
-    config: ValidationConfig;
-    constructor(config: ValidationConfig);
-    valid(formSelector: string): Promise<boolean>;
-    invalid(formSelector: string): Promise<boolean>;
+    readonly config: FormValidationConfigs;
+    readonly messageOverrides: ValidationMessages;
+    constructor(config: FormValidationConfigs, messageOverrides?: ValidationMessages);
     validate(formSelector: string): Promise<ValidationState>;
-    private prepareValidationRules;
+    getFormConfig(formSelector: string): FieldValidationConfigs;
 }

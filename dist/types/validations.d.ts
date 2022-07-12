@@ -9,7 +9,7 @@ export declare class HTMLFormValidations {
     static contains(form: HTMLFormElement, field: HTMLInputElement, ...arr: string[]): boolean;
     static dateBefore(form: HTMLFormElement, field: HTMLInputElement, date: string): boolean;
     static dateAfter(form: HTMLFormElement, field: HTMLInputElement, date: string): boolean;
-    static different(form: HTMLFormElement, field: HTMLInputElement, otherField: HTMLInputElement, strict?: boolean): boolean;
+    static different(form: HTMLFormElement, field: HTMLInputElement, otherField: HTMLInputElement, strict?: string): boolean;
     static digitsLength(form: HTMLFormElement, field: HTMLInputElement, length: string | number): boolean;
     static digitsLengthBetween(form: HTMLFormElement, field: HTMLInputElement, minLength: string | number, maxLength: string | number): boolean;
     static email(form: HTMLFormElement, field: HTMLInputElement): boolean;
@@ -23,6 +23,6 @@ export declare class HTMLFormValidations {
     static required(form: HTMLFormElement, field: HTMLInputElement): boolean;
     static requiredIf(form: HTMLFormElement, field: HTMLInputElement, otherField: HTMLInputElement, value: any): boolean;
     static requiredIfNot(form: HTMLFormElement, field: HTMLInputElement, otherField: HTMLInputElement, value: any): boolean;
-    static same(form: HTMLFormElement, field: HTMLInputElement, otherField: HTMLInputElement, strict?: boolean): boolean;
+    static same(form: HTMLFormElement, field: HTMLInputElement, otherField: HTMLInputElement, strict?: string): boolean;
     static url(form: HTMLFormElement, field: HTMLInputElement): boolean;
 }

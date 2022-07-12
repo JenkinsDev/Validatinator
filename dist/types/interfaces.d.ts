@@ -1,7 +1,7 @@
-export interface ValidationConfig {
-    [key: string]: FormValidationConfig;
+export interface FormValidationConfigs {
+    [key: string]: FieldValidationConfigs;
 }
-export interface FormValidationConfig {
+export interface FieldValidationConfigs {
     [key: string]: string;
 }
 export interface ValidationMessages {

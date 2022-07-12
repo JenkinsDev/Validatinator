@@ -3,7 +3,9 @@
   "version": "2.0.0",
   "description": "Simple, yet effective, vanilla JavaScript form validation plugin. Validatinator is based off of one of PHP's most famous framework, Laravel.  Using Validatinator is as easy as instantiating a Validatinator object, calling the passes or fails methods and if there are failed validations then grabbing those validations from the errors property on the main object.",
   "author": "David Jenkins <djenkinsdev@gmail.com>",
-  "main": "./js/validatinator.min.js",
+  "main": "dist/validatinator.umd.js",
+  "module": "dist/validatinator.es5.js",
+  "typings": "dist/types/validatinator.d.ts",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -26,10 +28,12 @@
     "esbuild": "^0.14.48",
     "jest": "^28.1.2",
     "ts-jest": "^28.0.5",
+    "ts-jest-resolver": "^2.0.0",
     "typescript": "^4.7.4",
     "jest-environment-jsdom": "^28.1.2"
   },
   "scripts": {
+    "prebuild": "rm -rf dist",
     "build": "tsc",
     "watch": "tsc --watch",
     "test": "jest"

@@ -1,14 +1,3 @@
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -54,52 +43,32 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     }
     return to.concat(ar || Array.prototype.slice.call(from));
 };
-import { DEFAULT_MESSAGES } from './messages';
-import { ValidationStateBuilder } from './state';
-import { HTMLFormValidations } from './validations';
+import { ValidationStateBuilder } from "./state.js";
+import { HTMLFormValidations } from "./validations.js";
+import { prepareValidationRules } from "./utility.js";
 var Validatinator = (function () {
-    function Validatinator(config) {
-        this.config = __assign({}, config);
+    function Validatinator(config, messageOverrides) {
+        if (messageOverrides === void 0) { messageOverrides = {}; }
+        this.config = config;
+        this.messageOverrides = messageOverrides;
     }
-    Validatinator.prototype.valid = function (formSelector) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4, this.validate(formSelector)];
-                    case 1: return [2, (_a.sent()).valid];
-                }
-            });
-        });
-    };
-    Validatinator.prototype.invalid = function (formSelector) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4, this.validate(formSelector)];
-                    case 1: return [2, (_a.sent()).invalid];
-                }
-            });
-        });
-    };
     Validatinator.prototype.validate = function (formSelector) {
         return __awaiter(this, void 0, void 0, function () {
-            var formValidationConfig, form, stateBuilder;
-            var _this = this;
+            var formFieldConfigs, form, stateBuilder;
             return __generator(this, function (_a) {
-                formValidationConfig = this.config[formSelector];
-                if (!formValidationConfig)
+                formFieldConfigs = this.getFormConfig(formSelector);
+                if (!formFieldConfigs)
                     throw new Error("No validation config found for form: ".concat(formSelector));
                 form = document.querySelector(formSelector);
                 if (!form)
                     throw new Error("No form found with selector: ".concat(formSelector));
-                stateBuilder = new ValidationStateBuilder(DEFAULT_MESSAGES);
-                Object.keys(formValidationConfig).forEach(function (fieldSelector) {
+                stateBuilder = new ValidationStateBuilder(formFieldConfigs, this.messageOverrides);
+                Object.keys(formFieldConfigs).forEach(function (fieldSelector) {
                     var field = form.querySelector(fieldSelector);
                     if (!field)
                         throw new Error("No field found with selector: ".concat(fieldSelector));
-                    var unparsedValidationRules = formValidationConfig[fieldSelector];
-                    var parsedRules = _this.prepareValidationRules(unparsedValidationRules);
-                    parsedRules.forEach(function (_a) {
+                    var unpreparedValidationRules = formFieldConfigs[fieldSelector];
+                    prepareValidationRules(unpreparedValidationRules).forEach(function (_a) {
                         var method = _a[0], params = _a.slice(1);
                         var methodCallable = HTMLFormValidations[method];
                         if (!methodCallable)
@@ -112,14 +81,8 @@ var Validatinator = (function () {
             });
         });
     };
-    Validatinator.prototype.prepareValidationRules = function (validationRulesStr) {
-        var validationRules = validationRulesStr.split('|');
-        return validationRules.map(function (methodAndParams) {
-            var _a;
-            var _b = methodAndParams.split(':'), method = _b[0], params = _b[1];
-            var paramsArray = (_a = params === null || params === void 0 ? void 0 : params.split(',')) !== null && _a !== void 0 ? _a : [];
-            return __spreadArray([method], paramsArray, true);
-        });
+    Validatinator.prototype.getFormConfig = function (formSelector) {
+        return this.config[formSelector];
     };
     return Validatinator;
 }());
