@@ -20,3 +20,14 @@ jobs:
         if: github.ref == 'refs/heads/master'
         with:
           token: ${{ secrets.NPM_TOKEN }}
+
+      - name: Build documentation
+        if: github.ref == 'refs/heads/master'
+        run: npm run docs
+
+      - name: Publish documentation
+        uses: peaceiris/actions-gh-pages@v3
+        if: github.ref == 'refs/heads/master'
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs

@@ -1,4 +1,4 @@
-import Validatinator from './validatinator';
+import { Validatinator } from './validatinator';
 import { ValidationState } from './state';
 
 describe("Validatinator.validate", () => {

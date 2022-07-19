@@ -13,11 +13,16 @@ export class HTMLFormValidations {
 
   /**
    * Checks to see if the field has been accepted.
+   *
+   * Note: Only works on checkboxes.
    */
   static accepted(form: HTMLFormElement, field: HTMLInputElement) {
     return field.checked === true;
   }
 
+  /**
+   * Ensures the value of the field only contains alpha characters.
+   */
   static alpha(form: HTMLFormElement, field: HTMLInputElement) {
     return ALPHA_REGEX.test(field.value);
   }

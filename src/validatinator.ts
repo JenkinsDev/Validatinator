@@ -3,7 +3,7 @@ import { ValidationStateBuilder, ValidationState } from "./state.js";
 import { HTMLFormValidations } from "./validations.js";
 import { prepareValidationRules } from "./utility.js";
 
-export default class Validatinator {
+export class Validatinator {
 
   constructor(
     public readonly config: FormValidationConfigs,

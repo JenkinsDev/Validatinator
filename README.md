@@ -1,46 +1,79 @@
 # Validatinator (Reborn)
 
-Current Release: 2.0.2 [Reborn]
+Current Release: 2.0.3 [Reborn]
 
 Validatinator is a simple, yet effective, HTML form validation library built for JavaScript/TypeScript.
 
 The project was originally loosely based off of Laravel's validation system, and has evolved since.
 
+### How to Use
 
-### Future Plans
+#### Installation
 
-* Validatinator validations will be abstracted to different platforms/runtimes:
-    * By default the Validatinator library will support the browser runtime (current)
-    * Support for NodeJS validation via Object/Hash & Array validations
-    * Adapter/support for the JSON Schema Form format
+```javascript
+npm install validatinator
+```
 
+#### Example Usage
 
-#### Table of Contents
+```javascript
+import { Validatinator } from "validatinator";
 
-* [Setting Up](https://github.com/JenkinsDev/Validatinator/wiki/Setting-Up)
-* [Validation Methods](https://github.com/JenkinsDev/Validatinator/wiki/Validation-Methods)
-    * [Accepted](https://github.com/JenkinsDev/Validatinator/wiki/Validation-Methods#wiki-accepted)
-    * [Alpha](https://github.com/JenkinsDev/Validatinator/wiki/Validation-Methods#wiki-alpha)
-    * [Alpha Dash](https://github.com/JenkinsDev/Validatinator/wiki/Validation-Methods#wiki-alpha-dash)
-    * [Alpha Numeric](https://github.com/JenkinsDev/Validatinator/wiki/Validation-Methods#wiki-alpha-numeric)
-    * [Between](https://github.com/JenkinsDev/Validatinator/wiki/Validation-Methods#wiki-between)
-    * [Between Length](https://github.com/JenkinsDev/Validatinator/wiki/Validation-Methods#wiki-between-length)
-    * [Contains](https://github.com/JenkinsDev/Validatinator/wiki/Validation-Methods#wiki-contains)
-    * [Date Before](https://github.com/JenkinsDev/Validatinator/wiki/Validation-Methods#wiki-date-before)
-    * [Date After](https://github.com/JenkinsDev/Validatinator/wiki/Validation-Methods#wiki-date-after)
-    * [Different](https://github.com/JenkinsDev/Validatinator/wiki/Validation-Methods#wiki-different)
-    * [Digits Length](https://github.com/JenkinsDev/Validatinator/wiki/Validation-Methods#wiki-digits-length)
-    * [Digits Length Between](https://github.com/JenkinsDev/Validatinator/wiki/Validation-Methods#wiki-digits-length-between)
-    * [Email](https://github.com/JenkinsDev/Validatinator/wiki/Validation-Methods#wiki-email)
-    * [IPv4](https://github.com/JenkinsDev/Validatinator/wiki/Validation-Methods#wiki-ipv4)
-    * [Max](https://github.com/JenkinsDev/Validatinator/wiki/Validation-Methods#wiki-max)
-    * [Max Length](https://github.com/JenkinsDev/Validatinator/wiki/Validation-Methods#wiki-max-length)
-    * [Min](https://github.com/JenkinsDev/Validatinator/wiki/Validation-Methods#wiki-min)
-    * [Min Length](https://github.com/JenkinsDev/Validatinator/wiki/Validation-Methods#wiki-min-length)
-    * [Not In](https://github.com/JenkinsDev/Validatinator/wiki/Validation-Methods#wiki-not-in)
-    * [Number](https://github.com/JenkinsDev/Validatinator/wiki/Validation-Methods#wiki-number)
-    * [Required](https://github.com/JenkinsDev/Validatinator/wiki/Validation-Methods#wiki-required)
-    * [Required If](https://github.com/JenkinsDev/Validatinator/wiki/Validation-Methods#wiki-required-if)
-    * [Required If Not](https://github.com/JenkinsDev/Validatinator/wiki/Validation-Methods#wiki-required-if-not)
-    * [Same](https://github.com/JenkinsDev/Validatinator/wiki/Validation-Methods#wiki-same)
-    * [URL](https://github.com/JenkinsDev/Validatinator/wiki/Validation-Methods#wiki-url)
+const validatinator = new Validatinator({
+  ".my-form-query-selector": {
+    ".my-field-query-selector": "required|alpha",
+    ".another-field": "min:3|max:10",
+    "input[type='checkbox']:last-of-type": "accepted"
+  }
+});
+
+// async/await
+const state = await validatinator.validate(".my-form-query-selector");
+console.log(state.valid); // or state.invalid
+console.log(state.getAllErrors()); // or state.getFieldErrors(".another-field")
+
+// or as a promise
+validatinator.validate(".my-form-query-selector").them((state) => {});
+```
+
+### Why does this exist?
+
+Validatinator originally existed through the want of giving to the development community. As of 2022, this project is >6 years old, and has been stagnant for the majority of that time.
+
+While the library may have been stagnant, it has been poised to do well due to the fact that it "just works". Along with all of the technological advancements we've underwent in the past 6 years; now the core pillars of Validatinator's existence are locked to:
+
+* Zero dependencies
+* Ease of use
+* Framework & runtime agnostic (soon)
+* Configurable and override-able
+
+The holy grail of ease-of-use JS/TS validation libraries.
+
+### Validation Methods
+
+* `"accepted"`
+* `"alpha"`
+* `"alphaDash"`
+* `"alphaNum"`
+* `"alphaDashNum"`
+* `"between:2,10"`
+* `"betweenLength:2,10"`
+* `"contains:2,4,6,8,10,12"`
+* `"dateBefore:2022-02-04"`
+* `"dateAfter:2022-02-10"`
+* `"difference:.my-other-field-selector,false"`
+* `"digitsLength:3"`
+* `"digitsLengthBetween:3,10"`
+* `"email"`
+* `"ipvFour"`
+* `"max:500"`
+* `"maxLength:2"`
+* `"min:200"`
+* `"minLength:2"`
+* `"notIn:2,4,6,8,10,12"`
+* `"number"`
+* `"required"`
+* `"requiredIf:.another-field-selector,value-to-check"`
+* `"requiredIfNot:.another-field-selector,value-to-check"`
+* `"same:.another-field-selector,false"`
+* `"url"`
