@@ -18,7 +18,8 @@ export function prepareValidationRules(validationRulesStr: string): string[][] {
     .filter((methodAndParams: string) => !!methodAndParams)
     .map((methodAndParams: string) => {
       const [method, params] = methodAndParams.split(':');
-      const paramsArray = params?.split(',') ?? [];
+      // The pattern method parameter can contain a valid "," - don't split
+      const paramsArray = (method !== 'pattern') ? params?.split(',') ?? [] : [params];
       return [method, ...paramsArray];
     });
 }
