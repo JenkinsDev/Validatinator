@@ -26,5 +26,6 @@ export const DEFAULT_MESSAGES: ValidationMessages = {
   requiredIf: "This field is required if the value of ${0} equals {$1}.",
   requiredIfNot: "This field is required if the value of ${0} does not equal {$1}.",
   same: "This field must be the same value as ${0}.",
-  url: "This field must be a valid URL."
+  url: "This field must be a valid URL.",
+  pattern: "This field must match the regex pattern provided."
 };
