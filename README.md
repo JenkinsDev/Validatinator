@@ -72,12 +72,12 @@ The holy grail of ease-of-use JS/TS validation libraries.
 * `"minLength:2"`
 * `"notIn:2,4,6,8,10,12"`
 * `"number"`
+* `"pattern:valid_regex_string"`
 * `"required"`
 * `"requiredIf:.another-field-selector,value-to-check"`
 * `"requiredIfNot:.another-field-selector,value-to-check"`
 * `"same:.another-field-selector,false"`
 * `"url"`
-* `"pattern:valid_regex_string"`
 
 ### Validation Method Notes
 
