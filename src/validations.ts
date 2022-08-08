@@ -208,4 +208,9 @@ export class HTMLFormValidations {
   static url(form: HTMLFormElement, field: HTMLInputElement) {
     return URL_REGEX.test(field.value);
   }
+
+  static pattern(form: HTMLFormElement, field: HTMLInputElement, regexString: string | RegExp) {
+    const regex = new RegExp(regexString);
+    return regex.test(field.value);
+  }
 }
