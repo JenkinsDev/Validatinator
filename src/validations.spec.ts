@@ -254,6 +254,14 @@ describe("HTMLFormValidations.different", () => {
 
         expect(HTMLFormValidations.different(form, field, otherField)).toBe(true);
       });
+      describe("if the other field is referenced by a query selector", () => {
+        test("should return true", () => {
+          const [form, otherField] = createAndGetFormAndInput("text", "TesT", "class=\"other-field\"");
+          const field = createAndGetInput(form, "text", "test", );
+
+          expect(HTMLFormValidations.different(form, field, ".other-field")).toBe(true);
+        });
+      });
     });
   });
 
@@ -274,10 +282,18 @@ describe("HTMLFormValidations.different", () => {
 
         expect(HTMLFormValidations.different(form, field, otherField, "false")).toBe(true);
       });
+      describe("if the other field is referenced by a query selector", () => {
+        test("should return true", () => {
+          const [form, otherField] = createAndGetFormAndInput("text", "SaMe", "class=\"other-field\"");
+          const field = createAndGetInput(form, "text", "not-the-same-at-all", );
+
+          expect(HTMLFormValidations.different(form, field, ".other-field", "false")).toBe(true);
+        });
+      });
     });
 
     describe("and the field's value is the same as the provided value, with different casing", () => {
-      test("should return true", () => {
+      test("should return false", () => {
         const [form, field] = createAndGetFormAndInput("text", "SaMe");
         const otherField = createAndGetInput(form, "text", "same");
 
@@ -601,6 +617,14 @@ describe("HTMLFormValidations.requiredIf", () => {
 
         expect(HTMLFormValidations.requiredIf(form, field, otherField, "test")).toBe(true);
       });
+      describe("if the other field is referenced by a query selector", () => {
+        test("should return true", () => {
+          const [form, otherField] = createAndGetFormAndInput("text", "has-a-value", "class=\"other-field\"");
+          const field = createAndGetInput(form, "text", "test", );
+
+          expect(HTMLFormValidations.requiredIf(form, field, ".other-field", "test")).toBe(true);
+        });
+      });
     });
   });
 
@@ -641,6 +665,14 @@ describe("HTMLFormValidations.requiredIfNot", () => {
 
         expect(HTMLFormValidations.requiredIfNot(form, field, otherField, "other-value")).toBe(true);
       });
+      describe("if the other field is referenced by a query selector", () => {
+        test("should return true", () => {
+          const [form, otherField] = createAndGetFormAndInput("text", "has-a-value", "class=\"other-field\"");
+          const field = createAndGetInput(form, "text", "test", );
+
+          expect(HTMLFormValidations.requiredIfNot(form, field, ".other-field", "other-value")).toBe(true);
+        });
+      });
     });
   });
 });
@@ -673,6 +705,14 @@ describe("HTMLFormValidations.same", () => {
 
           expect(HTMLFormValidations.same(form, field, otherField)).toBe(true);
         });
+        describe("if the other field is referenced by a query selector", () => {
+          test("should return true", () => {
+            const [form, otherField] = createAndGetFormAndInput("text", "test", "class=\"other-field\"");
+            const field = createAndGetInput(form, "text", "test", );
+
+            expect(HTMLFormValidations.same(form, field, ".other-field")).toBe(true);
+          });
+        });
       });
     });
   });
@@ -694,6 +734,14 @@ describe("HTMLFormValidations.same", () => {
           const otherField = createAndGetInput(form, "text", "test");
 
           expect(HTMLFormValidations.same(form, field, otherField, "false")).toBe(true);
+        });
+        describe("if the other field is referenced by a query selector", () => {
+          test("should return true", () => {
+            const [form, otherField] = createAndGetFormAndInput("text", "TesT", "class=\"other-field\"");
+            const field = createAndGetInput(form, "text", "test", );
+
+            expect(HTMLFormValidations.same(form, field, ".other-field", "false")).toBe(true);
+          });
         });
       });
 
