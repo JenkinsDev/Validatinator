@@ -5,7 +5,7 @@
   "author": "David Jenkins <djenkinsdev@gmail.com>",
   "browser": "dist/lib/validatinator.js",
   "main": "dist/lib/validatinator.js",
-  "typings": "dist/types/validatinator.d.ts",
+  "types": "dist/types/validatinator.d.ts",
   "license": "MIT",
   "repository": {
     "type": "git",
