@@ -88,7 +88,7 @@ export class HTMLFormValidations {
   static different(
     form: HTMLFormElement,
     field: HTMLInputElement,
-    otherField: HTMLInputElement,
+    otherField: HTMLInputElement | string,
     strict: string = "true"
   ) {
     return !HTMLFormValidations.same(form, field, otherField, strict);
@@ -179,29 +179,38 @@ export class HTMLFormValidations {
   static requiredIf(
     form: HTMLFormElement,
     field: HTMLInputElement,
-    otherField: HTMLInputElement,
+    otherField: HTMLInputElement | string,
     value: any
   ) {
-    return otherField.value != value || HTMLFormValidations.required(form, field);
+    if(typeof(otherField) == "string"){
+      otherField = form.querySelector(otherField) as HTMLInputElement;
+    }
+    return otherField?.value != value || HTMLFormValidations.required(form, field);
   }
 
   static requiredIfNot(
     form: HTMLFormElement,
     field: HTMLInputElement,
-    otherField: HTMLInputElement,
+    otherField: HTMLInputElement | string,
     value: any
   ) {
-    return otherField.value == value || HTMLFormValidations.required(form, field);
+    if(typeof(otherField) == "string"){
+      otherField = form.querySelector(otherField) as HTMLInputElement;
+    }
+    return otherField?.value == value || HTMLFormValidations.required(form, field);
   }
 
   static same(
     form: HTMLFormElement,
     field: HTMLInputElement,
-    otherField: HTMLInputElement,
+    otherField: HTMLInputElement | string,
     strict: string = "true"
   ) {
+    if(typeof(otherField) == "string"){
+      otherField = form.querySelector(otherField) as HTMLInputElement;
+    }
     return (strict.toLowerCase() == "true") ?
-      field.value == otherField.value :
+      field.value == otherField?.value :
       field.value?.toLowerCase() == otherField.value?.toLowerCase();
   }
 
