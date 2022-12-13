@@ -36,6 +36,7 @@
   "scripts": {
     "prebuild": "rm -rf dist",
     "build": "tsc",
+    "prepare": "tsc",
     "watch": "tsc --watch",
     "test": "jest",
     "docs": "typedoc --out docs/ --tsconfig tsconfig.json src/index.ts"
