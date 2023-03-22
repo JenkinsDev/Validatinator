@@ -2,7 +2,7 @@
   "compilerOptions": {
     "moduleResolution": "node",
     "target": "es5",
-    "module": "es2015",
+    "module": "es2020",
     "esModuleInterop": true,
     "allowJs": true,
     "allowSyntheticDefaultImports": true,
@@ -16,7 +16,7 @@
     "outDir": "./dist/lib",
     "rootDir": "./src",
     "lib": [
-      "es2015",
+      "es2020",
       "dom"
     ]
   },

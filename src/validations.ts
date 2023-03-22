@@ -1,8 +1,11 @@
-const ALPHA_REGEX = new RegExp(/^[a-zA-Z]+$/);
-const ALPHA_DASH_REGEX = new RegExp(/^[a-zA-Z-_]+$/);
-const ALPHA_NUMERIC_REGEX = new RegExp(/^[a-zA-Z0-9]+$/);
-const ALPHA_NUMERIC_DASH_REGEX = new RegExp(/^[a-zA-Z0-9-_]+$/);
-const EMAIL_REGEX = new RegExp(/[^\s@]+@[^\s@]+\.[^\s@]+/);
+const ALPHA_REGEX = new RegExp(/^[a-zA-Z]*$/);
+const ALPHA_DASH_REGEX = new RegExp(/^[a-zA-Z-_]*$/);
+const ALPHA_NUMERIC_REGEX = new RegExp(/^[a-zA-Z0-9]*$/);
+const ALPHA_NUMERIC_DASH_REGEX = new RegExp(/^[a-zA-Z0-9-_]*$/);
+//email addresses according to RFC 5322
+const EMAIL_REGEX = new RegExp(
+    /^([!#-'*+/-9=?A-Z^-~-]+(\.[!#-'*+/-9=?A-Z^-~-]+)*|"([]!#-[^-~ \t]|(\\[\t -~]))+")@([!#-'*+/-9=?A-Z^-~-]+(\.[!#-'*+/-9=?A-Z^-~-]+)*|\[[\t -Z^-~]*])/
+);
 const IPV4_REGEX = new RegExp(/^(\d+)\.(\d+)\.(\d+)\.(\d+)$/);
 const URL_REGEX = new RegExp(/^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/);
 
