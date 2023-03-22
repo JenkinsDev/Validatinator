@@ -47,9 +47,14 @@ describe("HTMLFormValidations.accepted", () => {
 });
 
 describe("HTMLFormValidations.alpha", () => {
-  describe("when the field is not alpha", () => {
+  const failureTestCases = [
+    "1", "a1", "a1%", "a\t", "#$1",
+    "a-b", "a_b", "a b", "a.b", "a,b"
+  ];
+
+  describe.each(failureTestCases)("when the field is not alpha: %p", (testCase) => {
     test("should return false", () => {
-      const [form, field] = createAndGetFormAndInput("text", "1");
+      const [form, field] = createAndGetFormAndInput("text", testCase);
       expect(HTMLFormValidations.alpha(form, field)).toBe(false);
     });
   });
@@ -63,10 +68,15 @@ describe("HTMLFormValidations.alpha", () => {
 });
 
 describe("HTMLFormValidations.alphaDash", () => {
-  describe("when the field is not alphaDash", () => {
+  const failureTestCases = [
+    "1", "a1", "a1%", "a\t", "#$1",
+    "a b", "a.b", "a,b"
+  ];
+
+  describe.each(failureTestCases)("when the field is not alphaDash: %p", (testCase) => {
     test("should return false", () => {
-      const [form, field] = createAndGetFormAndInput("text", "1");
-      expect(HTMLFormValidations.alphaDash(form, field)).toBe(false);
+      const [form, field] = createAndGetFormAndInput("text", testCase);
+      expect(HTMLFormValidations.alpha(form, field)).toBe(false);
     });
   });
 
@@ -79,9 +89,14 @@ describe("HTMLFormValidations.alphaDash", () => {
 });
 
 describe("HTMLFormValidations.alphaNum", () => {
-  describe("when the field is not alphaNum", () => {
+  const failureTestCases = [
+    "a1%", "a\t", "#$1", "a b",
+    "a.b", "a,b", "a-b", "a_b"
+  ];
+
+  describe.each(failureTestCases)("when the field is not alphaNum: %p", (testCase) => {
     test("should return false", () => {
-      const [form, field] = createAndGetFormAndInput("text", "asdf-_#@!$");
+      const [form, field] = createAndGetFormAndInput("text", testCase);
       expect(HTMLFormValidations.alphaNum(form, field)).toBe(false);
     });
   });
@@ -95,16 +110,22 @@ describe("HTMLFormValidations.alphaNum", () => {
 });
 
 describe("HTMLFormValidations.alphaDashNum", () => {
-  describe("when the field is not alphaDashNum", () => {
+  const failureTestCases = [
+    "a1%", "a\t", "#$1", "a b",
+    "a.b", "a,b", "asdf123-_-!",
+    "asdf123-_-*", "asdf123-_-@"
+  ];
+
+  describe.each(failureTestCases)("when the field is not alphaDashNum: %p", (testCase) => {
     test("should return false", () => {
-      const [form, field] = createAndGetFormAndInput("text", "asdf-_#@!$");
+      const [form, field] = createAndGetFormAndInput("text", testCase);
       expect(HTMLFormValidations.alphaDashNum(form, field)).toBe(false);
     });
   });
 
   describe("when the field is alphaDashNum", () => {
     test("should return true", () => {
-      const [form, field] = createAndGetFormAndInput("text", "asdf123-_-");
+      const [form, field] = createAndGetFormAndInput("text", "asdf1234567890-_-");
       expect(HTMLFormValidations.alphaDashNum(form, field)).toBe(true);
     });
   });
@@ -765,21 +786,20 @@ describe("HTMLFormValidations.url", () => {
     });
   });
 
-  describe("when the field's value is a valid URL", () => {
-    test("should return true", () => {
-      const validUrls = [
-        "http://www.google.com",
-        "https://www.google.com",
-        "http://www.japan.go.jp/",
-        "https://www.japan.go.jp/",
-        "child5.child4.child3.child2.child1.child0.root.tld",
-      ];
+  const validTestCases = [
+    "http://www.google.com",
+    "https://www.google.com/path_one/path_two?query=string&another=string#fragment",
+    "http://www.japan.go.jp/",
+    "https://japan.go.jp/path_one/path_two?query=string&another=string#fragment",
+    "child5.child4.child3.child2.child1.child0.root.tld",
+    "child5.child4.child3.child2.child1.child0.root.tld/path_one/path_two?query=string&another=string#fragment",
+  ];
 
+  describe.each(validTestCases)("when the field's value is a valid URL: %p", (testCase) => {
+    test("should return true", () => {
       const [form, field] = createAndGetFormAndInput("text", "");
-      validUrls.forEach(url => {
-        field.value = url;
-        expect(HTMLFormValidations.url(form, field)).toBe(true);
-      });
+      field.value = testCase;
+      expect(HTMLFormValidations.url(form, field)).toBe(true);
     });
   });
 });
@@ -792,6 +812,7 @@ describe("HTMLFormValidations.pattern", () => {
       expect(HTMLFormValidations.pattern(form, field, regex)).toBe(false);
     });
   });
+
   describe("when the field's value matches the pattern", () => {
     test("should return true", () => {
       const regex = "[0-9]{2,4}[a-z]+";
