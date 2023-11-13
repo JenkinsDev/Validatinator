@@ -1,4 +1,4 @@
-import { Validatinator } from "./validatinator";
+export { Validatinator } from "./validatinator";
 
 export { DEFAULT_MESSAGES } from "./constants";
 export {
@@ -9,5 +9,3 @@ export {
 } from "./interfaces";
 export { ValidationState } from "./state";
 export { HTMLFormValidations } from "./validations";
-
-export default Validatinator;
