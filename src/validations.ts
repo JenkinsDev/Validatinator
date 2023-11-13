@@ -26,19 +26,19 @@ export class HTMLFormValidations {
    * Ensures the value of the field only contains alpha characters.
    */
   static alpha(form: HTMLFormElement, field: HTMLInputElement) {
-    return ALPHA_REGEX.test(field.value.trim());
+    return ALPHA_REGEX.test(field.value);
   }
 
   static alphaDash(form: HTMLFormElement, field: HTMLInputElement) {
-    return ALPHA_DASH_REGEX.test(field.value.trim());
+    return ALPHA_DASH_REGEX.test(field.value);
   }
 
   static alphaNum(form: HTMLFormElement, field: HTMLInputElement) {
-    return ALPHA_NUMERIC_REGEX.test(field.value.trim());
+    return ALPHA_NUMERIC_REGEX.test(field.value);
   }
 
   static alphaDashNum(form: HTMLFormElement, field: HTMLInputElement) {
-    return ALPHA_NUMERIC_DASH_REGEX.test(field.value.trim());
+    return ALPHA_NUMERIC_DASH_REGEX.test(field.value);
   }
 
   static between(
@@ -54,7 +54,7 @@ export class HTMLFormValidations {
       throw new Error("min and max must both be numbers in the `between` validation.");
     }
 
-    const value = parseInt(field.value.trim(), 10);
+    const value = parseInt(field.value, 10);
     return (!isNaN(value) && min <= value && value <= max);
   }
 
@@ -71,21 +71,20 @@ export class HTMLFormValidations {
       throw new Error("min and max must both be numbers in the `betweenLength` validation.");
     }
 
-    let value = field.value?.trim();
-    const valueLength = value.length ?? 0;
+    const valueLength = field.value?.length ?? 0;
     return (min <= valueLength && valueLength <= max);
   }
 
   static contains(form: HTMLFormElement, field: HTMLInputElement, ...arr: string[]) {
-    return arr.indexOf(field.value.trim()) !== -1;
+    return arr.indexOf(field.value) !== -1;
   }
 
   static dateBefore(form: HTMLFormElement, field: HTMLInputElement, date: string) {
-    return Date.parse(field.value.trim()) < Date.parse(date);
+    return Date.parse(field.value) < Date.parse(date);
   }
 
   static dateAfter(form: HTMLFormElement, field: HTMLInputElement, date: string) {
-    return Date.parse(field.value.trim()) > Date.parse(date);
+    return Date.parse(field.value) > Date.parse(date);
   }
 
   static different(
@@ -102,7 +101,7 @@ export class HTMLFormValidations {
     field: HTMLInputElement,
     length: string | number
   ) {
-    if (isNaN(parseInt(field.value.trim()))) {
+    if (isNaN(parseInt(field.value))) {
       return false;
     }
 
@@ -111,7 +110,7 @@ export class HTMLFormValidations {
       throw new Error("length must be of numerical value in the `digitsLength` validation.");
     }
 
-    const valueLength = field.value?.trim().length ?? 0;
+    const valueLength = field.value?.length ?? 0;
     return valueLength == length;
   }
 
@@ -121,7 +120,7 @@ export class HTMLFormValidations {
     minLength: string | number,
     maxLength: string | number
   ) {
-    if (isNaN(parseInt(field.value.trim()))) {
+    if (isNaN(parseInt(field.value))) {
       return false;
     }
 
@@ -134,7 +133,7 @@ export class HTMLFormValidations {
 
   static ipvFour(form: HTMLFormElement, field: HTMLInputElement) {
     // Get an array with all four of our integer values.
-    const ipvFourSegs = field.value?.trim().match(IPV4_REGEX) ?? [];
+    const ipvFourSegs = field.value?.match(IPV4_REGEX) ?? [];
 
     const isSegmentValid = (seg: string) => {
       if (seg === null || seg === undefined) return false;
@@ -172,7 +171,7 @@ export class HTMLFormValidations {
   }
 
   static number(form: HTMLFormElement, field: HTMLInputElement) {
-    return !isNaN(parseFloat(field.value.trim()));
+    return !isNaN(parseFloat(field.value));
   }
 
   static required(form: HTMLFormElement, field: HTMLInputElement) {
@@ -188,7 +187,7 @@ export class HTMLFormValidations {
     if(typeof(otherField) == "string"){
       otherField = form.querySelector(otherField) as HTMLInputElement;
     }
-    return otherField?.value.trim() != value || HTMLFormValidations.required(form, field);
+    return otherField?.value != value || HTMLFormValidations.required(form, field);
   }
 
   static requiredIfNot(
@@ -200,7 +199,7 @@ export class HTMLFormValidations {
     if(typeof(otherField) == "string"){
       otherField = form.querySelector(otherField) as HTMLInputElement;
     }
-    return otherField?.value.trim() == value || HTMLFormValidations.required(form, field);
+    return otherField?.value == value || HTMLFormValidations.required(form, field);
   }
 
   static same(
@@ -213,16 +212,16 @@ export class HTMLFormValidations {
       otherField = form.querySelector(otherField) as HTMLInputElement;
     }
     return (strict.toLowerCase() == "true") ?
-      field.value.trim() == otherField?.value.trim() :
-      field.value?.trim().toLowerCase() == otherField.value?.trim().toLowerCase();
+      field.value == otherField?.value :
+      field.value?.toLowerCase() == otherField.value?.toLowerCase();
   }
 
   static url(form: HTMLFormElement, field: HTMLInputElement) {
-    return URL_REGEX.test(field.value.trim());
+    return URL_REGEX.test(field.value);
   }
 
   static pattern(form: HTMLFormElement, field: HTMLInputElement, regexString: string | RegExp) {
     const regex = new RegExp(regexString);
-    return regex.test(field.value.trim());
+    return regex.test(field.value);
   }
 }
