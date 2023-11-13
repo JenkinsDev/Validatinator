@@ -9,10 +9,10 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/JenkinsDev/Validatinator.git"
+    "url": "git+https://github.com/mvitaliy/Validatinator.git"
   },
   "bugs": {
-    "url": "https://github.com/JenkinsDev/Validatinator/issues"
+    "url": "https://github.com/mvitaliy/Validatinator/issues"
   },
   "keywords": [
     "forms",
