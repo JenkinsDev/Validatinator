@@ -807,7 +807,7 @@ describe("HTMLFormValidations.url", () => {
 describe("HTMLFormValidations.pattern", () => {
   describe("when the field's value does not match the pattern", () => {
     test("should return false", () => {
-      const regex = "[0-9]{2,4}[a-z]+";
+      const regex = "^[0-9]{2,4}[a-z]+$";
       const [form, field] = createAndGetFormAndInput("text", "not a match");
       expect(HTMLFormValidations.pattern(form, field, regex)).toBe(false);
     });
@@ -815,7 +815,7 @@ describe("HTMLFormValidations.pattern", () => {
 
   describe("when the field's value matches the pattern", () => {
     test("should return true", () => {
-      const regex = "[0-9]{2,4}[a-z]+";
+      const regex = "^[0-9]{2,4}[a-z]+$";
       const [form, field] = createAndGetFormAndInput("text", "343bde");
       expect(HTMLFormValidations.pattern(form, field, regex)).toBe(true);
     });

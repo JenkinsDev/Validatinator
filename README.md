@@ -72,7 +72,7 @@ The holy grail of ease-of-use JS/TS validation libraries.
 * `"minLength:2"`
 * `"notIn:2,4,6,8,10,12"`
 * `"number"`
-* `"pattern:valid_regex_string"`
+* `"pattern:^valid_regex_string$"`
 * `"required"`
 * `"requiredIf:.another-field-selector,value-to-check"`
 * `"requiredIfNot:.another-field-selector,value-to-check"`
@@ -83,4 +83,4 @@ The holy grail of ease-of-use JS/TS validation libraries.
 
 * `different` - The second argument is `strict` which when `false` performs case insensitive comparisons.
 * `same` - The second argument is `strict` which when `false` performs case insensitive comparisons.
-* `pattern` - The valid regex string will be compared against the field value and if any part of the value matches the string, it will be valid. To strictly match the field value one must include the "starts with" (`^`) and "ends with" (`$`) assertion characters. A backslash inside the regex string must be escaped to be processed as a literal backslash (ex: `"pattern:\\d"` to match any numeric digit).
+* `pattern` - The valid regex string will be compared against the field value and if any part of the value matches the string, it will be valid. To strictly match the field value one must include the "starts with" (`^`) and "ends with" (`$`) assertion characters. A backslash inside the regex string must be escaped. Ex: `"pattern:^[a-zA-Z0-9\\!\/...$"`.

@@ -12,14 +12,34 @@
  * @param validationRules - The validation rules string to parse.
  */
 export function prepareValidationRules(validationRulesStr: string): string[][] {
-  const validationRules = validationRulesStr?.split('|') ?? [];
+  let validationRules = [];
+  let validationRulesWithoutPatternStr = validationRulesStr;
+  let patternStr = '';
+
+  if (validationRulesStr?.includes('pattern')) {
+    patternStr = validationRulesStr.slice(validationRulesStr.indexOf('pattern'), validationRulesStr.lastIndexOf('$') + 1);
+    validationRulesWithoutPatternStr = validationRulesStr.replace(patternStr, '');
+    validationRules = [
+        ...validationRulesWithoutPatternStr?.split('|').filter(el => el !== ''),
+        patternStr
+    ] ?? [];
+  } else {
+    validationRules = validationRulesStr?.split('|') ?? [];
+  }
 
   return validationRules
     .filter((methodAndParams: string) => !!methodAndParams)
     .map((methodAndParams: string) => {
-      const [method, params] = methodAndParams.split(':');
+      let method = '', params = '';
+
+      if (methodAndParams.includes('pattern')) {
+        [method = 'pattern', params = patternStr.slice(patternStr.indexOf('^'), patternStr.lastIndexOf('$') + 1)];
+      } else {
+        [method, params] = methodAndParams.split(':');
+      }
       // The pattern method parameter can contain a valid "," - don't split
       const paramsArray = (method !== 'pattern') ? params?.split(',') ?? [] : [params];
+
       return [method, ...paramsArray];
     });
 }
